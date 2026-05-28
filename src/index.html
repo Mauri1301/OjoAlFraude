@@ -13,6 +13,36 @@
 <div class="dots-grid"></div>
 <div class="glow-accent"></div>
 
+<!-- ADMIN: LISTA DE PARTICIPANTES -->
+<div id="p-admin" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">⚙️ Panel Admin</span>
+    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Participantes</h2>
+      <p class="body-sm text-muted">Toca un participante para ver su historial de sesiones</p>
+    </div>
+    <div id="admin-participants" class="flex-col gap-12"></div>
+  </div>
+</div>
+
+<!-- ADMIN: DETALLE DE PARTICIPANTE -->
+<div id="p-admin-detail" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" onclick="cargarPanelAdmin()">← Volver</button>
+    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg" id="detail-nombre"></h2>
+      <p class="body-sm text-muted" id="detail-info"></p>
+    </div>
+    <div id="detail-sessions" class="flex-col gap-12"></div>
+  </div>
+</div>
+
 <!-- SCREEN 0a: LOGIN -->
 <div id="p-login" class="screen active">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
@@ -34,7 +64,7 @@
       </div>
       <span id="login-err" class="form-error hidden"></span>
       <button id="btn-login" class="btn btn-primary" onclick="submitLogin()">Ingresar</button>
-      <button class="btn btn-ghost" onclick="goTo('p-register')">¿Primera vez? Regístrate →</button>
+      <button class="btn-link" onclick="goTo('p-register')">¿Primera vez? Regístrate →</button>
     </div>
   </div>
 </div>
@@ -108,7 +138,7 @@
     </div>
     <span id="reg-err" class="form-error hidden"></span>
     <button id="btn-register" class="btn btn-primary" onclick="submitRegister()">Crear cuenta →</button>
-    <button class="btn btn-ghost" onclick="goTo('p-login')">¿Ya tienes cuenta? Inicia sesión</button>
+    <button class="btn-link" onclick="goTo('p-login')">¿Ya tienes cuenta? Inicia sesión</button>
   </div>
 </div>
 

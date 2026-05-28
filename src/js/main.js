@@ -21,35 +21,29 @@ import {
 } from './nivel.js';
 
 import { finalizarSUS, selectSUS } from './sus.js';
-
 import { exportarResultados, reiniciarJuego } from './export.js';
-
 import { submitLogin, submitRegister, logoutUser } from './auth-ui.js';
+import { cargarPanelAdmin, verDetalleParticipante, toggleSessionDetail } from './admin-ui.js';
 
-/* ── Observer de autenticación ──────────────────────────────────
-   Firebase llama a este callback:
-   · al cargar la página (con el usuario persistido o null)
-   · tras cada login, register o logout
-──────────────────────────────────────────────────────────────── */
+/* ── Observer de autenticación ── */
 onAuthChange(async (user) => {
   if (user) {
     STATE.currentUser = user;
 
-    // Cargar perfil desde Firestore solo si no está ya en STATE
-    // (evita sobreescribir datos recién guardados durante el registro)
     if (!STATE.participante.uid) {
       try {
         const profile = await getUserProfile(user.uid);
         if (profile) STATE.participante = { ...profile, uid: user.uid };
-      } catch {
-        // Sin conexión o Firestore no configurado aún; el juego sigue
-      }
+      } catch { }
     }
 
-    // Si el usuario estaba en una pantalla de auth, redirigir a bienvenida
     const active = document.querySelector('.screen.active')?.id;
     if (!active || active === 'p-login' || active === 'p-register') {
-      goTo('p-bienvenida');
+      if (STATE.participante.role === 'admin') {
+        cargarPanelAdmin();
+      } else {
+        goTo('p-bienvenida');
+      }
     }
   } else {
     STATE.currentUser  = null;
@@ -79,6 +73,10 @@ Object.assign(window, {
   selectSUS,
   exportarResultados,
   reiniciarJuego,
+  // admin
+  cargarPanelAdmin,
+  verDetalleParticipante,
+  toggleSessionDetail,
 });
 
 /* ── Animación de entrada ── */

@@ -2,6 +2,7 @@
 import { STATE, goTo } from './state.js';
 import { SUS_PREGUNTAS } from '../data/nivel-config.js';
 import { renderFin } from './results.js';
+import { saveSession } from '../firebase/db.js';
 
 export function renderSUS() {
   const container = document.getElementById('sus-content');
@@ -38,8 +39,27 @@ export function calcSUSScore() {
   return Math.round((total / (SUS_PREGUNTAS.length * 5)) * 100);
 }
 
-export function finalizarSUS() {
+export async function finalizarSUS() {
   STATE.susScore = calcSUSScore();
   renderFin();
   goTo('p-fin');
+
+  if (STATE.currentUser) {
+    const bonusPts = STATE.historial.filter(h => h.streakBonus).length * 5;
+    saveSession(STATE.currentUser.uid, {
+      participante: STATE.participante,
+      pretest:  { respuestas: STATE.pretest,  score: STATE.pretestScore },
+      juego: {
+        puntaje_por_nivel:   STATE.puntaje,
+        puntaje_total:       STATE.puntaje.reduce((a, b) => a + b, 0),
+        puntaje_base:        STATE.puntaje.reduce((a, b) => a + b, 0) - bonusPts,
+        bonus_racha_total:   bonusPts,
+        escenarios_con_bono: STATE.historial.filter(h => h.streakBonus).length,
+        max_winstreak:       STATE.maxWinstreak,
+        historial:           STATE.historial,
+      },
+      posttest: { respuestas: STATE.posttest, score: STATE.posttestScore },
+      sus:      { respuestas: STATE.sus,      score: STATE.susScore },
+    }).catch(err => console.error('Error al guardar sesión:', err));
+  }
 }
