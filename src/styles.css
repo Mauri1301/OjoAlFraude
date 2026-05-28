@@ -138,6 +138,12 @@ input,select,textarea{font-family:var(--font-body);outline:none}
 }
 .topbar-logo{font-family:var(--font);font-weight:800;font-size:1.1rem;color:var(--accent)}
 .topbar-score{font-family:var(--font);font-weight:700;font-size:.95rem}
+.topbar-btn{
+  background:transparent;border:1px solid var(--border);border-radius:99px;
+  padding:5px 14px;font-size:.78rem;font-family:var(--font);
+  color:var(--text-muted);cursor:pointer;transition:color .2s,border-color .2s;
+}
+.topbar-btn:hover{color:var(--text);border-color:var(--text-muted)}
 
 /* ============================================================
    SCORE DISPLAY

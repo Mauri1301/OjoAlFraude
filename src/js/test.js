@@ -1,35 +1,14 @@
-/* Registro y pantallas de pre-test / post-test */
+/* Pre-test / post-test */
 import { STATE, goTo } from './state.js';
 import { TEST_QUESTIONS } from '../data/test-questions.js';
 import { goToIntroNivel } from './nivel.js';
 import { renderComparacion } from './results.js';
 import { renderSUS } from './sus.js';
 
-export function registroSiguiente() {
-  const campos = [
-    { id: 'r-nombre', err: 'r-nombre-err', check: v => v.trim().length >= 2 },
-    { id: 'r-edad',   err: 'r-edad-err',   check: v => v >= 55 && v <= 100 },
-    { id: 'r-genero', err: 'r-genero-err', check: v => v !== '' },
-    { id: 'r-uso',    err: 'r-uso-err',    check: v => v !== '' },
-    { id: 'r-exp',    err: 'r-exp-err',    check: v => v !== '' },
-  ];
-  let ok = true;
-  campos.forEach(c => {
-    const el  = document.getElementById(c.id);
-    const err = document.getElementById(c.err);
-    if (!c.check(el.value)) {
-      err.classList.remove('hidden');
-      ok = false;
-    } else {
-      err.classList.add('hidden');
-      STATE.participante[c.id.replace('r-', '')] = el.value;
-    }
-  });
-  if (ok) {
-    STATE.participante.timestamp = new Date().toISOString();
-    renderTest('pretest-content', STATE.pretest, 'btn-pretest');
-    goTo('p-pretest');
-  }
+// Llamada desde el botón "Empezar" en p-bienvenida (el perfil ya está en STATE por auth)
+export function iniciarPretest() {
+  renderTest('pretest-content', STATE.pretest, 'btn-pretest');
+  goTo('p-pretest');
 }
 
 export function renderTest(containerId, stateObj, btnId) {

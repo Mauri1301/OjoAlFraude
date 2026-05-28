@@ -30,7 +30,7 @@ export function exportarResultados() {
 }
 
 export function reiniciarJuego() {
-  STATE.participante = {};
+  // Mantiene currentUser y participante (Opción A: perfil persistente entre sesiones)
   STATE.pretest      = {};
   STATE.posttest     = {};
   STATE.sus          = {};

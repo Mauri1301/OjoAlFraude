@@ -1,5 +1,6 @@
 export const STATE = {
-  participante: {},
+  currentUser:  null,   // objeto Firebase User (auth)
+  participante: {},     // perfil del participante (cargado desde Firestore)
   pretest: {},
   posttest: {},
   sus: {},

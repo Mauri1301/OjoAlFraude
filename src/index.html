@@ -13,8 +13,111 @@
 <div class="dots-grid"></div>
 <div class="glow-accent"></div>
 
+<!-- SCREEN 0a: LOGIN -->
+<div id="p-login" class="screen active">
+  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="text-center flex-col gap-16">
+      <span class="shield-big">🛡️</span>
+      <div class="flex-col gap-8">
+        <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
+        <p class="body-md text-muted">Inicia sesión para continuar</p>
+      </div>
+    </div>
+    <div class="card flex-col gap-16">
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input id="login-email" class="form-input" type="email" placeholder="tucorreo@gmail.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input id="login-pwd" class="form-input" type="password" placeholder="Tu contraseña" autocomplete="current-password">
+      </div>
+      <span id="login-err" class="form-error hidden"></span>
+      <button id="btn-login" class="btn btn-primary" onclick="submitLogin()">Ingresar</button>
+      <button class="btn btn-ghost" onclick="goTo('p-register')">¿Primera vez? Regístrate →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 0b: REGISTRO CON AUTH -->
+<div id="p-register" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="badge badge-warning">Registro</span>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Crear cuenta</h2>
+      <p class="body-sm text-muted">Esta información es confidencial y anónima</p>
+    </div>
+    <div class="flex-col gap-16">
+      <div class="form-group">
+        <label class="form-label">Nombre (o seudónimo)</label>
+        <input id="reg-nombre" class="form-input" type="text" placeholder="Ej: Rosa, Juan, Mamá..." maxlength="40">
+        <span id="reg-nombre-err" class="form-error hidden">Por favor ingresa un nombre</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Edad</label>
+        <input id="reg-edad" class="form-input" type="number" placeholder="Ej: 68" min="55" max="100">
+        <span id="reg-edad-err" class="form-error hidden">Ingresa una edad entre 55 y 100 años</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Género</label>
+        <select id="reg-genero" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Prefiero no decir</option>
+        </select>
+        <span id="reg-genero-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">¿Con qué frecuencia usas el celular?</label>
+        <select id="reg-uso" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="diario">Todos los días</option>
+          <option value="varios">Varios días a la semana</option>
+          <option value="poco">Poco, solo para llamadas</option>
+          <option value="casi-no">Casi no lo uso</option>
+        </select>
+        <span id="reg-uso-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">¿Has recibido alguna vez un mensaje sospechoso?</label>
+        <select id="reg-exp" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="si-cai">Sí, y caí en el engaño</option>
+          <option value="si-no-cai">Sí, pero me di cuenta a tiempo</option>
+          <option value="no">No que yo recuerde</option>
+        </select>
+        <span id="reg-exp-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group">
+        <label class="form-label">Correo electrónico</label>
+        <input id="reg-email" class="form-input" type="email" placeholder="tucorreo@gmail.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <input id="reg-pwd" class="form-input" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmar contraseña</label>
+        <input id="reg-pwd-conf" class="form-input" type="password" placeholder="Repite la contraseña" autocomplete="new-password">
+      </div>
+    </div>
+    <span id="reg-err" class="form-error hidden"></span>
+    <button id="btn-register" class="btn btn-primary" onclick="submitRegister()">Crear cuenta →</button>
+    <button class="btn btn-ghost" onclick="goTo('p-login')">¿Ya tienes cuenta? Inicia sesión</button>
+  </div>
+</div>
+
 <!-- SCREEN 1: BIENVENIDA -->
-<div id="p-bienvenida" class="screen active">
+<div id="p-bienvenida" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+  </div>
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
     <div class="text-center flex-col gap-16">
       <span class="shield-big">🛡️</span>
@@ -45,67 +148,8 @@
       </div>
     </div>
     <div class="flex-col gap-12">
-      <button class="btn btn-primary" onclick="goTo('p-registro')">🚀 ¡Empezar ahora!</button>
-      <p class="body-sm text-muted text-center">Tu información es confidencial y solo se usará para esta investigación</p>
+      <button class="btn btn-primary" onclick="iniciarPretest()">🚀 ¡Empezar ahora!</button>
     </div>
-  </div>
-</div>
-
-<!-- SCREEN 2: REGISTRO -->
-<div id="p-registro" class="screen">
-  <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
-    <span class="badge badge-warning">Registro</span>
-  </div>
-  <div class="container content-z flex-col gap-20">
-    <div class="flex-col gap-4 mt-8">
-      <h2 class="title-lg">Datos del participante</h2>
-      <p class="body-sm text-muted">Esta información es confidencial y anónima</p>
-    </div>
-    <div class="flex-col gap-16">
-      <div class="form-group">
-        <label class="form-label">Nombre (o seudónimo)</label>
-        <input id="r-nombre" class="form-input" type="text" placeholder="Ej: Rosa, Juan, Mamá..." maxlength="40">
-        <span id="r-nombre-err" class="form-error hidden">Por favor ingresa un nombre</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Edad</label>
-        <input id="r-edad" class="form-input" type="number" placeholder="Ej: 68" min="55" max="100">
-        <span id="r-edad-err" class="form-error hidden">Ingresa una edad entre 55 y 100 años</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Género</label>
-        <select id="r-genero" class="form-input">
-          <option value="">Selecciona...</option>
-          <option value="M">Masculino</option>
-          <option value="F">Femenino</option>
-          <option value="O">Prefiero no decir</option>
-        </select>
-        <span id="r-genero-err" class="form-error hidden">Selecciona una opción</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">¿Con qué frecuencia usas el celular?</label>
-        <select id="r-uso" class="form-input">
-          <option value="">Selecciona...</option>
-          <option value="diario">Todos los días</option>
-          <option value="varios">Varios días a la semana</option>
-          <option value="poco">Poco, solo para llamadas</option>
-          <option value="casi-no">Casi no lo uso</option>
-        </select>
-        <span id="r-uso-err" class="form-error hidden">Selecciona una opción</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">¿Has recibido alguna vez un mensaje sospechoso?</label>
-        <select id="r-exp" class="form-input">
-          <option value="">Selecciona...</option>
-          <option value="si-cai">Sí, y caí en el engaño</option>
-          <option value="si-no-cai">Sí, pero me di cuenta a tiempo</option>
-          <option value="no">No que yo recuerde</option>
-        </select>
-        <span id="r-exp-err" class="form-error hidden">Selecciona una opción</span>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="registroSiguiente()">Continuar al Pre-test →</button>
   </div>
 </div>
 
