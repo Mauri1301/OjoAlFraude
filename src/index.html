@@ -17,7 +17,11 @@
 <div id="p-admin" class="screen">
   <div class="topbar">
     <span class="topbar-logo">⚙️ Panel Admin</span>
-    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    <div style="display:flex;gap:8px">
+      <button class="topbar-btn" onclick="cargarEscenarios()">Escenarios</button>
+      <button class="topbar-btn" onclick="cargarPreguntas()">Preguntas</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
   </div>
   <div class="container content-z flex-col gap-20">
     <div class="flex-col gap-4 mt-8">
@@ -40,6 +44,93 @@
       <p class="body-sm text-muted" id="detail-info"></p>
     </div>
     <div id="detail-sessions" class="flex-col gap-12"></div>
+  </div>
+</div>
+
+<!-- ADMIN: ESCENARIOS -->
+<div id="p-admin-scenarios" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" onclick="cargarPanelAdmin()">← Participantes</button>
+    <div style="display:flex;gap:8px">
+      <button class="topbar-btn" onclick="cargarPreguntas()">Preguntas</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Escenarios</h2>
+      <p class="body-sm text-muted">Activa o desactiva escenarios del pool aleatorio</p>
+    </div>
+    <div id="admin-scenarios-list" class="flex-col gap-8"></div>
+  </div>
+</div>
+
+<!-- ADMIN: PREGUNTAS -->
+<div id="p-admin-questions" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" onclick="cargarPanelAdmin()">← Participantes</button>
+    <div style="display:flex;gap:8px">
+      <button class="topbar-btn" onclick="cargarEscenarios()">Escenarios</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Preguntas</h2>
+      <p class="body-sm text-muted">Activa o desactiva preguntas del pre/post-test</p>
+    </div>
+    <div id="admin-questions-list" class="flex-col gap-8"></div>
+  </div>
+</div>
+
+<!-- ADMIN: EDITOR -->
+<div id="p-admin-edit" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" id="edit-back-fn" data-back="cargarEscenarios"
+            onclick="window[this.getAttribute('data-back')]()">← Volver</button>
+    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg" id="edit-header">Editar</h2>
+    </div>
+    <div class="flex-col gap-12">
+      <div class="form-group">
+        <label class="form-label">Título / Texto principal</label>
+        <textarea id="edit-titulo" class="form-input" rows="2"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pregunta al participante <span class="text-muted">(escenarios)</span></label>
+        <input id="edit-pregunta" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opción A</label>
+        <input id="edit-opcion0" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opción B</label>
+        <input id="edit-opcion1" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opción C</label>
+        <input id="edit-opcion2" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Opción D</label>
+        <input id="edit-opcion3" class="form-input" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Respuesta correcta (0=A, 1=B, 2=C, 3=D)</label>
+        <input id="edit-correcta" class="form-input" type="number" min="0" max="3">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Explicación <span class="text-muted">(escenarios)</span></label>
+        <textarea id="edit-explicacion" class="form-input" rows="3"></textarea>
+      </div>
+    </div>
+    <button id="btn-guardar-edicion" class="btn btn-primary" onclick="guardarEdicion()">
+      Guardar cambios
+    </button>
   </div>
 </div>
 

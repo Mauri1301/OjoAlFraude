@@ -1,6 +1,6 @@
 import {
-  getFirestore, doc, setDoc, getDoc,
-  collection, addDoc, query, where, getDocs, orderBy, serverTimestamp,
+  getFirestore, doc, setDoc, getDoc, updateDoc,
+  collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch,
 } from 'firebase/firestore';
 import { app } from './config.js';
 
@@ -45,4 +45,49 @@ export async function getUserSessions(uid) {
 export async function getAllUsers() {
   const snap = await getDocs(collection(db, 'users'));
   return snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+}
+
+/* ── Contenido del juego ── */
+
+export async function loadScenarios() {
+  const q = query(collection(db, 'scenarios'), where('activo', '==', true));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+}
+
+export async function loadQuestions() {
+  const q = query(collection(db, 'questions'), where('activo', '==', true));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+}
+
+export async function loadAllScenarios() {
+  const snap = await getDocs(collection(db, 'scenarios'));
+  return snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+}
+
+export async function loadAllQuestions() {
+  const snap = await getDocs(collection(db, 'questions'));
+  return snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+}
+
+export async function updateScenario(firestoreId, data) {
+  await updateDoc(doc(db, 'scenarios', firestoreId), data);
+}
+
+export async function updateQuestion(firestoreId, data) {
+  await updateDoc(doc(db, 'questions', firestoreId), data);
+}
+
+export async function seedContent(scenarios, questions) {
+  const batch = writeBatch(db);
+  scenarios.forEach(s => {
+    const ref = doc(collection(db, 'scenarios'));
+    batch.set(ref, s);
+  });
+  questions.forEach(q => {
+    const ref = doc(collection(db, 'questions'));
+    batch.set(ref, q);
+  });
+  await batch.commit();
 }

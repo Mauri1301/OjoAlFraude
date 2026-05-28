@@ -3,6 +3,7 @@
 import { STATE, goTo } from './state.js';
 import { onAuthChange } from '../firebase/auth.js';
 import { getUserProfile } from '../firebase/db.js';
+import { cargarContenido } from './content-loader.js';
 
 import {
   iniciarPretest,
@@ -22,8 +23,15 @@ import {
 
 import { finalizarSUS, selectSUS } from './sus.js';
 import { exportarResultados, reiniciarJuego } from './export.js';
-import { submitLogin, submitRegister, logoutUser } from './auth-ui.js';
-import { cargarPanelAdmin, verDetalleParticipante, toggleSessionDetail } from './admin-ui.js';
+import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
+import {
+  cargarPanelAdmin, verDetalleParticipante, toggleSessionDetail,
+  cargarEscenarios, cargarPreguntas,
+  toggleEscenario, togglePregunta,
+  editarEscenario, editarPregunta, guardarEdicion,
+  importarContenido,
+} from './admin-ui.js';
+
 
 /* ── Observer de autenticación ── */
 onAuthChange(async (user) => {
@@ -37,6 +45,9 @@ onAuthChange(async (user) => {
       } catch { }
     }
 
+    // Cargar contenido aleatorio para esta sesión
+    await cargarContenido();
+
     const active = document.querySelector('.screen.active')?.id;
     if (!active || active === 'p-login' || active === 'p-register') {
       if (STATE.participante.role === 'admin') {
@@ -48,11 +59,12 @@ onAuthChange(async (user) => {
   } else {
     STATE.currentUser  = null;
     STATE.participante = {};
+    resetLoginForm();
     goTo('p-login');
   }
 });
 
-/* ── Exponer funciones al scope global para los onclick del HTML ── */
+/* ── Exponer funciones al scope global ── */
 Object.assign(window, {
   goTo,
   // auth
@@ -73,10 +85,19 @@ Object.assign(window, {
   selectSUS,
   exportarResultados,
   reiniciarJuego,
-  // admin
+  // admin — participantes
   cargarPanelAdmin,
   verDetalleParticipante,
   toggleSessionDetail,
+  // admin — contenido
+  cargarEscenarios,
+  cargarPreguntas,
+  toggleEscenario,
+  togglePregunta,
+  editarEscenario,
+  editarPregunta,
+  guardarEdicion,
+  importarContenido,
 });
 
 /* ── Animación de entrada ── */

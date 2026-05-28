@@ -1,8 +1,9 @@
 /* Motor del juego: intros, escenarios, winstreak, feedback */
 import { STATE, goTo } from './state.js';
-import { ESCENARIOS } from '../data/escenarios.js';
+import { ESCENARIOS } from '../data/escenarios.js';       // fallback local
 import { NIVEL_CONFIG } from '../data/nivel-config.js';
 import { mostrarResultado } from './results.js';
+import { renderMensaje } from './mensaje-renderer.js';
 
 export function goToIntroNivel(n) {
   const cfg = NIVEL_CONFIG[n - 1];
@@ -28,6 +29,9 @@ export function iniciarNivel(n) {
 }
 
 export function getEscenariosNivel(n) {
+  // Usar selección aleatoria de Firestore si está disponible; fallback a local
+  const dinamicos = STATE.escenariosActuales?.[n];
+  if (dinamicos?.length) return dinamicos;
   return ESCENARIOS.filter(e => e.nivel === n);
 }
 
@@ -71,8 +75,16 @@ export function renderEscenario(n) {
       </div>
     </div>`;
 
-  const tpl = document.getElementById(esc.tplId);
-  document.getElementById('msg-placeholder').replaceWith(tpl.content.cloneNode(true));
+  // Renderizar mensaje: desde datos dinámicos (Firestore) o template estático (fallback)
+  const placeholder = document.getElementById('msg-placeholder');
+  if (esc.mensaje) {
+    const div = document.createElement('div');
+    div.innerHTML = renderMensaje(esc.mensaje);
+    placeholder.replaceWith(div.firstElementChild || div);
+  } else if (esc.tplId) {
+    const tpl = document.getElementById(esc.tplId);
+    if (tpl) placeholder.replaceWith(tpl.content.cloneNode(true));
+  }
 
   window.scrollTo(0, 0);
 }

@@ -30,7 +30,8 @@ export function exportarResultados() {
 }
 
 export function reiniciarJuego() {
-  // Mantiene currentUser y participante (Opción A: perfil persistente entre sesiones)
+  // Mantiene currentUser y participante (Opción A: perfil persistente)
+  // questionsActuales y escenariosActuales se recargan en cargarContenido (main.js)
   STATE.pretest      = {};
   STATE.posttest     = {};
   STATE.sus          = {};
@@ -40,6 +41,9 @@ export function reiniciarJuego() {
   STATE.historial    = [];
   STATE.winstreak    = 0;
   STATE.maxWinstreak = 0;
+  // Limpiar contenido — se recargará aleatoriamente en iniciarPretest()
+  STATE.questionsActuales  = [];
+  STATE.escenariosActuales = {};
   delete STATE.pretestScore;
   delete STATE.posttestScore;
   delete STATE.susScore;

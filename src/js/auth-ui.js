@@ -3,6 +3,15 @@ import { STATE, goTo } from './state.js';
 import { loginWithEmail, registerWithEmail, logoutUser } from '../firebase/auth.js';
 import { saveUserProfile } from '../firebase/db.js';
 
+export function resetLoginForm() {
+  const btn = document.getElementById('btn-login');
+  if (btn) { btn.disabled = false; btn.textContent = 'Ingresar'; }
+  const err = document.getElementById('login-err');
+  if (err) err.classList.add('hidden');
+  const pwd = document.getElementById('login-pwd');
+  if (pwd) pwd.value = '';
+}
+
 export async function submitLogin() {
   const email    = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-pwd').value;

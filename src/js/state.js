@@ -1,6 +1,10 @@
 export const STATE = {
-  currentUser:  null,   // objeto Firebase User (auth)
-  participante: {},     // perfil del participante (cargado desde Firestore)
+  currentUser:        null, // objeto Firebase User (auth)
+  participante:       {},   // perfil del participante (cargado desde Firestore)
+  // Contenido cargado desde Firestore (aleatorio por sesión)
+  questionsActuales:  [],   // 5 preguntas seleccionadas al azar
+  escenariosActuales: {},   // { 1: [...3], 2: [...3], 3: [...3] }
+  // Estado del juego
   pretest: {},
   posttest: {},
   sus: {},
