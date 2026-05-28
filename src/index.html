@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>OjoAlFraude — Protégete del engaño digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div class="dots-grid"></div>
+<div class="glow-accent"></div>
+
+<!-- SCREEN 1: BIENVENIDA -->
+<div id="p-bienvenida" class="screen active">
+  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="text-center flex-col gap-16">
+      <span class="shield-big">🛡️</span>
+      <div class="flex-col gap-8">
+        <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
+        <p class="body-md text-muted">Aprende a protegerte de los engaños digitales más comunes en Perú</p>
+      </div>
+      <div class="flex-col gap-8 mt-8">
+        <div class="chip">🏛️ Universidad de Lima</div>
+        <div class="chip">📱 Proyecto de tesis — Ingeniería de Sistemas</div>
+      </div>
+    </div>
+    <div class="card flex-col gap-12">
+      <div class="title-sm">¿Qué vas a aprender?</div>
+      <div class="flex-col gap-8">
+        <div class="flex-center" style="gap:10px;justify-content:flex-start">
+          <span>🎯</span>
+          <span class="body-md">Identificar fraudes en WhatsApp, correo, SMS y redes sociales</span>
+        </div>
+        <div class="flex-center" style="gap:10px;justify-content:flex-start">
+          <span>🧠</span>
+          <span class="body-md">3 niveles con 9 escenarios reales del contexto peruano</span>
+        </div>
+        <div class="flex-center" style="gap:10px;justify-content:flex-start">
+          <span>⏱️</span>
+          <span class="body-md">Duración aproximada: 20 a 30 minutos</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-12">
+      <button class="btn btn-primary" onclick="goTo('p-registro')">🚀 ¡Empezar ahora!</button>
+      <p class="body-sm text-muted text-center">Tu información es confidencial y solo se usará para esta investigación</p>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: REGISTRO -->
+<div id="p-registro" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="badge badge-warning">Registro</span>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Datos del participante</h2>
+      <p class="body-sm text-muted">Esta información es confidencial y anónima</p>
+    </div>
+    <div class="flex-col gap-16">
+      <div class="form-group">
+        <label class="form-label">Nombre (o seudónimo)</label>
+        <input id="r-nombre" class="form-input" type="text" placeholder="Ej: Rosa, Juan, Mamá..." maxlength="40">
+        <span id="r-nombre-err" class="form-error hidden">Por favor ingresa un nombre</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Edad</label>
+        <input id="r-edad" class="form-input" type="number" placeholder="Ej: 68" min="55" max="100">
+        <span id="r-edad-err" class="form-error hidden">Ingresa una edad entre 55 y 100 años</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Género</label>
+        <select id="r-genero" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Prefiero no decir</option>
+        </select>
+        <span id="r-genero-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">¿Con qué frecuencia usas el celular?</label>
+        <select id="r-uso" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="diario">Todos los días</option>
+          <option value="varios">Varios días a la semana</option>
+          <option value="poco">Poco, solo para llamadas</option>
+          <option value="casi-no">Casi no lo uso</option>
+        </select>
+        <span id="r-uso-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">¿Has recibido alguna vez un mensaje sospechoso?</label>
+        <select id="r-exp" class="form-input">
+          <option value="">Selecciona...</option>
+          <option value="si-cai">Sí, y caí en el engaño</option>
+          <option value="si-no-cai">Sí, pero me di cuenta a tiempo</option>
+          <option value="no">No que yo recuerde</option>
+        </select>
+        <span id="r-exp-err" class="form-error hidden">Selecciona una opción</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="registroSiguiente()">Continuar al Pre-test →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: PRE-TEST -->
+<div id="p-pretest" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="badge badge-info">Pre-test</span>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Antes de jugar...</h2>
+      <p class="body-md text-muted">5 preguntas rápidas para conocer lo que ya sabes. No hay respuestas malas.</p>
+    </div>
+    <div id="pretest-content" class="flex-col gap-20"></div>
+    <button id="btn-pretest" class="btn btn-primary hidden" onclick="finalizarPretest()">
+      Guardar y comenzar el juego →
+    </button>
+  </div>
+</div>
+
+<!-- SCREENS 4–9: INTRO NIVEL + NIVEL ACTIVO (unificados) -->
+<div id="p-intro-nivel" class="screen">
+  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="level-hero flex-col gap-12 text-center">
+      <div id="intro-icon" class="level-icon"></div>
+      <div>
+        <div id="intro-badge" class="badge mb-12"></div>
+        <h2 id="intro-titulo" class="title-lg mt-8"></h2>
+        <p id="intro-subtitulo" class="body-md text-muted mt-8"></p>
+      </div>
+      <div class="divider"></div>
+      <div class="flex-col gap-8 text-center">
+        <p id="intro-descripcion" class="body-md"></p>
+        <p class="body-sm text-muted">3 escenarios · +10 pts por acierto · -5 pts por error</p>
+      </div>
+    </div>
+    <button id="intro-btn" class="btn btn-primary"></button>
+  </div>
+</div>
+
+<div id="p-nivel" class="screen">
+  <div class="topbar">
+    <div class="flex-col" style="gap:2px">
+      <span id="topbar-nivel-titulo" class="topbar-logo"></span>
+      <div class="progress-wrap" style="width:120px">
+        <div id="prog-nivel" class="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="flex-center" style="gap:8px">
+      <div id="streak-nivel" class="streak-pill hidden"></div>
+      <div class="score-pill">⭐ <span id="score-nivel">0</span></div>
+    </div>
+  </div>
+  <div id="nivel-content" class="container content-z flex-col gap-20"></div>
+</div>
+
+<!-- SCREEN 10: RESULTADO -->
+<div id="p-resultado" class="screen">
+  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="text-center flex-col gap-16">
+      <div id="result-emoji" style="font-size:4rem"></div>
+      <h2 class="title-lg" id="result-title"></h2>
+      <p class="body-md text-muted" id="result-subtitle"></p>
+    </div>
+    <div class="result-ring">
+      <span class="pts" id="result-pts"></span>
+      <span class="pts-label">PUNTOS</span>
+    </div>
+    <div id="result-breakdown" class="card flex-col gap-12"></div>
+    <div class="flex-col gap-12">
+      <button class="btn btn-primary" onclick="iniciarPosttest()">Continuar al Post-test →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 11: POST-TEST -->
+<div id="p-posttest" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="badge badge-info">Post-test</span>
+  </div>
+  <div class="container content-z flex-col gap-20">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Después de jugar...</h2>
+      <p class="body-md text-muted">Las mismas 5 preguntas de antes. ¿Cuánto aprendiste?</p>
+    </div>
+    <div id="posttest-content" class="flex-col gap-20"></div>
+    <button id="btn-posttest" class="btn btn-primary hidden" onclick="finalizarPosttest()">
+      Ver mis resultados →
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN 12: COMPARACIÓN -->
+<div id="p-comparacion" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="badge badge-success">Resultados</span>
+  </div>
+  <div class="container content-z flex-col gap-20" style="padding-bottom:40px">
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">Tu progreso</h2>
+      <p class="body-md text-muted">Así cambió tu conocimiento sobre fraudes digitales</p>
+    </div>
+    <div class="card flex-col gap-16">
+      <div class="title-sm">📊 Pre-test vs Post-test</div>
+      <div class="compare-bars" id="compare-bars"></div>
+    </div>
+    <div id="mejora-card" class="card flex-col gap-8"></div>
+    <div class="card flex-col gap-12">
+      <div class="title-sm">🧩 Encuesta de usabilidad (SUS)</div>
+      <p class="body-sm text-muted">5 preguntas cortas sobre tu experiencia con el juego. Escala del 1 al 5.</p>
+      <div id="sus-content" class="flex-col gap-20"></div>
+      <button id="btn-sus" class="btn btn-primary hidden mt-8" onclick="finalizarSUS()">
+        Ver resumen final →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 13: FIN -->
+<div id="p-fin" class="screen">
+  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="text-center flex-col gap-16">
+      <span style="font-size:4rem">🎉</span>
+      <div>
+        <h2 class="title-xl">¡Felicitaciones!</h2>
+        <p class="body-lg text-muted mt-8">Has completado OjoAlFraude</p>
+      </div>
+    </div>
+    <div id="fin-summary" class="card flex-col gap-12"></div>
+    <!-- SDT – cierre del ciclo de competencia (Ryan & Deci, 2020) -->
+    <div id="fin-competencia" class="card flex-col gap-12"></div>
+    <div class="card flex-col gap-12">
+      <div class="title-sm">🚨 ¿Qué hacer si recibes un fraude real?</div>
+      <div class="flex-col gap-8">
+        <div class="alert-marker">
+          <span class="alert-marker-icon">📞</span>
+          <span class="alert-marker-text"><strong>Dirincri PNP:</strong> 1818 o (01) 431-8898 — Denuncia delitos informáticos</span>
+        </div>
+        <div class="alert-marker">
+          <span class="alert-marker-icon">🏦</span>
+          <span class="alert-marker-text"><strong>BCP:</strong> Si crees que están usando tu cuenta, llama al (01) 311-9898 de inmediato</span>
+        </div>
+        <div class="alert-marker">
+          <span class="alert-marker-icon">📱</span>
+          <span class="alert-marker-text"><strong>Yape / BCP:</strong> Nunca compartas tu clave ni el código SMS que te llegue</span>
+        </div>
+        <div class="alert-marker">
+          <span class="alert-marker-icon">🖥️</span>
+          <span class="alert-marker-text"><strong>SUNAT:</strong> Nunca te pedirá datos personales ni claves por correo o WhatsApp</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-12">
+      <button class="btn btn-primary" onclick="exportarResultados()">📄 Descargar mis resultados</button>
+      <button class="btn btn-ghost" onclick="reiniciarJuego()">🔄 Jugar de nuevo</button>
+    </div>
+    <p class="body-sm text-muted text-center">Gracias por participar en esta investigación — Universidad de Lima 2025</p>
+  </div>
+</div>
+
+<!-- OVERLAY: FEEDBACK -->
+<div id="overlay-feedback" class="overlay">
+  <div class="modal">
+    <div id="feedback-content" class="flex-col gap-16"></div>
+    <button class="btn btn-primary mt-24" id="btn-feedback-next" onclick="siguienteEscenario()">
+      Siguiente →
+    </button>
+  </div>
+</div>
+
+<!-- TEMPLATES DE MENSAJES — el navegador no los renderiza;
+     JS los clona con tpl.content.cloneNode(true) en renderEscenario() -->
+
+<template id="tpl-esc-0">
+  <div class="wa-bubble-wrap">
+    <div class="wa-header">
+      <div class="wa-avatar">B</div>
+      <div>
+        <div class="wa-sender">BCP Seguridad</div>
+        <div class="wa-number">+51 987 654 321</div>
+      </div>
+    </div>
+    <div class="wa-bubble">
+      Estimado cliente, su cuenta ha sido BLOQUEADA por actividad sospechosa. Para desbloquearla ingrese AHORA a:<br><br>
+      <span class="wa-link">www.bcp-seguridad-peru.verificacion.com</span><br><br>
+      Tiene <strong>2 horas</strong> antes de que su cuenta sea suspendida definitivamente.<br>
+      <div class="wa-time">10:34 a.m. ✓✓</div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-1">
+  <div class="email-wrap">
+    <div class="email-header">
+      <div class="email-from">De: <span>notificaciones@sunat-devolucion.net</span></div>
+      <div class="email-from">Para: <span>usted@gmail.com</span></div>
+      <div class="email-subject">🎉 SUNAT: Devolución de impuestos S/. 487.00 aprobada</div>
+    </div>
+    <div class="email-body">
+      <div class="email-logo">SUNAT PERÚ</div>
+      <p>Estimado contribuyente,</p><br>
+      <p>Nos complace informarle que después de una revisión de su declaración jurada, se ha aprobado una <strong>devolución de S/. 487.00</strong> a su favor.</p><br>
+      <p>Para procesar su devolución en las próximas 24 horas, haga clic en el siguiente enlace y confirme sus datos bancarios:</p><br>
+      <p><span class="email-link">www.sunat-devolucion.net/reclamar?codigo=PER20241187</span></p><br>
+      <p><em>Si no reclama en 48 horas, el monto será anulado.</em></p>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-2">
+  <div class="wa-bubble-wrap">
+    <div class="wa-header">
+      <div class="wa-avatar" style="background:#8B5CF6">Y</div>
+      <div>
+        <div class="wa-sender">Yape Soporte</div>
+        <div class="wa-number">+51 941 123 789</div>
+      </div>
+    </div>
+    <div class="wa-bubble">
+      Buenos días, soy del equipo de <strong>Yape</strong>. Detectamos un intento de inicio de sesión en su cuenta desde otro dispositivo.<br><br>
+      Para proteger su cuenta, le enviamos un código SMS al número registrado. <strong>Por favor compártanos ese código</strong> para que podamos bloquear el acceso no autorizado.<br><br>
+      Es urgente. Su Yape puede ser vaciado en minutos si no actuamos.
+      <div class="wa-time">9:17 a.m. ✓</div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-3">
+  <div class="sms-wrap">
+    <div class="sms-header">
+      <div class="sms-icon">📱</div>
+      <div>
+        <div class="sms-sender">MOVISTAR-PE</div>
+        <div class="wa-number" style="font-size:.75rem;color:#8696a0">SMS</div>
+      </div>
+    </div>
+    <div class="sms-bubble">
+      MOVISTAR PERÚ: Su línea será suspendida en 24 horas por falta de actualización de datos. Evite el corte ingresando a:<br><br>
+      <span class="sms-link">movistar-pe.actualiza.datos.com</span><br><br>
+      Ingrese su DNI y contraseña del portal para confirmar. Ref: #MVS-20481
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-4">
+  <div class="sms-wrap">
+    <div class="sms-header">
+      <div class="sms-icon" style="background:#005da6">B</div>
+      <div>
+        <div class="sms-sender">BCP-ALERTAS</div>
+        <div class="wa-number" style="font-size:.75rem;color:#8696a0">SMS</div>
+      </div>
+    </div>
+    <div class="sms-bubble">
+      BCP ALERTA: Se registró un cargo de S/. 1,250.00 en su tarjeta terminada en 4821 en "TIENDA ONLINE MX". Si NO reconoce esta compra, CONFIRME su identidad en:<br><br>
+      <span class="sms-link">bcp.alerta-fraude.com/bloquear</span><br><br>
+      Si no actúa en 30 minutos, el cargo será aprobado.
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-5">
+  <div class="sms-wrap">
+    <div class="sms-header">
+      <div class="sms-icon" style="background:#e74c3c">O</div>
+      <div>
+        <div class="sms-sender">OLVA-COURIER</div>
+        <div class="wa-number" style="font-size:.75rem;color:#8696a0">SMS</div>
+      </div>
+    </div>
+    <div class="sms-bubble">
+      OLVA COURIER: Su paquete Nº OLV-447821 está retenido en almacén por S/. 8.50 de arancel pendiente. Para liberar su envío realice el pago en las próximas 12 horas:<br><br>
+      <span class="sms-link">olva-pago.com/liberar?pk=OLV447821</span><br><br>
+      Pasado ese plazo, el paquete será devuelto al remitente.
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-6">
+  <div class="fb-wrap">
+    <div class="fb-topbar">
+      <span class="fb-logo">f</span>
+      <span style="font-size:.85rem;color:#b0b3b8">BCP Perú Oficial</span>
+    </div>
+    <div class="fb-post">
+      <div class="fb-author">
+        <div class="fb-avatar">B</div>
+        <div>
+          <div class="fb-author-name">BCP Perú ✓</div>
+          <div class="fb-author-sub">Hace 2 horas · 🌐</div>
+        </div>
+      </div>
+      <div class="fb-text">
+        🎉🎉 ¡GRAN SORTEO POR NUESTRO ANIVERSARIO! 🎉🎉<br><br>
+        Estamos regalando <strong>S/. 5,000 en efectivo</strong> a 3 ganadores. Para participar:<br><br>
+        1️⃣ Dale ME GUSTA a esta publicación<br>
+        2️⃣ Comparte en tu muro<br>
+        3️⃣ Escríbenos por MENSAJE PRIVADO con tu DNI y número de cuenta para coordinar la entrega<br><br>
+        ¡Los ganadores serán anunciados HOY a las 6pm! ⏰
+      </div>
+      <div class="fb-img">🏆 [Imagen del logo BCP con billetes]</div>
+      <div class="fb-reactions">
+        <span class="fb-reaction">👍 4,823</span>
+        <span class="fb-reaction">💬 1,204 comentarios</span>
+        <span class="fb-reaction">↗ 892 compartidos</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-7">
+  <div class="fb-wrap">
+    <div class="fb-topbar">
+      <span class="fb-logo">f</span>
+      <span style="font-size:.85rem;color:#b0b3b8">Messenger</span>
+    </div>
+    <div class="fb-post">
+      <div class="fb-author">
+        <div class="fb-avatar" style="background:#e17055">C</div>
+        <div>
+          <div class="fb-author-name">Carlos Huamán</div>
+          <div class="fb-author-sub">Tu amigo de hace años</div>
+        </div>
+      </div>
+      <div class="fb-text">
+        Hola compadre! ¿Cómo estás?<br><br>
+        Mira, te cuento que empecé a invertir en una plataforma de criptomonedas hace 3 meses y ya gané S/. 8,400. Es increíble.<br><br>
+        El sistema es seguro, registrado. Solo necesitas empezar con S/. 500 y en 2 semanas tienes el doble garantizado. Te mando el link para que te registres, ¿te animas?<br><br>
+        <span class="sms-link">cripto-inversiones-peru.com/registro</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-esc-8">
+  <div class="fb-wrap">
+    <div class="fb-topbar">
+      <span class="fb-logo">f</span>
+      <span style="font-size:.85rem;color:#b0b3b8">Empleo Perú 2025 (Grupo)</span>
+    </div>
+    <div class="fb-post">
+      <div class="fb-author">
+        <div class="fb-avatar" style="background:#00b894">E</div>
+        <div>
+          <div class="fb-author-name">EmpresaGlobal RRHH</div>
+          <div class="fb-author-sub">Hace 5 horas</div>
+        </div>
+      </div>
+      <div class="fb-text">
+        🔥 URGENTE — Se necesita personal para trabajo DESDE CASA 🏠<br><br>
+        ✅ Sueldo: S/. 2,800 mensuales<br>
+        ✅ Horario flexible<br>
+        ✅ Sin experiencia necesaria<br>
+        ✅ Mayores de 50 años bienvenidos<br><br>
+        Para postular, envíenos sus datos por mensaje privado. Se requiere un <strong>pago de inscripción de S/. 80</strong> para el kit de trabajo y credenciales del sistema. El monto se descuenta del primer sueldo.<br><br>
+        ¡Plazas limitadas! Solo quedan 3 vacantes.
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
