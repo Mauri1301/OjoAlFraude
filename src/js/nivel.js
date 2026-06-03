@@ -86,7 +86,30 @@ export function renderEscenario(n) {
     if (tpl) placeholder.replaceWith(tpl.content.cloneNode(true));
   }
 
+  // Convertir spans de link en <a> reales si el escenario tiene linkUrl
+  if (esc.linkUrl) {
+    container.querySelectorAll('.wa-link, .sms-link, .email-link').forEach(span => {
+      const a = document.createElement('a');
+      a.className   = span.className;
+      a.href        = esc.linkUrl;
+      a.target      = '_blank';
+      a.rel         = 'noopener';
+      a.textContent = span.textContent;
+      a.addEventListener('click', () => clicoEnlaceFraude(n));
+      span.replaceWith(a);
+    });
+  }
+
   window.scrollTo(0, 0);
+}
+
+// Registra respuesta incorrecta automáticamente cuando el usuario hace clic en el link
+export function clicoEnlaceFraude(n) {
+  const escenarios = getEscenariosNivel(n);
+  const esc = escenarios[STATE.escenarioIdx];
+  // Seleccionar cualquier opción incorrecta
+  const wrongIdx = esc.correcta === 0 ? 1 : 0;
+  responderEscenario(n, wrongIdx);
 }
 
 export function responderEscenario(n, opcion) {

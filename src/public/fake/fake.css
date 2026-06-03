@@ -1,0 +1,56 @@
+/* Estilos compartidos de las páginas falsas de phishing — OjoAlFraude */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f2f5;padding-bottom:70px;--brand:#005da6}
+
+/* Banner de advertencia */
+.warn-bar{background:#b71c1c;color:#fff;padding:10px 16px;font-size:.82rem;font-weight:600;text-align:center;line-height:1.4;position:sticky;top:0;z-index:200}
+.warn-bar span{font-size:1rem;margin-right:4px}
+
+/* Barra de navegador simulada */
+.sim-browser{background:#2c2c2c;padding:8px 12px;display:flex;align-items:center;gap:8px;position:sticky;top:42px;z-index:199}
+.sim-dots{display:flex;gap:5px}
+.sim-dot{width:10px;height:10px;border-radius:50%}
+.sim-url-wrap{flex:1;display:flex;align-items:center;gap:6px;position:relative}
+.sim-url{flex:1;background:#1a1a1a;border:1.5px solid #e53935;border-radius:20px;padding:5px 12px;font-size:.78rem;color:#fff;display:flex;align-items:center;gap:6px;overflow:hidden}
+.sim-url mark{background:rgba(229,57,53,.35);color:#ff6b6b;border-radius:3px;padding:0 2px;font-style:normal}
+.lock-warn{color:#e53935;flex-shrink:0}
+
+/* Badges numerados + tooltips */
+.tip-wrap{position:absolute;z-index:100}
+.bdg{width:22px;height:22px;border-radius:50%;background:#e53935;color:#fff;font-size:.72rem;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(229,57,53,.5);user-select:none;border:2px solid #fff}
+.tip{visibility:hidden;opacity:0;pointer-events:none;position:absolute;background:#1a0000;color:#fff;border:1.5px solid #e53935;border-radius:10px;padding:10px 12px;font-size:.78rem;line-height:1.45;width:220px;z-index:300;transition:opacity .18s}
+.tip strong{color:#ff8a80}
+.tip::before{content:'';position:absolute;border:6px solid transparent}
+.tip.up{bottom:calc(100% + 8px);left:50%;transform:translateX(-50%)}
+.tip.up::before{border-top-color:#e53935;bottom:-12px;left:50%;transform:translateX(-50%)}
+.tip.down{top:calc(100% + 8px);left:50%;transform:translateX(-50%)}
+.tip.down::before{border-bottom-color:#e53935;top:-12px;left:50%;transform:translateX(-50%)}
+.tip.left{left:0;transform:none}
+.tip.right{right:0;left:auto;transform:none}
+.tip-wrap:hover .tip,.tip-wrap.open .tip{visibility:visible;opacity:1;pointer-events:auto}
+
+/* Cabecera de marca */
+.brand-header{background:var(--brand);padding:14px 20px}
+.brand-logo{color:#fff;font-size:1.3rem;font-weight:900;letter-spacing:1px}
+.brand-tagline{color:rgba(255,255,255,.7);font-size:.7rem}
+
+/* Contenido */
+.fake-main{padding:20px;max-width:420px;margin:0 auto}
+.fake-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.card-title{font-size:1rem;font-weight:700;color:var(--brand);margin-bottom:14px;position:relative;display:inline-block}
+.alert-msg{border-radius:8px;padding:10px 12px;font-size:.82rem;margin-bottom:16px;position:relative;line-height:1.4}
+.alert-red{background:#fdecea;border:1px solid #e53935;color:#b71c1c}
+.alert-amber{background:#fff8e1;border:1px solid #ffc107;color:#7a5c00}
+.alert-green{background:#e8f5e9;border:1px solid #4caf50;color:#1b5e20}
+.money{font-weight:700;text-align:center}
+.flabel{font-size:.8rem;color:#555;margin-bottom:4px;margin-top:12px}
+.finput{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:.9rem;color:#aaa;background:#f9f9f9}
+.row{display:flex;gap:8px}.row>div{flex:1}
+.refcode{background:#f5f5f5;border-radius:6px;padding:6px 10px;font-size:.75rem;color:#666;margin-top:12px;font-family:monospace;position:relative}
+.fake-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:8px;padding:13px;font-size:.95rem;font-weight:700;margin-top:16px;opacity:.7;font-family:inherit;cursor:default}
+
+/* Barra de cierre */
+.close-bar{position:fixed;bottom:0;left:0;right:0;background:#1a0000;border-top:2px solid #e53935;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:500}
+.close-txt{font-size:.75rem;color:#aaa}
+.btn-close{background:#e53935;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-close:hover{background:#b71c1c}

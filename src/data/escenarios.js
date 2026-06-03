@@ -4,7 +4,7 @@ export const ESCENARIOS = [
     nivel: 1, idx: 0,
     titulo: 'El mensaje del banco',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
-    tplId: 'tpl-esc-0',
+    tplId: 'tpl-esc-0', linkUrl: '/fake/bcp.html',
     pregunta: '¿Qué haces con este mensaje?',
     opciones: [
       'Entras al enlace de inmediato para desbloquear tu cuenta',
@@ -26,7 +26,7 @@ export const ESCENARIOS = [
     nivel: 1, idx: 1,
     titulo: 'El correo de SUNAT',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
-    tplId: 'tpl-esc-1',
+    tplId: 'tpl-esc-1', linkUrl: '/fake/sunat.html',
     pregunta: '¿Este correo de SUNAT es real?',
     opciones: [
       'Sí, ingreso al enlace para reclamar mi devolución',
@@ -72,7 +72,7 @@ export const ESCENARIOS = [
     nivel: 2, idx: 0,
     titulo: 'El SMS de Movistar',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
-    tplId: 'tpl-esc-3',
+    tplId: 'tpl-esc-3', linkUrl: '/fake/movistar.html',
     pregunta: '¿Qué haces con este SMS de Movistar?',
     opciones: [
       'Ingresas al enlace porque no quieres perder tu línea',
@@ -94,7 +94,7 @@ export const ESCENARIOS = [
     nivel: 2, idx: 1,
     titulo: 'La compra sospechosa',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
-    tplId: 'tpl-esc-4',
+    tplId: 'tpl-esc-4', linkUrl: '/fake/bcp.html',
     pregunta: '¿Cómo reaccionas ante este SMS del BCP?',
     opciones: [
       'Ingresas al enlace urgentemente para bloquear el cargo',
@@ -116,7 +116,7 @@ export const ESCENARIOS = [
     nivel: 2, idx: 2,
     titulo: 'El pago del delivery',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
-    tplId: 'tpl-esc-5',
+    tplId: 'tpl-esc-5', linkUrl: '/fake/olva.html',
     pregunta: '¿Pagas los S/. 8.50 para liberar tu paquete?',
     opciones: [
       'Sí, son solo S/. 8.50, no es mucho dinero y quiero mi paquete',
@@ -162,7 +162,7 @@ export const ESCENARIOS = [
     nivel: 3, idx: 1,
     titulo: 'El amigo hackeado',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
-    tplId: 'tpl-esc-7',
+    tplId: 'tpl-esc-7', linkUrl: '/fake/cripto.html',
     pregunta: '¿Qué haces cuando tu amigo Carlos te ofrece esto?',
     opciones: [
       'Te registras. Si Carlos ganó, tú también puedes',

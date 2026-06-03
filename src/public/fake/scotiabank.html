@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Scotiabank - Seguridad</title>
+<link rel="stylesheet" href="./fake.css">
+</head>
+<body style="--brand:#EC111A">
+<div class="warn-bar"><span>⚠️</span> Simulación educativa — Pasa el mouse sobre los <strong>números rojos</strong> para ver por qué esta página es fraudulenta</div>
+<div class="sim-browser">
+  <div class="sim-dots"><div class="sim-dot" style="background:#ff5f57"></div><div class="sim-dot" style="background:#febc2e"></div><div class="sim-dot" style="background:#28c840"></div></div>
+  <div class="sim-url-wrap">
+    <div class="sim-url"><span class="lock-warn">⚠️</span> <span id="sim-url-text">scotia-fraude.alerta-pe.net/bloquear</span></div>
+    <div class="tip-wrap" style="top:-8px;right:-8px"><div class="bdg">1</div><div class="tip down right"><strong>Dominio falso</strong><br>El dominio real es <strong style="color:#6bcb77">scotiabank.com.pe</strong>. "alerta-pe.net" no pertenece al Scotiabank.</div></div>
+  </div>
+</div>
+<div class="brand-header"><div class="brand-logo">Scotiabank</div><div class="brand-tagline">Banca en Línea</div></div>
+<div class="fake-main">
+  <div class="fake-card">
+    <div class="alert-msg alert-red">💳 Se registró un cargo de <strong>S/. 2,340.00</strong> en su tarjeta *4521. Si no lo reconoce, confirme su identidad para bloquearlo.
+      <div class="tip-wrap" style="position:absolute;top:-10px;right:-10px"><div class="bdg">2</div><div class="tip up right"><strong>Cargo falso</strong><br>Los bancos no envían links por SMS para "confirmar identidad" ante cargos. Llama al número del reverso de tu tarjeta.</div></div>
+    </div>
+    <div style="position:relative;display:inline-block">
+      <div class="card-title">Confirme su identidad</div>
+      <div class="tip-wrap" style="position:absolute;top:-10px;right:-28px"><div class="bdg">3</div><div class="tip up"><strong>Pide datos de tarjeta</strong><br>Ningún banco te pide el número completo de tarjeta y CVV para "bloquear" un cargo.</div></div>
+    </div>
+    <div class="flabel">Número de tarjeta</div>
+    <input class="finput" type="text" placeholder="0000 0000 0000 0000" disabled>
+    <div class="row" style="margin-top:12px">
+      <div><div class="flabel" style="margin-top:0">Vencimiento</div><input class="finput" type="text" placeholder="MM/AA" disabled></div>
+      <div><div class="flabel" style="margin-top:0">CVV</div><input class="finput" type="text" placeholder="000" disabled></div>
+    </div>
+    <div class="alert-msg alert-amber" style="margin-top:12px;margin-bottom:0">⏱️ Dispone de <strong>20 minutos</strong> antes de que el cargo sea aprobado.
+      <div class="tip-wrap" style="position:absolute;top:-10px;right:-10px"><div class="bdg">4</div><div class="tip up right"><strong>Urgencia extrema</strong><br>"20 minutos" es la señal más obvia de fraude: busca que actúes sin verificar.</div></div>
+    </div>
+    <button class="fake-btn">CONFIRMAR Y BLOQUEAR CARGO</button>
+  </div>
+</div>
+<div class="close-bar"><span class="close-txt">⚠️ Esto es una simulación educativa</span><button class="btn-close" onclick="cerrar()">Cerrar pestaña ✕</button></div>
+<script src="./fake.js"></script>
+</body>
+</html>

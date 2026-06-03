@@ -19,6 +19,7 @@ import {
   iniciarNivel,
   responderEscenario,
   siguienteEscenario,
+  clicoEnlaceFraude,
 } from './nivel.js';
 
 import { finalizarSUS, selectSUS } from './sus.js';
@@ -29,7 +30,7 @@ import {
   cargarEscenarios, cargarPreguntas,
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
-  importarContenido,
+  importarContenido, sincronizarEnlaces,
 } from './admin-ui.js';
 
 
@@ -81,6 +82,7 @@ Object.assign(window, {
   iniciarNivel,
   responderEscenario,
   siguienteEscenario,
+  clicoEnlaceFraude,
   finalizarSUS,
   selectSUS,
   exportarResultados,
@@ -98,6 +100,7 @@ Object.assign(window, {
   editarPregunta,
   guardarEdicion,
   importarContenido,
+  sincronizarEnlaces,
 });
 
 /* ── Animación de entrada ── */

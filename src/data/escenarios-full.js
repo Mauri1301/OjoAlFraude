@@ -7,7 +7,7 @@ export const ESCENARIOS_FULL = [
   ════════════════════════════════════════════ */
 
   {
-    nivel: 1, idx: 0, activo: true,
+    nivel: 1, idx: 0, activo: true, linkUrl: '/fake/bcp.html?u=bcp-seguridad-peru.verificacion.com',
     titulo: 'El mensaje del banco',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
@@ -30,7 +30,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 1, activo: true,
+    nivel: 1, idx: 1, activo: true, linkUrl: '/fake/sunat.html',
     titulo: 'El correo de SUNAT',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
@@ -77,7 +77,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 3, activo: true,
+    nivel: 1, idx: 3, activo: true, linkUrl: '/fake/bbva.html?u=bbva-reactivacion.cuenta-pe.net',
     titulo: 'La cuenta de BBVA por cerrarse',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
@@ -101,7 +101,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 4, activo: true,
+    nivel: 1, idx: 4, activo: true, linkUrl: '/fake/interbank.html',
     titulo: 'El bono de Interbank',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
@@ -124,7 +124,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 5, activo: true,
+    nivel: 1, idx: 5, activo: true, linkUrl: '/fake/reniec.html',
     titulo: 'El DNI digital de RENIEC',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
@@ -148,7 +148,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 6, activo: true,
+    nivel: 1, idx: 6, activo: true, linkUrl: '/fake/claro.html',
     titulo: 'La recarga gratis de Claro',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
@@ -171,7 +171,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 1, idx: 7, activo: true,
+    nivel: 1, idx: 7, activo: true, linkUrl: '/fake/mintra.html',
     titulo: 'El bono del Ministerio de Trabajo',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
@@ -222,7 +222,7 @@ export const ESCENARIOS_FULL = [
   ════════════════════════════════════════════ */
 
   {
-    nivel: 2, idx: 0, activo: true,
+    nivel: 2, idx: 0, activo: true, linkUrl: '/fake/movistar.html',
     titulo: 'El SMS de Movistar',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -244,7 +244,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 1, activo: true,
+    nivel: 2, idx: 1, activo: true, linkUrl: '/fake/bcp.html?u=bcp.alerta-fraude.com/bloquear',
     titulo: 'La compra sospechosa',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -266,7 +266,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 2, activo: true,
+    nivel: 2, idx: 2, activo: true, linkUrl: '/fake/olva.html',
     titulo: 'El pago del delivery',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -288,7 +288,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 3, activo: true,
+    nivel: 2, idx: 3, activo: true, linkUrl: '/fake/claro.html?u=claro-pagos.deuda-pe.net',
     titulo: 'La deuda de Claro',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -310,7 +310,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 4, activo: true,
+    nivel: 2, idx: 4, activo: true, linkUrl: '/fake/bbva.html?u=bbva-bloqueo.alerta-pe.net',
     titulo: 'La transferencia del BBVA',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -332,7 +332,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 5, activo: true,
+    nivel: 2, idx: 5, activo: true, linkUrl: '/fake/interbank.html?u=interbank-cashback.bonos.pe/activar',
     titulo: 'El cashback de Interbank',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -354,7 +354,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 6, activo: true,
+    nivel: 2, idx: 6, activo: true, linkUrl: '/fake/bcp.html?u=bcp-cancelar.pin-alerta.com',
     titulo: 'El cambio de PIN del BCP',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -376,7 +376,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 7, activo: true,
+    nivel: 2, idx: 7, activo: true, linkUrl: '/fake/entel.html',
     titulo: 'El iPhone de Entel',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -398,7 +398,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 2, idx: 8, activo: true,
+    nivel: 2, idx: 8, activo: true, linkUrl: '/fake/scotiabank.html',
     titulo: 'El cargo del Scotiabank',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
@@ -449,7 +449,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 3, idx: 1, activo: true,
+    nivel: 3, idx: 1, activo: true, linkUrl: '/fake/cripto.html',
     titulo: 'El amigo hackeado',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
@@ -518,7 +518,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 3, idx: 4, activo: true,
+    nivel: 3, idx: 4, activo: true, linkUrl: '/fake/instagram.html',
     titulo: 'El sorteo de Instagram',
     canal: 'Instagram', badge: 'badge-danger', badgeLabel: 'Instagram',
     mensaje: {
@@ -564,7 +564,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 3, idx: 6, activo: true,
+    nivel: 3, idx: 6, activo: true, linkUrl: '/fake/midis.html',
     titulo: 'El bono del gobierno en Facebook',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
@@ -588,7 +588,7 @@ export const ESCENARIOS_FULL = [
   },
 
   {
-    nivel: 3, idx: 7, activo: true,
+    nivel: 3, idx: 7, activo: true, linkUrl: '/fake/rappi.html',
     titulo: 'El pago pendiente del delivery',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {

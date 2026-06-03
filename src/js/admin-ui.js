@@ -1,6 +1,6 @@
 /* Panel de administrador */
 import { goTo } from './state.js';
-import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent } from '../firebase/db.js';
+import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
 import { TEST_QUESTIONS } from '../data/test-questions.js';
 import { ESCENARIOS_FULL } from '../data/escenarios-full.js';
@@ -420,5 +420,22 @@ export async function importarContenido() {
     alert('Error al importar: ' + err.message);
     btn.disabled = false;
     btn.textContent = '📥 Importar contenido base';
+  }
+}
+
+// Sincroniza los enlaces a páginas falsas (linkUrl) hacia los escenarios ya existentes en Firestore
+export async function sincronizarEnlaces() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Sincronizando...';
+  try {
+    const n = await syncScenarioLinks(ESCENARIOS_FULL);
+    alert(`✅ ${n} escenario(s) actualizado(s) con su enlace de página falsa.`);
+    btn.disabled = false;
+    btn.textContent = '🔗 Sincronizar enlaces de páginas falsas';
+  } catch (err) {
+    alert('Error al sincronizar: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🔗 Sincronizar enlaces de páginas falsas';
   }
 }
