@@ -263,7 +263,7 @@
     <span class="topbar-logo">🛡️ OjoAlFraude</span>
     <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
   </div>
-  <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+  <div class="container content-z flex-col gap-24" style="padding-top:32px;padding-bottom:40px">
     <div class="text-center flex-col gap-16">
       <span class="shield-big">🛡️</span>
       <div class="flex-col gap-8">
@@ -288,8 +288,10 @@
         </div>
       </div>
     </div>
-    <div class="flex-col gap-12">
-      <button class="btn btn-primary" onclick="iniciarPretest()">🚀 ¡Empezar ahora!</button>
+    <button class="btn btn-primary" onclick="iniciarPretest()">🚀 ¡Empezar ahora!</button>
+    <div class="card flex-col gap-12">
+      <div class="title-sm">📋 Mis sesiones anteriores</div>
+      <div id="bienvenida-historial" class="bienvenida-historial-list"><p class="body-sm text-muted">Cargando...</p></div>
     </div>
   </div>
 </div>
@@ -452,8 +454,8 @@
 <div id="overlay-sus" class="overlay">
   <div class="modal sus-modal">
     <div class="flex-col gap-4 mb-16">
-      <h3 class="title-md">🧩 Encuesta de usabilidad</h3>
-      <p class="body-sm text-muted">5 preguntas cortas sobre tu experiencia. Escala del 1 al 5.</p>
+      <h3 class="title-md">🧩 Encuesta de concientización</h3>
+      <p class="body-sm text-muted">3 preguntas cortas sobre lo que aprendiste.</p>
     </div>
     <div id="sus-content" class="flex-col gap-20"></div>
     <button id="btn-sus" class="btn btn-primary hidden mt-16" onclick="finalizarSUS()">

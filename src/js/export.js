@@ -16,7 +16,7 @@ export function exportarResultados() {
       historial:               STATE.historial
     },
     posttest: { respuestas: STATE.posttest, score: STATE.posttestScore },
-    sus:      { respuestas: STATE.sus,      score: STATE.susScore },
+    sus:      { respuestas: STATE.sus },
     exportado: new Date().toISOString()
   };
 
@@ -46,6 +46,5 @@ export function reiniciarJuego() {
   STATE.escenariosActuales = {};
   delete STATE.pretestScore;
   delete STATE.posttestScore;
-  delete STATE.susScore;
   goTo('p-bienvenida');
 }

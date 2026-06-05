@@ -141,11 +141,6 @@ export function renderFin() {
         <span class="body-md text-muted">Post-test</span>
         <span class="bold">${STATE.posttestScore} / 5 correctas</span>
       </div>
-      <div class="divider"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="body-md text-muted">Usabilidad (SUS)</span>
-        <span class="bold">${STATE.susScore}%</span>
-      </div>
       ${STATE.maxWinstreak >= 2 ? `
       <div class="divider"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">

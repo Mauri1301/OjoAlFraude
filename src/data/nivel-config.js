@@ -20,9 +20,15 @@ export const NIVEL_CONFIG = [
 ];
 
 export const SUS_PREGUNTAS = [
-  'Creo que me gustaría usar este juego con frecuencia',
-  'El juego fue fácil de usar y entender',
-  'Las instrucciones y mensajes fueron claros',
-  'Me sentí seguro/a y cómodo/a usando el juego',
-  'Aprendí cosas útiles que puedo aplicar en mi vida diaria'
+  'Después de usar este juego, siento que sé identificar mejor un mensaje fraudulento en mi celular.',
+  'Ahora me siento más alerta cuando recibo mensajes de números desconocidos o de instituciones pidiéndome datos personales.',
+  'Si recibo un mensaje sospechoso, sé qué debo hacer para no caer en un fraude digital.'
+];
+
+export const LIKERT_LABELS = [
+  'Totalmente en desacuerdo',
+  'En desacuerdo',
+  'Ni de acuerdo ni en desacuerdo',
+  'De acuerdo',
+  'Totalmente de acuerdo'
 ];

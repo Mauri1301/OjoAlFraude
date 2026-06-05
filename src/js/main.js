@@ -2,7 +2,7 @@
 
 import { STATE, goTo } from './state.js';
 import { onAuthChange } from '../firebase/auth.js';
-import { getUserProfile } from '../firebase/db.js';
+import { getUserProfile, getUserSessions } from '../firebase/db.js';
 import { cargarContenido } from './content-loader.js';
 
 import {
@@ -59,6 +59,7 @@ onAuthChange(async (user) => {
         cargarPanelAdmin();
       } else {
         goTo('p-bienvenida');
+        cargarHistorialBienvenida(user.uid);
       }
     }
   } else {
@@ -116,6 +117,48 @@ Object.assign(window, {
   sincronizarEnlaces,
   sincronizarConsequencias,
 });
+
+/* ── Historial de sesiones en bienvenida ── */
+async function cargarHistorialBienvenida(uid) {
+  const el = document.getElementById('bienvenida-historial');
+  if (!el) return;
+  try {
+    const sessions = await getUserSessions(uid);
+    if (!sessions.length) {
+      el.innerHTML = '<p class="body-sm text-muted">Aún no has completado ninguna sesión.</p>';
+      return;
+    }
+    el.innerHTML = sessions.map(s => {
+      const fecha    = s.completadoEn?.toDate
+        ? s.completadoEn.toDate().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        : '—';
+      const pts      = s.juego?.puntaje_total ?? null;
+      const streak   = s.juego?.max_winstreak ?? 0;
+      const ptsColor = pts === null ? 'var(--text-muted)' : pts >= 60 ? 'var(--accent3)' : pts >= 36 ? 'var(--accent)' : 'var(--accent2)';
+
+      return `
+        <div class="bienvenida-session-item">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="body-sm bold">Sesión ${s.sessionNumber}</span>
+            <span class="body-sm text-muted">${fecha}</span>
+          </div>
+          <div class="bienvenida-scores">
+            <div class="bienvenida-stat">
+              <span class="body-sm text-muted">Puntaje</span>
+              <span class="title-sm" style="color:${ptsColor}">${pts !== null ? pts + ' pts' : '—'}</span>
+            </div>
+            ${streak >= 2 ? `
+            <div class="bienvenida-stat">
+              <span class="body-sm text-muted">Mejor racha</span>
+              <span class="title-sm" style="color:#ff8c42">🔥 x${streak}</span>
+            </div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  } catch {
+    el.innerHTML = '<p class="body-sm text-muted">No se pudo cargar el historial.</p>';
+  }
+}
 
 /* ── Animación de entrada ── */
 document.addEventListener('DOMContentLoaded', () => {

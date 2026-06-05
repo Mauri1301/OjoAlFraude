@@ -362,26 +362,28 @@ function buildGameSection(historial = []) {
     </div>`;
 }
 
+const LIKERT_LABELS_SHORT = ['T. desacuerdo', 'Desacuerdo', 'Neutral', 'De acuerdo', 'T. de acuerdo'];
+
 function buildSUSSection(respuestas = {}) {
   const rows = SUS_PREGUNTAS.map((p, i) => {
     const val = respuestas?.[`q${i}`];
     const bar = val ? `<div style="display:flex;gap:4px">${[1,2,3,4,5].map(n =>
-      `<div style="width:18px;height:18px;border-radius:4px;background:${n <= val ? 'var(--accent)' : 'var(--surface2)'};border:1px solid var(--border)"></div>`
+      `<div title="${LIKERT_LABELS_SHORT[n-1]}" style="width:18px;height:18px;border-radius:4px;background:${n <= val ? 'var(--accent)' : 'var(--surface2)'};border:1px solid var(--border)"></div>`
     ).join('')}</div>` : '<span class="body-sm text-muted">—</span>';
 
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
         <span class="body-sm text-muted" style="flex:1">${i + 1}. ${p}</span>
-        <div style="display:flex;align-items:center;gap:6px">
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
           ${bar}
-          <span class="body-sm bold" style="min-width:20px;text-align:right">${val ?? '—'}</span>
+          <span class="body-sm bold" style="min-width:20px;text-align:right">${val ? LIKERT_LABELS_SHORT[val - 1] : '—'}</span>
         </div>
       </div>`;
   }).join('');
 
   return `
-    <div class="flex-col gap-10" style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px">
-      <div class="title-sm">🧩 SUS (Usabilidad)</div>
+    <div class="flex-col gap-12" style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px">
+      <div class="title-sm">🧩 Encuesta complementaria</div>
       ${rows}
     </div>`;
 }
