@@ -76,12 +76,12 @@ export async function submitRegister() {
     errEl.classList.remove('hidden');
     return;
   }
-  if (pwd.length < 6) {
+  if (!STATE.currentUser && pwd.length < 6) {
     errEl.textContent = 'La contraseña debe tener al menos 6 caracteres';
     errEl.classList.remove('hidden');
     return;
   }
-  if (pwd !== pwdConf) {
+  if (!STATE.currentUser && pwd !== pwdConf) {
     errEl.textContent = 'Las contraseñas no coinciden';
     errEl.classList.remove('hidden');
     return;
@@ -93,21 +93,37 @@ export async function submitRegister() {
   btn.textContent = 'Creando cuenta...';
 
   try {
-    const cred = await registerWithEmail(email, pwd);
-    const uid  = cred.user.uid;
+    let uid, userEmail;
+
+    if (STATE.currentUser) {
+      // Usuario ya autenticado — solo guardar perfil
+      uid       = STATE.currentUser.uid;
+      userEmail = STATE.currentUser.email;
+    } else {
+      const cred = await registerWithEmail(email, pwd);
+      uid       = cred.user.uid;
+      userEmail = email;
+      STATE.currentUser = cred.user;
+    }
 
     const profile = {
       ...profileData,
-      email,
+      email: userEmail,
       uid,
       creadoEn: new Date().toISOString(),
     };
 
     await saveUserProfile(uid, profile);
 
-    STATE.participante = profile;
-    STATE.currentUser  = cred.user;
+    // Restaurar campos de contraseña por si acaso
+    const pwdRow  = document.getElementById('reg-pwd')?.closest('.form-group');
+    const confRow = document.getElementById('reg-pwd-conf')?.closest('.form-group');
+    const emailEl = document.getElementById('reg-email');
+    if (pwdRow)  pwdRow.style.display  = '';
+    if (confRow) confRow.style.display = '';
+    if (emailEl) { emailEl.readOnly = false; emailEl.style.opacity = ''; emailEl.style.cursor = ''; }
 
+    STATE.participante = profile;
     goTo('p-bienvenida');
   } catch (err) {
     btn.disabled    = false;

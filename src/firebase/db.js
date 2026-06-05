@@ -1,6 +1,6 @@
 import {
   getFirestore, doc, setDoc, getDoc, updateDoc,
-  collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch,
+  collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch, deleteDoc,
 } from 'firebase/firestore';
 import { app } from './config.js';
 
@@ -13,6 +13,14 @@ export async function saveUserProfile(uid, profileData) {
 export async function getUserProfile(uid) {
   const snap = await getDoc(doc(db, 'users', uid));
   return snap.exists() ? snap.data() : null;
+}
+
+export async function deleteParticipante(uid) {
+  const sessionsSnap = await getDocs(query(collection(db, 'sessions'), where('userId', '==', uid)));
+  const batch = writeBatch(db);
+  sessionsSnap.docs.forEach(d => batch.delete(d.ref));
+  batch.delete(doc(db, 'users', uid));
+  await batch.commit();
 }
 
 export async function saveSession(uid, data) {
@@ -81,6 +89,28 @@ export async function updateQuestion(firestoreId, data) {
 
 // Sincroniza el campo linkUrl de los escenarios locales hacia los docs ya existentes en Firestore,
 // emparejando por (nivel, idx). No duplica documentos.
+export async function syncOpciones(localScenarios) {
+  const snap = await getDocs(collection(db, 'scenarios'));
+  const batch = writeBatch(db);
+  let count = 0;
+  snap.docs.forEach(d => {
+    const data  = d.data();
+    const local = localScenarios.find(s => s.nivel === data.nivel && s.idx === data.idx);
+    if (!local) return;
+    const updates = {};
+    if (local.opciones && JSON.stringify(local.opciones) !== JSON.stringify(data.opciones))
+      updates.opciones = local.opciones;
+    if (local.consecuencia_ok && local.consecuencia_ok !== data.consecuencia_ok)
+      updates.consecuencia_ok = local.consecuencia_ok;
+    if (Object.keys(updates).length) {
+      batch.update(d.ref, updates);
+      count++;
+    }
+  });
+  if (count) await batch.commit();
+  return count;
+}
+
 export async function syncConsequencias(localScenarios) {
   const snap = await getDocs(collection(db, 'scenarios'));
   const batch = writeBatch(db);

@@ -44,7 +44,10 @@
 <div id="p-admin-detail" class="screen">
   <div class="topbar">
     <button class="topbar-btn" onclick="cargarPanelAdmin()">← Volver</button>
-    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    <div style="display:flex;gap:8px">
+      <button id="btn-eliminar-participante" class="topbar-btn" style="color:var(--accent2);border-color:var(--accent2)">🗑️ Eliminar participante</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
   </div>
   <div class="container content-z flex-col gap-20">
     <div class="flex-col gap-4 mt-8">
@@ -91,6 +94,7 @@
     </div>
     <button class="btn btn-ghost" onclick="sincronizarEnlaces()">🔗 Sincronizar enlaces de páginas falsas</button>
     <button class="btn btn-ghost" onclick="sincronizarConsequencias()">📝 Sincronizar consecuencias</button>
+    <button class="btn btn-ghost" onclick="sincronizarOpciones()">🔄 Sincronizar opciones y respuestas</button>
     <div id="admin-scenarios-list" class="flex-col gap-8"></div>
   </div>
 </div>

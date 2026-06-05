@@ -34,7 +34,7 @@ import {
   cargarEscenarios, cargarPreguntas,
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
-  importarContenido, sincronizarEnlaces, sincronizarConsequencias, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab,
+  importarContenido, sincronizarEnlaces, sincronizarConsequencias, sincronizarOpciones, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab, eliminarParticipante,
 } from './admin-ui.js';
 
 
@@ -47,6 +47,22 @@ onAuthChange(async (user) => {
       try {
         const profile = await getUserProfile(user.uid);
         if (profile) STATE.participante = { ...profile, uid: user.uid };
+        else {
+          // Usuario autenticado sin perfil — ocultar contraseña y pre-llenar email
+          const emailEl = document.getElementById('reg-email');
+          const pwdRow  = document.getElementById('reg-pwd')?.closest('.form-group');
+          const confRow = document.getElementById('reg-pwd-conf')?.closest('.form-group');
+          if (emailEl) {
+            emailEl.value = user.email;
+            emailEl.readOnly = true;
+            emailEl.style.opacity = '0.5';
+            emailEl.style.cursor  = 'not-allowed';
+          }
+          if (pwdRow)  pwdRow.style.display  = 'none';
+          if (confRow) confRow.style.display = 'none';
+          goTo('p-register');
+          return;
+        }
       } catch { }
     }
 
@@ -105,6 +121,7 @@ Object.assign(window, {
   verDetalleSesion,
   volverADetalle,
   switchTestTab,
+  eliminarParticipante,
   // admin — contenido
   cargarEscenarios,
   cargarPreguntas,
@@ -116,10 +133,12 @@ Object.assign(window, {
   importarContenido,
   sincronizarEnlaces,
   sincronizarConsequencias,
+  sincronizarOpciones,
+  cargarHistorialBienvenida,
 });
 
 /* ── Historial de sesiones en bienvenida ── */
-async function cargarHistorialBienvenida(uid) {
+export async function cargarHistorialBienvenida(uid) {
   const el = document.getElementById('bienvenida-historial');
   if (!el) return;
   try {
@@ -159,6 +178,13 @@ async function cargarHistorialBienvenida(uid) {
     el.innerHTML = '<p class="body-sm text-muted">No se pudo cargar el historial.</p>';
   }
 }
+
+/* ── Cargar historial al entrar a bienvenida ── */
+window.addEventListener('screen-change', ({ detail }) => {
+  if (detail.screen === 'p-bienvenida' && STATE.currentUser?.uid) {
+    cargarHistorialBienvenida(STATE.currentUser.uid);
+  }
+});
 
 /* ── Animación de entrada ── */
 document.addEventListener('DOMContentLoaded', () => {

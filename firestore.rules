@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Perfiles de usuario
+    match /users/{uid} {
+      allow read, write: if isAuthenticated() && request.auth.uid == uid;
+      allow read, write, delete: if isAdmin();
+    }
+
+    // Sesiones de juego
+    match /sessions/{sessionId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Escenarios y preguntas (contenido del juego)
+    match /scenarios/{scenarioId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /questions/{questionId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

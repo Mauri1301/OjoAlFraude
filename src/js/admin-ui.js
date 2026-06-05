@@ -1,6 +1,6 @@
 /* Panel de administrador */
 import { goTo } from './state.js';
-import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias } from '../firebase/db.js';
+import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias, syncOpciones, deleteParticipante } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
 import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
 import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
@@ -39,7 +39,10 @@ async function calcularTasaGeneral() {
   const card = document.getElementById('admin-tasa-general');
   if (!card) return;
   const participantes = _allUsers.filter(u => u.role !== 'admin');
-  if (!participantes.length) return;
+  if (!participantes.length) { card.style.display = 'none'; return; }
+  document.getElementById('admin-tasa-valor').textContent = '…';
+  document.getElementById('admin-tasa-detalle').textContent = 'Calculando...';
+  card.style.display = 'flex';
 
   try {
     const todasLasSesiones = await Promise.all(participantes.map(u => getUserSessions(u.uid)));
@@ -50,7 +53,11 @@ async function calcularTasaGeneral() {
         if (h.correcto) totalCorrectos++;
       });
     });
-    if (!totalIntentos) return;
+    if (!totalIntentos) {
+      document.getElementById('admin-tasa-valor').textContent = '—';
+      document.getElementById('admin-tasa-detalle').textContent = 'Ningún participante ha completado sesiones aún.';
+      return;
+    }
     const tasa = Math.round(totalCorrectos / totalIntentos * 100);
     document.getElementById('admin-tasa-valor').textContent = tasa + '%';
     document.getElementById('admin-tasa-detalle').textContent =
@@ -103,6 +110,13 @@ export function filtrarParticipantes(query) {
 export async function verDetalleParticipante(uid) {
   const user = _allUsers.find(u => u.uid === uid);
   goTo('p-admin-detail');
+
+  const btnEliminar = document.getElementById('btn-eliminar-participante');
+  if (btnEliminar) {
+    btnEliminar.onclick = () => eliminarParticipante(uid);
+    btnEliminar.disabled = false;
+    btnEliminar.textContent = '🗑️ Eliminar participante';
+  }
 
   document.getElementById('detail-nombre').textContent = user?.nombre || 'Participante';
   document.getElementById('detail-info').textContent = [
@@ -275,6 +289,23 @@ export function verDetalleSesion(sessionId) {
 
 export function volverADetalle() {
   verDetalleParticipante(_currentUid);
+}
+
+export async function eliminarParticipante(uid) {
+  const user = _allUsers.find(u => u.uid === uid);
+  const nombre = user?.nombre || 'este participante';
+  if (!confirm(`¿Eliminar a ${nombre} y todas sus sesiones? Esta acción no se puede deshacer.`)) return;
+
+  const btn = document.getElementById('btn-eliminar-participante');
+  if (btn) { btn.disabled = true; btn.textContent = 'Eliminando...'; }
+
+  try {
+    await deleteParticipante(uid);
+    cargarPanelAdmin();
+  } catch (err) {
+    alert('Error al eliminar: ' + err.message);
+    if (btn) { btn.disabled = false; btn.textContent = '🗑️ Eliminar participante'; }
+  }
 }
 
 export function switchTestTab(tab) {
@@ -630,6 +661,22 @@ export async function importarContenido() {
     alert('Error al importar: ' + err.message);
     btn.disabled = false;
     btn.textContent = '📥 Importar contenido base';
+  }
+}
+
+export async function sincronizarOpciones() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Sincronizando...';
+  try {
+    const n = await syncOpciones(ESCENARIOS_FULL);
+    alert(`✅ ${n} escenario(s) actualizado(s) con nuevas opciones y consecuencia_ok.`);
+    btn.disabled = false;
+    btn.textContent = '🔄 Sincronizar opciones y respuestas';
+  } catch (err) {
+    alert('Error al sincronizar: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🔄 Sincronizar opciones y respuestas';
   }
 }
 
