@@ -9,43 +9,63 @@ import { ESCENARIOS } from '../data/escenarios.js';
 import { SUS_PREGUNTAS } from '../data/nivel-config.js';
 
 let _allUsers = [];
+let _sessions = [];
+let _currentUid = null;
 
 /* ── Lista de participantes ── */
 export async function cargarPanelAdmin() {
   goTo('p-admin');
+  const searchEl = document.getElementById('admin-search');
+  if (searchEl) searchEl.value = '';
   const container = document.getElementById('admin-participants');
   container.innerHTML = '<p class="body-sm text-muted">Cargando participantes...</p>';
 
   try {
     _allUsers = await getAllUsers();
-    const participantes = _allUsers.filter(u => u.role !== 'admin');
-
-    if (participantes.length === 0) {
-      container.innerHTML = '<p class="body-sm text-muted text-center mt-8">Aún no hay participantes registrados.</p>';
-      return;
-    }
-
-    container.innerHTML = participantes
-      .sort((a, b) => (b.sessionCount || 0) - (a.sessionCount || 0))
-      .map(u => `
-        <div class="card flex-col gap-8" style="cursor:pointer" onclick="verDetalleParticipante('${u.uid}')">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div style="display:flex;gap:12px;align-items:center">
-              <div class="admin-avatar">${(u.nombre || '?')[0].toUpperCase()}</div>
-              <div>
-                <div class="title-sm">${u.nombre || 'Sin nombre'}</div>
-                <div class="body-sm text-muted">${u.edad ? u.edad + ' años' : ''} · ${u.email || ''}</div>
-              </div>
-            </div>
-            <div class="badge ${(u.sessionCount || 0) > 0 ? 'badge-success' : 'badge-info'}">
-              ${u.sessionCount || 0} sesión${(u.sessionCount || 0) !== 1 ? 'es' : ''}
-            </div>
-          </div>
-        </div>
-      `).join('');
+    renderParticipantes(_allUsers.filter(u => u.role !== 'admin'));
   } catch (err) {
     container.innerHTML = `<span class="form-error">Error al cargar: ${err.message}</span>`;
   }
+}
+
+function renderParticipantes(participantes) {
+  const container = document.getElementById('admin-participants');
+
+  if (participantes.length === 0) {
+    container.innerHTML = '<p class="body-sm text-muted text-center mt-8">No se encontraron participantes.</p>';
+    return;
+  }
+
+  container.innerHTML = participantes
+    .sort((a, b) => (b.sessionCount || 0) - (a.sessionCount || 0))
+    .map(u => {
+      const sesiones = u.sessionCount || 0;
+      const genero = u.genero === 'M' ? 'Masculino' : u.genero === 'F' ? 'Femenino' : null;
+      const meta = [u.edad ? u.edad + ' años' : null, genero, u.email].filter(Boolean).join(' · ');
+      return `
+        <div class="admin-participant-card" onclick="verDetalleParticipante('${u.uid}')">
+          <div style="display:flex;gap:12px;align-items:center;flex:1;min-width:0">
+            <div class="admin-avatar" style="flex-shrink:0">${(u.nombre || '?')[0].toUpperCase()}</div>
+            <div style="min-width:0">
+              <div class="title-sm">${u.nombre || 'Sin nombre'}</div>
+              <div class="body-sm text-muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${meta}</div>
+            </div>
+          </div>
+          <div class="badge ${sesiones > 0 ? 'badge-success' : 'badge-info'}" style="flex-shrink:0">
+            ${sesiones} sesión${sesiones !== 1 ? 'es' : ''}
+          </div>
+        </div>`;
+    }).join('');
+}
+
+export function filtrarParticipantes(query) {
+  const participantes = _allUsers.filter(u => u.role !== 'admin');
+  if (!query.trim()) {
+    renderParticipantes(participantes);
+    return;
+  }
+  const q = query.toLowerCase();
+  renderParticipantes(participantes.filter(u => (u.nombre || '').toLowerCase().includes(q)));
 }
 
 /* ── Detalle de un participante ── */
@@ -64,14 +84,17 @@ export async function verDetalleParticipante(uid) {
   container.innerHTML = '<p class="body-sm text-muted">Cargando sesiones...</p>';
 
   try {
-    const sessions = await getUserSessions(uid);
+    _sessions = await getUserSessions(uid);
+    _currentUid = uid;
 
-    if (sessions.length === 0) {
+    if (_sessions.length === 0) {
       container.innerHTML = '<p class="body-sm text-muted text-center mt-8">Este participante no ha completado ninguna sesión.</p>';
       return;
     }
 
-    container.innerHTML = sessions.map(s => {
+    const maxPuntaje = Math.max(..._sessions.map(s => s.juego?.puntaje_total ?? -Infinity));
+
+    container.innerHTML = _sessions.map(s => {
       const fecha  = s.completadoEn?.toDate
         ? s.completadoEn.toDate().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
         : '—';
@@ -89,20 +112,34 @@ export async function verDetalleParticipante(uid) {
           </span>
         </div>`;
 
+      const tiemposValidos = (s.juego?.historial || []).filter(h => h.tiempoSegundos != null);
+      const tiempoTotal = tiemposValidos.length
+        ? tiemposValidos.reduce((acc, h) => acc + h.tiempoSegundos, 0)
+        : null;
+      const tiempoStr = tiempoTotal === null ? null
+        : tiempoTotal >= 60 ? `${Math.floor(tiempoTotal / 60)}m ${tiempoTotal % 60}s`
+        : `${tiempoTotal}s`;
+
+      const preColor  = typeof pre  === 'number' ? (pre  >= 4 ? 'var(--accent3)' : pre  >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
+      const postColor = typeof post === 'number' ? (post >= 4 ? 'var(--accent3)' : post >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
+
       return `
         <div class="card flex-col gap-12">
           <div style="display:flex;justify-content:space-between;align-items:center">
-            <div class="badge badge-warning">Sesión ${s.sessionNumber}</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="badge badge-warning">Sesión ${s.sessionNumber}</div>
+              ${typeof game === 'number' && game === maxPuntaje ? '<div class="badge badge-success">⭐ Mejor sesión</div>' : ''}
+            </div>
             <span class="body-sm text-muted">${fecha}</span>
           </div>
-          <div class="admin-scores-grid">
+          <div class="admin-scores-grid" style="${tiempoStr ? 'grid-template-columns:repeat(5,1fr)' : ''}">
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Pre-test</span>
-              <span class="title-sm">${pre}/5</span>
+              <span class="title-sm" style="color:${preColor}">${pre}/5</span>
             </div>
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Post-test</span>
-              <span class="title-sm">${post}/5</span>
+              <span class="title-sm" style="color:${postColor}">${post}/5</span>
             </div>
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Juego</span>
@@ -112,15 +149,17 @@ export async function verDetalleParticipante(uid) {
               <span class="body-sm text-muted">SUS</span>
               <span class="title-sm">${sus}%</span>
             </div>
+            ${tiempoStr ? `
+            <div class="admin-score-cell">
+              <span class="body-sm text-muted">Tiempo</span>
+              <span class="title-sm">⏱ ${tiempoStr}</span>
+            </div>` : ''}
           </div>
           ${mejoraHtml}
           <button class="btn-link" style="text-align:left;font-size:.82rem"
-                  onclick="toggleSessionDetail('${s.id}')">
-            Ver respuestas detalladas ↓
+                  onclick="verDetalleSesion('${s.id}')">
+            Ver respuestas detalladas →
           </button>
-          <div id="sd-${s.id}" class="hidden flex-col gap-20" style="border-top:1px solid var(--border);padding-top:16px">
-            ${buildSessionDetail(s)}
-          </div>
         </div>`;
     }).join('');
   } catch (err) {
@@ -128,24 +167,127 @@ export async function verDetalleParticipante(uid) {
   }
 }
 
-/* ── Toggle del panel de detalle ── */
-export function toggleSessionDetail(id) {
-  const panel = document.getElementById(`sd-${id}`);
-  const btn   = panel.previousElementSibling;
-  const open  = panel.classList.toggle('hidden');
-  btn.textContent = open ? 'Ver respuestas detalladas ↓' : 'Ocultar respuestas ↑';
+/* ── Pantalla de detalle de sesión ── */
+export function verDetalleSesion(sessionId) {
+  const s = _sessions.find(s => s.id === sessionId);
+  if (!s) return;
+
+  const maxPuntaje = Math.max(..._sessions.map(s => s.juego?.puntaje_total ?? -Infinity));
+  const esMejor = typeof s.juego?.puntaje_total === 'number' && s.juego.puntaje_total === maxPuntaje;
+  const fecha = s.completadoEn?.toDate
+    ? s.completadoEn.toDate().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    : '—';
+
+  document.getElementById('session-badge').textContent = `Sesión ${s.sessionNumber} · ${fecha}`;
+  document.getElementById('session-best-badge').classList.toggle('hidden', !esMejor);
+
+  const pre  = s.pretest?.score  ?? '—';
+  const post = s.posttest?.score ?? '—';
+  const game = s.juego?.puntaje_total ?? '—';
+  const sus  = s.sus?.score ?? '—';
+  const preColor  = typeof pre  === 'number' ? (pre  >= 4 ? 'var(--accent3)' : pre  >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
+  const postColor = typeof post === 'number' ? (post >= 4 ? 'var(--accent3)' : post >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
+
+  const tiemposValidos = (s.juego?.historial || []).filter(h => h.tiempoSegundos != null);
+  const tiempoTotal = tiemposValidos.length ? tiemposValidos.reduce((a, h) => a + h.tiempoSegundos, 0) : null;
+  const tiempoStr = tiempoTotal === null ? null : tiempoTotal >= 60 ? `${Math.floor(tiempoTotal / 60)}m ${tiempoTotal % 60}s` : `${tiempoTotal}s`;
+
+  document.getElementById('session-detail-container').innerHTML = `
+    <div class="session-scores-bar">
+      <div class="admin-score-cell">
+        <span class="body-sm text-muted">Pre-test</span>
+        <span class="title-md" style="color:${preColor}">${pre}/5</span>
+      </div>
+      <div class="admin-score-cell">
+        <span class="body-sm text-muted">Post-test</span>
+        <span class="title-md" style="color:${postColor}">${post}/5</span>
+      </div>
+      <div class="admin-score-cell">
+        <span class="body-sm text-muted">Juego</span>
+        <span class="title-md">${game} pts</span>
+      </div>
+      <div class="admin-score-cell">
+        <span class="body-sm text-muted">SUS</span>
+        <span class="title-md">${sus}%</span>
+      </div>
+      ${tiempoStr ? `<div class="admin-score-cell">
+        <span class="body-sm text-muted">Tiempo</span>
+        <span class="title-md">⏱ ${tiempoStr}</span>
+      </div>` : ''}
+    </div>
+    ${buildTestCompare(s.pretest?.respuestas, s.posttest?.respuestas)}
+    <div class="divider"></div>
+    <div class="session-bottom-grid">
+      ${buildGameSection(s.juego?.historial)}
+      <div class="divider session-bottom-divider"></div>
+      ${buildSUSSection(s.sus?.respuestas)}
+    </div>`;
+
+  goTo('p-admin-session');
+}
+
+export function volverADetalle() {
+  verDetalleParticipante(_currentUid);
+}
+
+export function switchTestTab(tab) {
+  document.getElementById('tab-content-pre').classList.toggle('hidden', tab !== 'pre');
+  document.getElementById('tab-content-post').classList.toggle('hidden', tab !== 'post');
+  document.getElementById('tab-btn-pre').classList.toggle('active', tab === 'pre');
+  document.getElementById('tab-btn-post').classList.toggle('active', tab === 'post');
 }
 
 /* ── Construcción del detalle de una sesión ── */
 function buildSessionDetail(s) {
   return `
-    ${buildTestSection('📝 Pre-test',  s.pretest?.respuestas)}
-    <div class="divider"></div>
-    ${buildGameSection(s.juego?.historial)}
-    <div class="divider"></div>
-    ${buildTestSection('📝 Post-test', s.posttest?.respuestas)}
-    <div class="divider"></div>
+    <div class="session-detail-grid">
+      ${buildTestSection('📝 Pre-test',  s.pretest?.respuestas)}
+      <div class="divider"></div>
+      ${buildGameSection(s.juego?.historial)}
+      <div class="divider"></div>
+      ${buildTestSection('📝 Post-test', s.posttest?.respuestas)}
+    </div>
+    <div class="divider mt-8"></div>
     ${buildSUSSection(s.sus?.respuestas)}`;
+}
+
+function buildTestCompare(pre = {}, post = {}) {
+  const rows = TEST_QUESTIONS.map((q, i) => {
+    const preIdx  = pre?.[`q${i}`];
+    const postIdx = post?.[`q${i}`];
+    const preOk   = preIdx  === q.correcta;
+    const postOk  = postIdx === q.correcta;
+
+    const cell = (idx, ok) => idx !== undefined
+      ? `<div class="flex-col gap-2">
+           <span style="font-size:1rem">${ok ? '✅' : '❌'}</span>
+           <span class="body-sm text-muted" style="font-size:.75rem">${q.opciones[idx].substring(0, 32)}${q.opciones[idx].length > 32 ? '…' : ''}</span>
+         </div>`
+      : '<span class="body-sm text-muted">—</span>';
+
+    const arrow = (!preOk && postOk) ? '↗️' : (preOk && !postOk) ? '↘️' : (preOk && postOk) ? '✓' : '✗';
+    const arrowColor = (!preOk && postOk) ? 'var(--accent3)' : (preOk && !postOk) ? 'var(--accent2)' : (preOk && postOk) ? 'var(--accent3)' : 'var(--text-muted)';
+
+    return `
+      <div class="test-compare-row">
+        <span class="body-sm"><strong>P${i + 1}</strong> ${q.texto}</span>
+        ${cell(preIdx, preOk)}
+        <span style="color:${arrowColor};font-size:1rem;text-align:center">${arrow}</span>
+        ${cell(postIdx, postOk)}
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="flex-col gap-12">
+      <div class="title-sm">📝 Pre-test vs Post-test</div>
+      <div class="test-compare-header">
+        <span class="body-sm text-muted">Pregunta</span>
+        <span class="body-sm text-muted">Antes</span>
+        <span></span>
+        <span class="body-sm text-muted">Después</span>
+      </div>
+      ${rows}
+    </div>`;
 }
 
 function buildTestSection(titulo, respuestas = {}) {
@@ -175,31 +317,48 @@ function buildTestSection(titulo, respuestas = {}) {
     </div>`;
 }
 
+const NIVEL_LABELS = { 1: 'Nivel 1 — Básico', 2: 'Nivel 2 — Intermedio', 3: 'Nivel 3 — Avanzado' };
+
 function buildGameSection(historial = []) {
   if (!historial.length) return '<div class="title-sm">🎮 Juego</div><p class="body-sm text-muted">Sin datos</p>';
 
-  const rows = historial.map(h => {
-    const esc = ESCENARIOS.find(e => e.nivel === h.nivel && e.idx === h.escenario);
+  const porNivel = {};
+  historial.forEach(h => {
+    if (!porNivel[h.nivel]) porNivel[h.nivel] = [];
+    porNivel[h.nivel].push(h);
+  });
+
+  const nivelRows = [1, 2, 3].map(n => {
+    if (!porNivel[n]?.length) return '';
+    const rows = porNivel[n].map(h => {
+      const esc = ESCENARIOS.find(e => e.nivel === h.nivel && e.idx === h.escenario);
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="font-size:1rem">${h.correcto ? '✅' : '❌'}</span>
+            <span class="body-sm">${esc?.titulo ?? `Esc. ${h.escenario + 1}`}</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${h.tiempoSegundos != null ? `<span class="body-sm text-muted">${h.tiempoSegundos}s</span>` : ''}
+            ${h.streakBonus ? '<span style="font-size:.8rem">🔥</span>' : ''}
+            <span class="body-sm bold" style="color:${h.delta > 0 ? 'var(--accent3)' : 'var(--accent2)'}">
+              ${h.delta > 0 ? '+' : ''}${h.delta} pts
+            </span>
+          </div>
+        </div>`;
+    }).join('');
+
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-        <div style="display:flex;gap:8px;align-items:center">
-          <span style="font-size:1rem">${h.correcto ? '✅' : '❌'}</span>
-          <span class="body-sm">${esc?.titulo ?? `N${h.nivel} · Esc. ${h.escenario + 1}`}</span>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center">
-          ${h.tiempoSegundos != null ? `<span class="body-sm text-muted">${h.tiempoSegundos}s</span>` : ''}
-          ${h.streakBonus ? '<span style="font-size:.8rem">🔥</span>' : ''}
-          <span class="body-sm bold" style="color:${h.delta > 0 ? 'var(--accent3)' : 'var(--accent2)'}">
-            ${h.delta > 0 ? '+' : ''}${h.delta} pts
-          </span>
-        </div>
+      <div class="flex-col gap-8">
+        <div style="font-size:.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;padding-bottom:4px;border-bottom:1px solid var(--border)">${NIVEL_LABELS[n]}</div>
+        ${rows}
       </div>`;
   }).join('');
 
   return `
-    <div class="flex-col gap-10">
+    <div class="flex-col gap-14">
       <div class="title-sm">🎮 Escenarios del juego</div>
-      ${rows}
+      ${nivelRows}
     </div>`;
 }
 
@@ -221,7 +380,7 @@ function buildSUSSection(respuestas = {}) {
   }).join('');
 
   return `
-    <div class="flex-col gap-10">
+    <div class="flex-col gap-10" style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px">
       <div class="title-sm">🧩 SUS (Usabilidad)</div>
       ${rows}
     </div>`;

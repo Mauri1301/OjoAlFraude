@@ -53,7 +53,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
 .container{width:100%;max-width:480px;margin:0 auto;padding:24px 20px}
 .flex-center{display:flex;align-items:center;justify-content:center}
 .flex-col{display:flex;flex-direction:column}
-.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-20{gap:20px}.gap-24{gap:24px}
+.gap-8{gap:8px}.gap-10{gap:10px}.gap-12{gap:12px}.gap-14{gap:14px}.gap-16{gap:16px}.gap-20{gap:20px}.gap-24{gap:24px}
 .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}
 .text-center{text-align:center}
 .w-full{width:100%}
@@ -488,6 +488,50 @@ select.form-input option{background:var(--surface2)}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ============================================================
+   ADMIN PANEL
+============================================================ */
+.admin-participant-card{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:16px 20px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.admin-participant-card:hover{border-color:var(--accent);background:rgba(247,183,49,.04)}
+
+.test-compare-header,.test-compare-row{
+  display:grid;grid-template-columns:2fr 1fr .3fr 1fr;gap:12px;align-items:center;
+}
+.test-compare-header{padding-bottom:8px;border-bottom:1.5px solid var(--border)}
+.test-compare-row{padding:10px 0;border-bottom:1px solid var(--surface2)}
+.test-compare-row:last-child{border-bottom:none}
+
+.tab-bar{display:flex;gap:8px}
+.tab-btn{
+  padding:8px 18px;border-radius:var(--radius-sm);
+  background:var(--surface2);border:1.5px solid var(--border);
+  color:var(--text-muted);font-family:var(--font);font-size:.85rem;
+  cursor:pointer;transition:all .2s;
+}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+
+.session-scores-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:20px;
+}
+.session-bottom-grid{display:flex;flex-direction:column;gap:24px}
+
+@media(min-width:768px){
+  #p-admin .container{max-width:860px}
+  #p-admin-detail .container{max-width:860px}
+  #p-admin-session .container{max-width:1000px}
+  .session-scores-bar{grid-template-columns:repeat(5,1fr)}
+  .session-bottom-grid{display:grid;grid-template-columns:1.2fr 1px 1fr;gap:32px;align-items:start}
+  .session-bottom-divider{width:1px;height:100%;margin:0;background:var(--border)}
+}
 
 /* ============================================================
    PANTALLA FINAL + COMPARACIÓN (desktop)

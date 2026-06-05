@@ -28,7 +28,8 @@
       <h2 class="title-lg">Participantes</h2>
       <p class="body-sm text-muted">Toca un participante para ver su historial de sesiones</p>
     </div>
-    <div id="admin-participants" class="flex-col gap-12"></div>
+    <input id="admin-search" class="form-input" type="text" placeholder="🔍 Buscar por nombre..." oninput="filtrarParticipantes(this.value)">
+    <div id="admin-participants" class="flex-col gap-8"></div>
   </div>
 </div>
 
@@ -45,6 +46,19 @@
     </div>
     <div id="detail-sessions" class="flex-col gap-12"></div>
   </div>
+</div>
+
+<!-- ADMIN: DETALLE DE SESIÓN -->
+<div id="p-admin-session" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" id="btn-back-session" onclick="volverADetalle()">← Volver</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="session-badge" class="badge badge-warning"></span>
+      <span id="session-best-badge" class="badge badge-success hidden">⭐ Mejor sesión</span>
+    </div>
+    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+  </div>
+  <div class="container content-z flex-col gap-20" id="session-detail-container" style="padding-bottom:40px"></div>
 </div>
 
 <!-- ADMIN: ESCENARIOS -->

@@ -30,11 +30,11 @@ import { finalizarSUS, selectSUS, abrirModalSUS } from './sus.js';
 import { exportarResultados, reiniciarJuego } from './export.js';
 import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
 import {
-  cargarPanelAdmin, verDetalleParticipante, toggleSessionDetail,
+  cargarPanelAdmin, verDetalleParticipante,
   cargarEscenarios, cargarPreguntas,
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
-  importarContenido, sincronizarEnlaces, sincronizarConsequencias,
+  importarContenido, sincronizarEnlaces, sincronizarConsequencias, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab,
 } from './admin-ui.js';
 
 
@@ -100,7 +100,10 @@ Object.assign(window, {
   // admin — participantes
   cargarPanelAdmin,
   verDetalleParticipante,
-  toggleSessionDetail,
+  filtrarParticipantes,
+  verDetalleSesion,
+  volverADetalle,
+  switchTestTab,
   // admin — contenido
   cargarEscenarios,
   cargarPreguntas,
