@@ -187,6 +187,7 @@ function buildGameSection(historial = []) {
           <span class="body-sm">${esc?.titulo ?? `N${h.nivel} · Esc. ${h.escenario + 1}`}</span>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
+          ${h.tiempoSegundos != null ? `<span class="body-sm text-muted">${h.tiempoSegundos}s</span>` : ''}
           ${h.streakBonus ? '<span style="font-size:.8rem">🔥</span>' : ''}
           <span class="body-sm bold" style="color:${h.delta > 0 ? 'var(--accent3)' : 'var(--accent2)'}">
             ${h.delta > 0 ? '+' : ''}${h.delta} pts

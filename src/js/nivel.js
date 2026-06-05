@@ -62,16 +62,22 @@ export function renderEscenario(n) {
         <h3 class="title-md">${esc.titulo}</h3>
         <p class="body-sm text-muted mt-8">Lee el mensaje con atención antes de responder</p>
       </div>
-      <div id="msg-placeholder"></div>
-      <div class="divider"></div>
-      <p class="body-md bold">${esc.pregunta}</p>
-      <div class="option-list" id="esc-opts">
-        ${esc.opciones.map((op, oi) => `
-          <div class="option-item" id="esc-opt-${oi}" onclick="responderEscenario(${n}, ${oi})">
-            <div class="option-letter">${['A','B','C','D'][oi]}</div>
-            <span>${op}</span>
+      <div class="escenario-layout">
+        <div class="escenario-mensaje">
+          <div id="msg-placeholder"></div>
+        </div>
+        <div class="escenario-pregunta flex-col gap-16">
+          <div class="divider escenario-divider"></div>
+          <p class="body-md bold">${esc.pregunta}</p>
+          <div class="option-list" id="esc-opts">
+            ${esc.opciones.map((op, oi) => `
+              <div class="option-item" id="esc-opt-${oi}" onclick="responderEscenario(${n}, ${oi})">
+                <div class="option-letter">${['A','B','C','D'][oi]}</div>
+                <span>${op}</span>
+              </div>
+            `).join('')}
           </div>
-        `).join('')}
+        </div>
       </div>
     </div>`;
 
@@ -100,6 +106,7 @@ export function renderEscenario(n) {
     });
   }
 
+  STATE.escenarioStartTime = Date.now();
   window.scrollTo(0, 0);
 }
 
@@ -123,7 +130,7 @@ export function responderEscenario(n, opcion) {
     const el = document.getElementById(`esc-opt-${i}`);
     if (!el) continue;
     el.style.pointerEvents = 'none';
-    if (i === esc.correcta) el.classList.add('correct');
+    if (correcto && i === esc.correcta) el.classList.add('correct');
     else if (i === opcion && !correcto) el.classList.add('wrong');
   }
 
@@ -139,7 +146,10 @@ export function responderEscenario(n, opcion) {
   }
   updateStreakDisplay(n);
 
-  STATE.historial.push({ nivel: n, escenario: STATE.escenarioIdx, correcto, delta, streakBonus });
+  const tiempoSegundos = STATE.escenarioStartTime
+    ? Math.round((Date.now() - STATE.escenarioStartTime) / 1000)
+    : null;
+  STATE.historial.push({ nivel: n, escenario: STATE.escenarioIdx, correcto, delta, streakBonus, tiempoSegundos });
 
   setTimeout(() => mostrarFeedback(esc, correcto, delta, streakBonus, STATE.winstreak, prevStreak), 400);
 }

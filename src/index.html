@@ -135,8 +135,16 @@
   </div>
 </div>
 
+<!-- SCREEN: LOADING (inicial mientras Firebase verifica sesión) -->
+<div id="p-loading" class="screen active">
+  <div class="container flex-col gap-16" style="min-height:100vh;justify-content:center;align-items:center">
+    <span style="font-size:3rem">🛡️</span>
+    <p class="body-md text-muted">Cargando...</p>
+  </div>
+</div>
+
 <!-- SCREEN 0a: LOGIN -->
-<div id="p-login" class="screen active">
+<div id="p-login" class="screen">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
     <div class="text-center flex-col gap-16">
       <span class="shield-big">🛡️</span>
@@ -246,10 +254,6 @@
       <div class="flex-col gap-8">
         <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
         <p class="body-md text-muted">Aprende a protegerte de los engaños digitales más comunes en Perú</p>
-      </div>
-      <div class="flex-col gap-8 mt-8">
-        <div class="chip">🏛️ Universidad de Lima</div>
-        <div class="chip">📱 Proyecto de tesis — Ingeniería de Sistemas</div>
       </div>
     </div>
     <div class="card flex-col gap-12">

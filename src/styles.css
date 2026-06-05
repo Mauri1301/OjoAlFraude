@@ -490,6 +490,40 @@ select.form-input option{background:var(--surface2)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
 
 /* ============================================================
+   ESCENARIO DOS COLUMNAS (desktop)
+============================================================ */
+.escenario-layout{display:flex;flex-direction:column;gap:16px}
+.escenario-pregunta{display:flex;flex-direction:column;gap:16px}
+.carousel-nav{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.carousel-nav-btn{width:auto;padding:10px 22px}
+
+@media(min-width:768px){
+  .overlay{align-items:center}
+  .modal{border-radius:var(--radius);max-width:560px}
+
+  .escenario-layout{
+    display:grid;
+    grid-template-columns:55fr 45fr;
+    gap:32px;
+    align-items:center;
+  }
+  .escenario-divider{display:none}
+  .escenario-pregunta{gap:16px}
+  #nivel-content.container{max-width:900px}
+}
+
+/* ============================================================
+   CAROUSEL (Pre/Post-test en desktop)
+============================================================ */
+@media(min-width:768px){
+  .carousel-wrap{max-width:600px;margin:0 auto;width:100%}
+  .carousel-header{
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .invisible{visibility:hidden;pointer-events:none}
+}
+
+/* ============================================================
    RESPONSIVE TWEAKS
 ============================================================ */
 @media(max-width:380px){

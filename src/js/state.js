@@ -13,7 +13,8 @@ export const STATE = {
   nivelActual: 0,
   historial: [],
   winstreak: 0,
-  maxWinstreak: 0
+  maxWinstreak: 0,
+  escenarioStartTime: null,
 };
 
 export function goTo(id) {

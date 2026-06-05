@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "PowerShell(node --version)",
-      "PowerShell(npm --version)"
+      "PowerShell(npm --version)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(node --version && which nvm 2>/dev/null || echo \"no nvm in PATH\" && ls ~/.nvm/alias/default 2>/dev/null || echo \"no nvm alias\")",
+      "Read(//Users/jbarbieri1996/.nvm/alias/**)",
+      "Read(//Users/jbarbieri1996/Library/Caches/firebase/**)",
+      "Read(//Users/jbarbieri1996/.npm/bin/**)",
+      "Read(//usr/local/bin/**)"
     ]
   }
 }

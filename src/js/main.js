@@ -12,6 +12,10 @@ import {
   finalizarPretest,
   finalizarPosttest,
   iniciarPosttest,
+  selectCarouselOption,
+  nextCarouselQuestion,
+  prevCarouselQuestion,
+  confirmCarousel,
 } from './test.js';
 
 import {
@@ -50,7 +54,7 @@ onAuthChange(async (user) => {
     await cargarContenido();
 
     const active = document.querySelector('.screen.active')?.id;
-    if (!active || active === 'p-login' || active === 'p-register') {
+    if (!active || active === 'p-login' || active === 'p-register' || active === 'p-loading') {
       if (STATE.participante.role === 'admin') {
         cargarPanelAdmin();
       } else {
@@ -87,6 +91,11 @@ Object.assign(window, {
   selectSUS,
   exportarResultados,
   reiniciarJuego,
+  // carrusel test (desktop)
+  selectCarouselOption,
+  nextCarouselQuestion,
+  prevCarouselQuestion,
+  confirmCarousel,
   // admin — participantes
   cargarPanelAdmin,
   verDetalleParticipante,
