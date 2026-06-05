@@ -151,7 +151,7 @@ export function responderEscenario(n, opcion) {
     : null;
   STATE.historial.push({ nivel: n, escenario: STATE.escenarioIdx, correcto, delta, streakBonus, tiempoSegundos });
 
-  setTimeout(() => mostrarFeedback(esc, correcto, delta, streakBonus, STATE.winstreak, prevStreak), 400);
+  setTimeout(() => mostrarFeedback(esc, correcto, delta, streakBonus, STATE.winstreak, prevStreak, opcion), 400);
 }
 
 export function updateStreakDisplay(n) {
@@ -168,7 +168,8 @@ export function updateStreakDisplay(n) {
   }
 }
 
-export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, prevStreak) {
+export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, prevStreak, opcion) {
+  const consecuenciaMal = esc.consecuencias_mal?.[opcion] ?? esc.consecuencia_mal ?? '❌ Respuesta incorrecta.';
   const content = document.getElementById('feedback-content');
   const deltaColor = delta > 0 ? 'text-success' : 'text-danger';
   const deltaStr  = delta > 0 ? `+${delta}` : `${delta}`;
@@ -199,7 +200,7 @@ export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, pr
     </div>
     ${streakMsgHtml}
     <div class="consequence-card ${correcto ? 'consequence-correct' : 'consequence-wrong'}">
-      <p class="body-md">${correcto ? esc.consecuencia_ok : esc.consecuencia_mal}</p>
+      <p class="body-md">${correcto ? esc.consecuencia_ok : consecuenciaMal}</p>
     </div>
     <div class="flex-col gap-8">
       <div class="title-sm text-danger">🔍 Señales de alerta en este mensaje:</div>

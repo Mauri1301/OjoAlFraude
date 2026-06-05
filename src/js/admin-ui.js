@@ -1,6 +1,6 @@
 /* Panel de administrador */
 import { goTo } from './state.js';
-import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks } from '../firebase/db.js';
+import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
 import { TEST_QUESTIONS } from '../data/test-questions.js';
 import { ESCENARIOS_FULL } from '../data/escenarios-full.js';
@@ -421,6 +421,22 @@ export async function importarContenido() {
     alert('Error al importar: ' + err.message);
     btn.disabled = false;
     btn.textContent = '📥 Importar contenido base';
+  }
+}
+
+export async function sincronizarConsequencias() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Sincronizando...';
+  try {
+    const n = await syncConsequencias(ESCENARIOS_FULL);
+    alert(`✅ ${n} escenario(s) actualizado(s) con nuevas consecuencias.`);
+    btn.disabled = false;
+    btn.textContent = '📝 Sincronizar consecuencias';
+  } catch (err) {
+    alert('Error al sincronizar: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '📝 Sincronizar consecuencias';
   }
 }
 

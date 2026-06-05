@@ -20,7 +20,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Entras al enlace para desbloquear tu cuenta', 'Llamas al BCP al número oficial (01) 311-9898', 'Le reenvías el mensaje a un familiar', 'Respondes pidiendo más información'],
     correcta: 1,
     consecuencia_ok: '✅ ¡Excelente! El agente confirmó que ese mensaje es un fraude. Tu cuenta está segura.',
-    consecuencia_mal: '❌ Ingresaste al enlace. Era una página falsa. Tu cuenta apareció con S/. 2,800 de movimientos no reconocidos.',
+    consecuencia_mal: '❌ Este es un fraude de phishing bancario. Los estafadores imitan mensajes del BCP para robarte los datos de tu cuenta. Cualquier respuesta que no sea verificar llamando al banco te expone: el enlace lleva a una página falsa que captura tus datos y puede generar cargos de S/. 2,800 o más.',
+    consecuencias_mal: {
+      0: '❌ Entraste al enlace. Era una página falsa, idéntica a la del BCP. Ingresaste tu usuario y clave, y esos datos llegaron directo a los estafadores. Al día siguiente, tu cuenta apareció con S/. 2,800 de movimientos que tú no hiciste.',
+      2: '❌ Reenviaste el mensaje a un familiar para que te ayudara. Tu familiar, queriendo ayudarte, ingresó al enlace y colocó sus propios datos. Ahora son dos las víctimas. Nunca debieron interactuar con ese mensaje.',
+      3: '❌ Respondiste pidiendo más información. El estafador tomó nota de que tu número está activo y dispuesto a responder. A los días te llegaron mensajes cada vez más convincentes hasta que terminaste entregando tus datos.',
+    },
     señales: [
       { icon: '🔗', texto: 'El enlace NO es el sitio real del BCP. "bcp-seguridad-peru.verificacion.com" es un dominio falso.' },
       { icon: '⏰', texto: 'La urgencia extrema ("2 horas") es una táctica para que actúes sin pensar.' },
@@ -44,7 +49,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Sí, ingreso al enlace para reclamar mi devolución', 'Entro con cuidado porque el monto es tentador', 'Es un fraude. No hago clic y lo reporto como spam', 'Llamo a SUNAT para confirmar'],
     correcta: 2,
     consecuencia_ok: '✅ Correcto. SUNAT confirmó que nunca envía correos solicitando datos bancarios por enlace.',
-    consecuencia_mal: '❌ Ingresaste y colocaste tus datos. La devolución nunca llegó, pero sí llegaron cargos no reconocidos.',
+    consecuencia_mal: '❌ Este es un fraude de phishing que suplanta a SUNAT. SUNAT nunca solicita datos bancarios por correo ni ofrece devoluciones por enlace. La única respuesta segura es no interactuar y reportarlo como spam. Cualquier otra acción — incluso entrar "con cuidado" — expone tus datos y puede generar cargos no reconocidos.',
+    consecuencias_mal: {
+      0: '❌ Entraste al enlace y colocaste tus datos bancarios para reclamar la devolución. La devolución nunca llegó, pero sí aparecieron cargos no reconocidos en tu cuenta esa misma semana.',
+      1: '❌ Entraste "con cuidado", pero la página falsa no distingue entre cautelosos e impulsivos — captura todo lo que escribes. Tus datos quedaron registrados igual que si hubieras entrado sin dudar.',
+      3: '❌ Llamar a confirmar es mejor que hacer clic, pero las señales de fraude eran suficientes para actuar de inmediato. SUNAT confirmó que era falso — pero mientras llamabas, otros que recibieron el mismo correo ya habían caído en la trampa sin que nadie lo reportara.',
+    },
     señales: [
       { icon: '📧', texto: 'El correo es "sunat-devolucion.net". El correo oficial de SUNAT es @sunat.gob.pe.' },
       { icon: '💰', texto: 'SUNAT nunca solicita datos bancarios por correo para hacer devoluciones.' },
@@ -67,7 +77,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Compartes el código para proteger tu cuenta', 'Preguntas cuánto tiempo tienes para decidir', 'Nunca compartes ese código. Cuelgas y llamas al soporte real de Yape', 'Pides que te envíe foto de su identificación'],
     correcta: 2,
     consecuencia_ok: '✅ ¡Muy bien! El soporte de Yape confirmó que nadie de su equipo te contactó.',
-    consecuencia_mal: '❌ Compartiste el código. En segundos el estafador ingresó a tu Yape y transfirió todo tu saldo.',
+    consecuencia_mal: '❌ El código SMS que llega a tu celular es la llave maestra de tu cuenta Yape. Nadie legítimo — ni Yape, ni un banco, ni ninguna empresa — te lo pedirá jamás. La única respuesta segura es colgar de inmediato y llamar al soporte real. Cualquier duda o demora le da tiempo al estafador para vaciar tu cuenta en segundos.',
+    consecuencias_mal: {
+      0: '❌ Compartiste el código SMS creyendo que así protegías tu cuenta. En segundos, el estafador ingresó a tu Yape desde otro dispositivo y transfirió todo tu saldo. Ese código es la única llave de tu cuenta — nadie legítimo te la pedirá jamás.',
+      1: '❌ Preguntaste cuánto tiempo tenías, y el estafador aprovechó para presionarte más: "Solo 5 minutos o tu cuenta se bloquea para siempre." Bajo esa presión, terminaste compartiendo el código y perdiste todo tu saldo.',
+      3: '❌ Pediste una foto de identificación. El estafador te envió una imagen falsa en segundos — las tienen preparadas. Eso te dio confianza y compartiste el código. Tu Yape fue vaciada de inmediato.',
+    },
     señales: [
       { icon: '🔑', texto: 'Ningún banco o aplicación JAMÁS te pedirá el código SMS que te llegue. Ese código es solo para ti.' },
       { icon: '📞', texto: 'El soporte real de Yape nunca contacta por WhatsApp para pedir códigos.' },
@@ -92,6 +107,11 @@ export const ESCENARIOS_FULL = [
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al BBVA. El asesor confirmó que tu cuenta está activa y que ese correo es un fraude.',
     consecuencia_mal: '❌ Ingresaste al enlace e introdujiste tus datos de acceso. Los estafadores vaciaron tu cuenta esa misma noche.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace por miedo a perder tu dinero. Era una página falsa del BBVA. Ingresaste tu usuario y clave, y esa misma noche tu cuenta apareció con movimientos que tú no hiciste.',
+      2: '❌ Reenviaste el correo a un familiar para que te ayudara. Tu familiar, queriendo ayudarte, ingresó al enlace y colocó sus propios datos. Ahora son dos las víctimas de la misma estafa.',
+      3: '❌ Ignoraste el correo sin verificar. Tu cuenta estaba bien — el BBVA no cierra cuentas así. Pero al no llamar al banco, quedaste con la duda y sin saber que ese tipo de correos siguen activos y engañando a otros clientes.',
+    },
     señales: [
       { icon: '📧', texto: '"bbva-alertas-peru.com" no es el dominio oficial del BBVA. El real es bbvaperu.com.' },
       { icon: '💰', texto: 'Los bancos no retienen saldos por inactividad de esta forma ni dan plazos de 24 horas por correo.' },
@@ -115,6 +135,11 @@ export const ESCENARIOS_FULL = [
     correcta: 1,
     consecuencia_ok: '✅ Revisaste tu app oficial de Interbank. No había ningún bono. El número era falso.',
     consecuencia_mal: '❌ Ingresaste al enlace e introdujiste tus datos de usuario y contraseña. Los estafadores los usaron para ingresar a tu cuenta real.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace porque S/. 200 te pareció un bono real. Era una página falsa. Ingresaste tu usuario y contraseña, y los estafadores los usaron para acceder a tu cuenta real de Interbank.',
+      2: '❌ Llamaste a un familiar para que te ayudara a ingresar al enlace. Tu familiar, sin saber que era fraude, colocó sus propios datos de Interbank. Ahora son dos las víctimas del mismo engaño.',
+      3: '❌ Respondiste el mensaje pidiendo más detalles. El estafador tenía respuestas preparadas: te explicó el "bono" con lujo de detalles y te convenció de ingresar al enlace. Tus credenciales fueron capturadas.',
+    },
     señales: [
       { icon: '🌐', texto: '"interbank-fidelidad.bonos-peru.net" no es dominio de Interbank. El oficial es interbank.com.pe.' },
       { icon: '📱', texto: 'Interbank nunca envía bonos por WhatsApp desde números personales.' },
@@ -139,6 +164,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. RENIEC no envía correos solicitando datos bancarios. El DNI no vence de esa manera.',
     consecuencia_mal: '❌ Adjuntaste tu DNI y tus datos bancarios. Los estafadores usaron esa información para suplantarte ante una financiera.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para evitar la multa de S/. 180. Era una página falsa. Adjuntaste tu DNI y datos bancarios, y los estafadores los usaron para suplantarte ante una financiera y sacar un crédito a tu nombre.',
+      1: '❌ El logo de RENIEC en el correo te dio confianza — eso es exactamente lo que buscan. Ingresaste al enlace y entregaste tu DNI y datos bancarios. Los estafadores los usaron para intentar sacar un préstamo a tu nombre.',
+      3: '❌ Llamaste a un familiar para preguntarle. Tu familiar tampoco sabía distinguirlo y te dijo "parece oficial, yo lo seguiría". Ingresaste al enlace y entregaste tu información personal. Siempre verifica en reniec.gob.pe directamente.',
+    },
     señales: [
       { icon: '📧', texto: '"reniec-digital.net" no es el dominio oficial de RENIEC. El real es reniec.gob.pe.' },
       { icon: '🪪', texto: 'El DNI peruano no vence de esa forma ni requiere renovación por correo electrónico.' },
@@ -162,6 +192,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Claro no realiza sorteos de recargas por WhatsApp desde números personales.',
     consecuencia_mal: '❌ Ingresaste al enlace. Te pidieron instalar una "app de Claro" que era malware. Robaron tus contactos y datos del celular.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para reclamar la recarga. La página te pidió instalar una "app oficial de Claro" que era malware. Robaron tus contactos, fotos y datos del celular.',
+      1: '❌ Llamaste a Claro y te confirmaron que no hay ningún sorteo activo. Bien hecho. Pero no reportaste el número de WhatsApp al *123 ni a la policía cibernética — el número siguió enviando el mismo mensaje a otros usuarios.',
+      3: '❌ Le preguntaste al remitente cuánto tiempo tenía la oferta. El estafador respondió con más detalles convincentes. Eso te dio confianza y finalmente ingresaste al enlace. Tu celular quedó infectado con malware.',
+    },
     señales: [
       { icon: '🌐', texto: '"claro-premios.recarga-pe.com" no pertenece a Claro. El sitio oficial es claro.com.pe.' },
       { icon: '🏆', texto: 'Claro no notifica premios por WhatsApp desde números personales sin verificar.' },
@@ -186,6 +221,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. MINTRA no entrega bonos por correo pidiendo claves bancarias. No existe ese programa.',
     consecuencia_mal: '❌ Ingresaste tu número de cuenta y clave bancaria. Los estafadores vaciaron tu cuenta ese mismo día.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace y registraste tu número de cuenta y clave bancaria para cobrar los S/. 350. Los estafadores vaciaron tu cuenta ese mismo día. El bono nunca existió.',
+      1: '❌ Fuiste a verificar en el sitio oficial del MINTRA — una buena instinto. Pero la señal más clara era que el correo pedía tu CLAVE BANCARIA, algo que ningún programa del Estado pide jamás. Eso solo debería haber bastado para descartarlo de inmediato.',
+      3: '❌ Entraste al enlace "solo para ver" si el bono existía, sin poner la clave. La página falsa mostró un formulario convincente y, sin darte cuenta, terminaste ingresando tu DNI y número de cuenta. Solo faltó la clave para que vaciaran tu cuenta.',
+    },
     señales: [
       { icon: '📧', texto: '"mintra-beneficios.com" no es dominio del gobierno peruano. Los sitios oficiales terminan en .gob.pe.' },
       { icon: '🔑', texto: 'Ningún programa del gobierno pide la CLAVE BANCARIA para entregar beneficios.' },
@@ -209,6 +249,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Colgaste y llamaste al BCP. Ningún agente te había contactado. Tu tarjeta está segura.',
     consecuencia_mal: '❌ Diste el número de tarjeta y fecha de vencimiento. Horas después usaron esos datos para compras en línea por S/. 1,400.',
+    consecuencias_mal: {
+      0: '❌ Diste el número de tarjeta y fecha de vencimiento porque parecía urgente. Horas después usaron esos datos para hacer compras en línea por S/. 1,400. Ningún empleado del BCP te pedirá datos de tarjeta por WhatsApp jamás.',
+      1: '❌ Le preguntaste su nombre y número de empleado. El estafador tenía una identidad falsa preparada: "Asesor Carlos Mendoza, cód. 7821". Eso te dio confianza y terminaste dando los datos de tu tarjeta. El BCP no verifica identidades así.',
+      3: '❌ Le dijiste que te llamara en 10 minutos. El estafador llamó de vuelta con más presión: "El intento de acceso sigue activo, necesito sus datos ahora." Bajo esa presión, terminaste dando el número y fecha de vencimiento de tu tarjeta.',
+    },
     señales: [
       { icon: '📞', texto: 'El BCP nunca contacta por WhatsApp para verificar datos. Sus agentes usan líneas telefónicas oficiales.' },
       { icon: '💳', texto: 'Ningún empleado bancario legítimo necesita que tú le confirmes datos de tu tarjeta por WhatsApp.' },
@@ -234,7 +279,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Ingresas al enlace porque no quieres perder tu línea', 'Llamas a Movistar al *104 para verificar si es verdad', 'Actualizas tus datos porque el mensaje parece oficial', 'Ignoras el mensaje pero no haces nada más'],
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al *104 de Movistar. El operador confirmó que tu línea está activa y que ese SMS era un fraude.',
-    consecuencia_mal: '❌ Ingresaste al enlace y pusiste tu DNI y contraseña. Semanas después te habían sacado un crédito a tu nombre.',
+    consecuencia_mal: '❌ Este es un fraude de smishing (phishing por SMS). Las operadoras nunca suspenden líneas por "actualización de datos" vía SMS. La única acción segura es verificar llamando al *104. Ignorar sin reportar también es un riesgo: el enlace sigue activo y puede seguir captando víctimas. Si ingresas tus datos, pueden usarlos para sacar créditos a tu nombre.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace por miedo a perder tu línea. Era una página falsa de Movistar que capturó tu DNI y contraseña. Semanas después descubriste que habían sacado un crédito a tu nombre usando esos datos.',
+      2: '❌ "Actualizaste" tus datos en lo que parecía el portal oficial de Movistar. Era una página falsa. Tu DNI y contraseña quedaron en manos de los estafadores, que los usaron para sacar un crédito a tu nombre.',
+      3: '❌ Ignoraste el mensaje pero no lo reportaste. Tu línea estaba bien — Movistar nunca suspende líneas por SMS. Pero al no reportarlo, el enlace falso siguió activo y otros usuarios cayeron en la misma trampa.',
+    },
     señales: [
       { icon: '🌐', texto: 'El dominio "movistar-pe.actualiza.datos.com" no es el sitio oficial. El real es movistar.com.pe.' },
       { icon: '🔐', texto: 'Movistar nunca pide tu contraseña del portal cliente por SMS.' },
@@ -256,7 +306,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Ingresas al enlace urgentemente para bloquear el cargo', 'Llamas al BCP al (01) 311-9898 o al número del reverso de tu tarjeta', 'Le pides a un familiar que te ayude a ingresar al enlace', 'Esperas los 30 minutos para ver qué pasa'],
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al BCP. El asesor revisó tu cuenta: no hubo ningún cargo. El SMS era un fraude.',
-    consecuencia_mal: '❌ Entraste al enlace e ingresaste tus datos de tarjeta. En lugar de "bloquear" el cargo falso, los estafadores ahora sí hicieron cargos reales.',
+    consecuencia_mal: '❌ Los bancos nunca envían enlaces por SMS para bloquear transacciones — eso solo se hace llamando al número del reverso de tu tarjeta. Este mensaje busca que actúes por pánico. Cualquier interacción con el enlace — ya sea tú mismo o a través de un familiar — entrega tus datos reales a los estafadores y genera cargos verdaderos.',
+    consecuencias_mal: {
+      0: '❌ Entraste al enlace por pánico. En lugar de bloquear el cargo falso, terminaste entregando los datos reales de tu tarjeta. Los estafadores usaron esos datos para hacer compras por S/. 1,200 esa misma noche.',
+      2: '❌ Le pediste a un familiar que ingresara al enlace para ayudarte. Tu familiar, queriendo protegerte, colocó los datos de su propia tarjeta. Ahora hay dos víctimas. El BCP nunca envía enlaces por SMS para bloquear transacciones.',
+      3: '❌ Esperaste los 30 minutos. El tiempo pasó sin que ocurriera nada — porque la compra nunca existió. Pero la confusión te dejó con dudas, y al final igual ingresaste al enlace "para verificar". Eso fue suficiente para que capturaran los datos de tu tarjeta.',
+    },
     señales: [
       { icon: '🔗', texto: '"bcp.alerta-fraude.com" no es un dominio del BCP. El sitio real es viabcp.com.' },
       { icon: '⏱️', texto: '"30 minutos" — Los fraudes siempre crean urgencia para que no tengas tiempo de verificar.' },
@@ -278,7 +333,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Sí, son solo S/. 8.50 y quiero mi paquete', 'Ingresas al enlace para ver de qué se trata antes de pagar', 'Verificas en la web oficial de Olva Courier o los llamas', 'Le envías el enlace a tu hijo para que él pague'],
     correcta: 2,
     consecuencia_ok: '✅ Llamaste a Olva Courier. No hay ningún paquete a tu nombre. El SMS era un fraude.',
-    consecuencia_mal: '❌ El problema no fue pagar S/. 8.50. Al ingresar tu tarjeta, los estafadores guardaron todos tus datos y hicieron compras mucho más grandes.',
+    consecuencia_mal: '❌ Este fraude usa un monto pequeño (S/. 8.50) como anzuelo para capturar los datos de tu tarjeta. El pago en sí no es el problema — son los datos que ingresas al hacerlo. Cualquier interacción con el enlace, incluso ayudado por otra persona, puede resultar en cargos mucho mayores. Siempre verifica directamente en la web oficial de la empresa.',
+    consecuencias_mal: {
+      0: '❌ Pagaste los S/. 8.50 pensando que era poco. Al ingresar los datos de tu tarjeta, los estafadores los guardaron. Tres días después aparecieron cargos de S/. 480 en tu estado de cuenta. El monto pequeño era solo el anzuelo.',
+      1: '❌ Entraste al enlace "solo para ver de qué se trataba". La página falsa capturó los datos de tu tarjeta cuando intentaste pagar. Que hayas entrado con cuidado no cambió el resultado.',
+      3: '❌ Le enviaste el enlace a tu hijo para que lo revisara. Tu hijo, confiando en que tú lo habías recibido, ingresó los datos de su tarjeta para ayudarte. El paquete nunca llegó y tu hijo tuvo cargos de S/. 350 en su cuenta.',
+    },
     señales: [
       { icon: '📦', texto: 'Si no estás esperando ningún paquete, cualquier SMS de delivery es sospechoso.' },
       { icon: '💸', texto: 'El monto pequeño (S/. 8.50) es una trampa para que no te preocupes y pongas tus datos de tarjeta.' },
@@ -301,6 +361,11 @@ export const ESCENARIOS_FULL = [
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al 123 de Claro. No tienes deuda pendiente. El SMS era falso.',
     consecuencia_mal: '❌ Pagaste en el enlace falso. Además de perder S/. 48.90, los estafadores guardaron los datos de tu tarjeta para usarlos después.',
+    consecuencias_mal: {
+      0: '❌ Pagaste de inmediato para no quedarte sin línea. Además de perder los S/. 48.90, los estafadores guardaron los datos de tu tarjeta y días después hicieron cargos por S/. 320. No tenías ninguna deuda real con Claro.',
+      2: '❌ Le preguntaste a un familiar si él tenía deuda con Claro. Tu familiar no sabía, y entre los dos decidieron "solo ver" el enlace. Terminaron ingresando datos de tarjeta "para verificar el estado de cuenta". Los datos fueron capturados.',
+      3: '❌ Ingresaste al enlace "solo para ver" el estado de tu deuda. La página falsa de Claro mostró una deuda inventada y un formulario de pago. Sin darte cuenta, ingresaste los datos de tu tarjeta. No tenías ninguna deuda real.',
+    },
     señales: [
       { icon: '🌐', texto: '"claro-pagos.deuda-pe.net" no pertenece a Claro. El portal oficial es mi.claro.com.pe.' },
       { icon: '📲', texto: 'Claro siempre avisa deudas desde sus sistemas internos o por llamada oficial, no con links de SMS.' },
@@ -323,6 +388,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Llamaste al BBVA. Tu cuenta no tenía ninguna transferencia iniciada. El SMS era un fraude.',
     consecuencia_mal: '❌ Ingresaste al enlace y proporcionaste tus datos de acceso. Los estafadores completaron la transferencia real desde tu cuenta.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace por pánico. Era una página falsa del BBVA. Ingresaste tus credenciales y los estafadores completaron una transferencia real de S/. 980 desde tu cuenta. El enlace del SMS era la trampa.',
+      1: '❌ Respondiste el SMS con "BLOQUEAR". Eso le confirmó al estafador que tu número está activo. Minutos después recibiste otro SMS con un enlace "para confirmar el bloqueo". Entraste a ese enlace y entregaste tus credenciales.',
+      3: '❌ Revisaste la app oficial y no había ninguna transferencia iniciada. Bien hecho — eso te tranquilizó. Pero al no reportar el SMS al BBVA, el número falso siguió enviando alertas a otros clientes que sí cayeron en la trampa.',
+    },
     señales: [
       { icon: '🔗', texto: '"bbva-bloqueo.alerta-pe.net" no es dominio del BBVA. El oficial es bbvaperu.com.' },
       { icon: '⚡', texto: '"15 min" — La presión de tiempo impide que verifiques con calma.' },
@@ -345,6 +415,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Revisaste la app oficial. No había ningún bono de cashback. El SMS era falso.',
     consecuencia_mal: '❌ Ingresaste al enlace e introdujiste tus credenciales. Los estafadores accedieron a tu cuenta real.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para no perder los S/. 150. Era una página falsa de Interbank. Ingresaste tu usuario y contraseña, y los estafadores accedieron a tu cuenta real y realizaron transferencias.',
+      1: '❌ Llamaste a Interbank y te confirmaron que no había ningún bono de cashback. Bien hecho. Sin embargo, revisar directamente en la app oficial habría sido más rápido, y llamar sin reportar el SMS dejó el número falso activo.',
+      3: '❌ Le preguntaste a otro cliente de Interbank. Él tampoco sabía, y entre los dos decidieron "entrar al enlace para ver". Tus credenciales fueron capturadas. Ante cualquier duda sobre beneficios, el único lugar válido es la app oficial.',
+    },
     señales: [
       { icon: '🌐', texto: '"interbank-cashback.bonos.pe" no pertenece a Interbank. El oficial es interbank.com.pe.' },
       { icon: '💰', texto: 'Interbank no notifica bonos de cashback por SMS con links. Lo haría en su app o estado de cuenta.' },
@@ -367,6 +442,11 @@ export const ESCENARIOS_FULL = [
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al BCP. Tu PIN no ha sido modificado. El SMS era un intento de fraude.',
     consecuencia_mal: '❌ Ingresaste al enlace para "cancelar". La página falsa capturó tu PIN actual y lo usaron para retiros en cajeros.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para cancelar el cambio de PIN. Era una página falsa que te pidió confirmar tu PIN actual "para verificar tu identidad". Lo ingresaste y los estafadores lo usaron para hacer retiros en cajeros automáticos.',
+      2: '❌ Llamaste a la policía, que te indicó que era un asunto bancario. Mientras tanto, perdiste tiempo valioso. Cuando finalmente llamaste al BCP, tu PIN no había sido cambiado — pero la demora generó angustia innecesaria. El canal correcto es siempre el banco directamente.',
+      3: '❌ Revisaste tu tarjeta física y estaba en tu billetera. Eso te tranquilizó, pero no resolvió la duda. Sin llamar al BCP para confirmar, quedaste con incertidumbre — y si el mensaje hubiera sido real, habrías perdido tiempo crítico.',
+    },
     señales: [
       { icon: '🔗', texto: '"bcp-cancelar.pin-alerta.com" es un dominio falso. El BCP usaría viabcp.com.' },
       { icon: '🔑', texto: 'El BCP nunca te pedirá ingresar o confirmar tu PIN a través de un enlace de SMS.' },
@@ -389,6 +469,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Entel no regala iPhones por SMS con links. Al ignorarlo protegiste tus datos.',
     consecuencia_mal: '❌ Ingresaste al enlace. La página pedía un "pago de envío de S/. 25" para recibir el iPhone. El iPhone nunca llegó y perdiste S/. 25 y los datos de tu tarjeta.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para reclamar el iPhone. La página te pidió pagar S/. 25 de envío. Pagaste — y con eso los estafadores capturaron los datos de tu tarjeta. El iPhone nunca llegó y días después aparecieron cargos de S/. 380.',
+      1: '❌ Llamaste a Entel y confirmaron que no hay ningún sorteo de iPhone. Bien hecho. Pero no reportaste el número del SMS — el mismo mensaje siguió llegando a otros clientes de Entel durante días.',
+      3: '❌ Le mostraste el SMS a un familiar. Tu familiar dijo "suena raro, pero por si acaso entra a ver de qué se trata." Ingresaste al enlace, pagaste S/. 25 de "envío" y perdiste además los datos de tu tarjeta. El iPhone nunca llegó.',
+    },
     señales: [
       { icon: '📱', texto: 'Entel no notifica premios de dispositivos costosos por SMS con enlaces a páginas externas.' },
       { icon: '🎁', texto: 'Nadie regala un iPhone valorado en S/. 6,000 a través de un SMS. Si suena demasiado bueno, es fraude.' },
@@ -411,6 +496,11 @@ export const ESCENARIOS_FULL = [
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al Scotiabank. No hubo ningún cargo de ese tipo. El SMS era un fraude.',
     consecuencia_mal: '❌ Ingresaste al enlace y "confirmaste tu identidad". Los estafadores usaron esos datos para realizar más cargos reales.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste al enlace para bloquear el cargo. La página falsa del Scotiabank te pidió "confirmar tu identidad" con usuario y clave. Los ingresaste y los estafadores realizaron cargos reales desde tu cuenta esa misma noche.',
+      2: '❌ Le pediste a un familiar que ingresara al enlace por ti. Tu familiar, queriendo ayudarte, colocó los datos de su propia tarjeta del Scotiabank. Ahora son dos las víctimas. Los bancos nunca envían links por SMS para bloquear cargos.',
+      3: '❌ Decidiste esperar al próximo estado de cuenta. El cargo en el SMS era falso — pero tu razonamiento te dejó sin reportar el fraude al banco. Si hubiera sido un cargo real, habrías perdido tiempo valioso para disputarlo.',
+    },
     señales: [
       { icon: '🌐', texto: '"scotia-fraude.alerta-pe.net" no es dominio del Scotiabank. El oficial es scotiabank.com.pe.' },
       { icon: '💳', texto: 'Los bancos nunca envían links por SMS para "confirmar identidad" ante cargos sospechosos.' },
@@ -439,7 +529,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Sí, compartes y escribes con tu DNI y número de cuenta', 'Solo le das me gusta, pero no envías tus datos', 'No participas. Buscas la página oficial del BCP para verificar', 'Llamas al BCP para preguntar si el sorteo es real'],
     correcta: 2,
     consecuencia_ok: '✅ Buscaste la página oficial verificada del BCP en Facebook. No hay ningún sorteo activo. La página era falsa.',
-    consecuencia_mal: '❌ Enviaste tu DNI y número de cuenta. Días después alguien intentó hacer un préstamo online usando tu identidad.',
+    consecuencia_mal: '❌ Ningún banco sortea premios solicitando datos por redes sociales. Esta página falsa imita al BCP para robar tu identidad. La única acción segura es verificar en la página oficial verificada. Compartir datos, dar "me gusta" sin reportar, o llamar sin denunciar la página deja el fraude activo para otras víctimas — y si enviaste tus datos, pueden intentar sacar préstamos a tu nombre.',
+    consecuencias_mal: {
+      0: '❌ Enviaste tu DNI y número de cuenta por mensaje privado. Días después recibiste una llamada del BCP real: alguien había intentado sacar un préstamo de S/. 5,000 usando tu identidad. Los datos que compartiste lo hicieron posible.',
+      1: '❌ Le diste "me gusta" sin enviar tus datos — parece inofensivo. Pero esa interacción le indicó al algoritmo de Facebook que el contenido era relevante, más personas lo vieron y algunas sí cayeron. Además, quedaste expuesto a mensajes privados de la misma página falsa.',
+      3: '❌ Llamaste al BCP y confirmaron que era fraude. Bien hecho — pero no reportaste la página falsa. Siguió activa tres semanas más y estafó a otros usuarios. La acción completa era verificar Y reportar la página directamente en Facebook.',
+    },
     señales: [
       { icon: '✅', texto: 'Verifica la insignia de verificación azul real. Las páginas falsas imitan el nombre pero no tienen verificación oficial.' },
       { icon: '🏦', texto: 'Ningún banco serio pide DNI y número de cuenta por mensaje privado de Facebook para un sorteo.' },
@@ -462,7 +557,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Te registras. Si Carlos ganó, tú también puedes', 'Preguntas más detalles antes de invertir', 'Llamas a Carlos por teléfono para verificar si realmente te escribió él', 'Pides que te transfiera primero algo de sus ganancias para confiar'],
     correcta: 2,
     consecuencia_ok: '✅ Llamaste a Carlos. "¿Qué link? ¡Yo no te mandé nada! Me hackearon la cuenta." Carlos te agradeció el aviso.',
-    consecuencia_mal: '❌ Te registraste y enviaste S/. 500. Las "ganancias" aparecían en la plataforma pero cuando quisiste retirar, pedían más dinero.',
+    consecuencia_mal: '❌ Cuando la cuenta de un amigo es hackeada, los estafadores la usan para contactar a sus conocidos y promover inversiones falsas. No existe plataforma que garantice ganancias. La única acción segura es llamar directamente a tu amigo por teléfono. Cualquier otra respuesta — registrarse, pedir más detalles o exigir un anticipo — te mantiene en el juego del estafador y puede resultar en pérdidas irrecuperables.',
+    consecuencias_mal: {
+      0: '❌ Te registraste pensando que si Carlos ganó, tú también podías. Enviaste S/. 500. Al principio la plataforma mostraba "ganancias", pero cuando quisiste retirar te pidieron pagar una "comisión del 15%". Nunca recuperaste tu dinero.',
+      1: '❌ Preguntaste más detalles antes de invertir. El estafador tenía todas las respuestas preparadas: capturas de pantalla de "ganancias", testimonios falsos y hasta un video de "Carlos". Convencido, terminaste enviando dinero de todas formas.',
+      3: '❌ Pediste que te transfirieran algo de las ganancias primero para confiar. El estafador te envió S/. 50 desde una cuenta desconocida. Eso te dio confianza y tú enviaste S/. 500. Después desapareció. El anticipo era parte del engaño.',
+    },
     señales: [
       { icon: '🤖', texto: 'Si un amigo te escribe de forma inusual sobre inversiones, su cuenta puede estar hackeada.' },
       { icon: '💰', texto: '"Ganancias garantizadas" no existe en ninguna inversión legítima. Es una señal clásica de fraude.' },
@@ -485,7 +585,12 @@ export const ESCENARIOS_FULL = [
     opciones: ['Sí, S/. 80 es poco comparado al sueldo que ofrecen', 'Preguntas si pueden descontarlo del sueldo sin pagar antes', 'No. Ningún empleo serio cobra por postular. Es un fraude', 'Investigas la empresa en Google antes de decidir'],
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Ninguna empresa legítima cobra por darte trabajo. Reportaste la publicación.',
-    consecuencia_mal: '❌ Pagaste los S/. 80. Después te pidieron S/. 150 más para "uniforme virtual". Luego dejaron de responder.',
+    consecuencia_mal: '❌ Ninguna empresa legítima cobra dinero para contratarte. Este es uno de los fraudes más comunes en grupos de empleo de Facebook. La única respuesta correcta es reconocerlo como fraude y reportarlo. Preguntar condiciones de pago o investigar sin reportar deja la oferta activa, y si llegas a pagar, los estafadores pedirán montos crecientes hasta desaparecer.',
+    consecuencias_mal: {
+      0: '❌ Pagaste los S/. 80 convencido de que el sueldo lo valía. Te pidieron S/. 150 más para el "uniforme virtual", luego S/. 200 para la "capacitación online". Cuando dejaste de pagar, dejaron de responder. No hubo trabajo ni devolución.',
+      1: '❌ Preguntaste si podían descontarlo del primer sueldo. El reclutador dijo que "no era posible por políticas de la empresa" y que necesitabas pagar antes para reservar tu plaza. Cediste y pagaste — después no hubo más respuestas.',
+      3: '❌ Buscaste la empresa en Google y encontraste reseñas positivas — pero eran falsas, creadas por los mismos estafadores. Confiado, pagaste los S/. 80. El trabajo nunca existió y las reseñas desaparecieron junto con ellos.',
+    },
     señales: [
       { icon: '💼', texto: 'NINGUNA empresa legítima cobra dinero para darte trabajo. El "pago de inscripción" es siempre una estafa.' },
       { icon: '🎯', texto: '"Mayores de 50 bienvenidos", "sin experiencia", "plazas limitadas" son señuelos para captar víctimas.' },
@@ -509,6 +614,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Llamaste a tu hijo. Estaba bien en casa sin saber nada. Le avisaste y el número fue bloqueado.',
     consecuencia_mal: '❌ Transferiste S/. 500. Tu hijo llamó después a preguntarte qué había pasado. Nunca hubo accidente.',
+    consecuencias_mal: {
+      0: '❌ Transferiste los S/. 500 por el pánico de saber que tu hijo estaba en peligro. Tu hijo te llamó después desde su celular "roto": nunca hubo accidente. El dinero ya no se pudo recuperar.',
+      1: '❌ Preguntaste el nombre del médico para verificar. El estafador te dio un nombre y hasta un "número del hospital". Eso te dio confianza y terminaste transfiriendo los S/. 500. La historia era completamente inventada.',
+      3: '❌ Escribiste al número desconocido pidiendo más detalles. El estafador respondió con más urgencia y detalles convincentes sobre el "accidente". Bajo esa presión, terminaste transfiriendo el dinero sin llamar al número habitual de tu hijo.',
+    },
     señales: [
       { icon: '📱', texto: 'El mensaje pide que NO llames al número habitual de tu familiar. Esa es la principal señal de alerta.' },
       { icon: '💸', texto: 'Solicitar transferencia urgente a un Yape desconocido es el patrón clásico de esta estafa.' },
@@ -532,6 +642,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Esta es una estafa clásica. Nadie envía premios pidiendo que pagues el envío primero.',
     consecuencia_mal: '❌ Pagaste los S/. 15. La Gift Card nunca llegó. Luego te pidieron S/. 30 más por "aduana". Los estafadores desaparecieron.',
+    consecuencias_mal: {
+      0: '❌ Pagaste los S/. 15 pensando que era poco por un premio de S/. 500. La Gift Card nunca llegó. Luego te pidieron S/. 30 más por "aduana". Después de pagar eso, la cuenta desapareció.',
+      1: '❌ Pediste que descontaran el envío del valor del premio. El estafador dijo que "no era posible por políticas del sorteo". Ante su insistencia, terminaste pagando los S/. 15 de todas formas. La Gift Card nunca llegó.',
+      3: '❌ Verificaste con Wong y te dijeron que no tienen ese tipo de sorteos en Instagram. Bien hecho. Pero mientras llamabas, no reportaste la cuenta falsa en Instagram — siguió activa y otros usuarios cayeron en la misma trampa.',
+    },
     señales: [
       { icon: '🎁', texto: 'La mecánica "paga el envío para recibir tu premio" es una de las estafas más antiguas y comunes.' },
       { icon: '📸', texto: 'La cuenta tiene muchos seguidores pero revisa: ¿tiene el sello de verificación azul? ¿Sus posts son recientes?' },
@@ -555,6 +670,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. No existe ninguna inversión que garantice 340% de retorno. Es una estafa piramidal.',
     consecuencia_mal: '❌ Enviaste S/. 300. Al principio te mostraban "ganancias" en la plataforma, pero al intentar retirar, pedían pagar impuestos de S/. 200 primero. Perdiste todo.',
+    consecuencias_mal: {
+      0: '❌ Enviaste S/. 300 pensando que era una pequeña cantidad para empezar. Al principio la plataforma mostraba "ganancias". Cuando quisiste retirar, te pidieron pagar S/. 200 en "impuestos". Perdiste todo.',
+      1: '❌ Preguntaste en el canal si había testimonios reales. Aparecieron varios "miembros" contando sus ganancias — todos eran perfiles falsos o pagados. Convencido por esas respuestas, enviaste los S/. 300. Las "ganancias" nunca se pudieron retirar.',
+      3: '❌ Buscaste la plataforma en internet y encontraste reseñas positivas — pero eran fabricadas por los mismos estafadores. Con esa "investigación", te convenciste de que era real y enviaste dinero. Las plataformas fraudulentas siempre tienen un rastro digital falso preparado.',
+    },
     señales: [
       { icon: '📈', texto: '"340% de retorno garantizado" es imposible en cualquier inversión legítima. Eso no existe.' },
       { icon: '👥', texto: 'Los testimonios de "miembros exitosos" en el canal son perfiles falsos o pagados.' },
@@ -579,6 +699,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Verificaste en gob.pe. No existe ese bono. La página era falsa y ya fue reportada.',
     consecuencia_mal: '❌ Ingresaste tu DNI, nombre completo y datos bancarios. Los estafadores los usaron para intentar sacar préstamos a tu nombre.',
+    consecuencias_mal: {
+      0: '❌ Ingresaste tus datos para ver si calificabas. La página falsa capturó tu DNI y datos bancarios. Días después alguien intentó sacar un préstamo de S/. 4,000 a tu nombre usando esa información.',
+      1: '❌ Compartiste la publicación para que otros adultos mayores pudieran cobrar el bono. Sin saberlo, ayudaste a que el fraude llegara a más personas de tu entorno. Algunos de ellos sí ingresaron sus datos y fueron afectados.',
+      3: '❌ Le preguntaste a un vecino si también había visto el bono. Tu vecino dijo "sí, yo también lo vi y parece real". Entre los dos entraron al enlace e ingresaron sus datos. La página era falsa y ambos quedaron expuestos a fraudes de identidad.',
+    },
     señales: [
       { icon: '✅', texto: 'La página no tiene el sello de verificación azul de Facebook. Una página oficial del gobierno siempre lo tiene.' },
       { icon: '🌐', texto: '"midis-bono700.registro-pe.com" no termina en .gob.pe. Los sitios oficiales del Estado peruano siempre usan .gob.pe.' },
@@ -602,6 +727,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Revisaste la app oficial de Rappi. No había ningún pedido ni deuda pendiente. El mensaje era falso.',
     consecuencia_mal: '❌ Pagaste los S/. 8.90 en el enlace falso. Los estafadores guardaron los datos de tu tarjeta y después realizaron cargos de S/. 450.',
+    consecuencias_mal: {
+      0: '❌ Pagaste los S/. 8.90 para no perder tu pedido. Al ingresar los datos de tu tarjeta, los estafadores los capturaron. Días después aparecieron cargos de S/. 450 en tu cuenta. No tenías ningún pedido ni deuda real en Rappi.',
+      1: '❌ Entraste al enlace para revisar el estado de la deuda. La página falsa de Rappi mostró una "deuda" convincente con número de pedido. Sin darte cuenta, ingresaste los datos de tu tarjeta para "saldar el pendiente". Los datos fueron capturados.',
+      3: '❌ Llamaste a Rappi y te confirmaron que no tenías ninguna deuda ni pedido pendiente. Bien hecho. Sin embargo, revisar directamente en la app oficial habría sido más rápido, y no reportar el número de WhatsApp lo dejó activo para otras víctimas.',
+    },
     señales: [
       { icon: '📱', texto: 'Rappi nunca cobra saldos pendientes por WhatsApp con links externos. Todo se gestiona dentro de la app.' },
       { icon: '💸', texto: 'El monto pequeño (S/. 8.90) busca que no sospechas y pongas tus datos de tarjeta.' },
@@ -626,6 +756,11 @@ export const ESCENARIOS_FULL = [
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Las rifas privadas en Facebook sin autorización son ilegales en Perú. El organizador desaparece con el dinero.',
     consecuencia_mal: '❌ Compraste 3 tickets (S/. 30). El domingo no hubo sorteo ni notaría. La página fue eliminada y el número yapea no respondió más.',
+    consecuencias_mal: {
+      0: '❌ Compraste 1 ticket por S/. 10. El domingo no hubo sorteo ni notaría. La página de Facebook fue eliminada y el número de Yape dejó de responder. Las rifas sin autorización del MINCETUR son ilegales en Perú.',
+      1: '❌ Compraste 5 tickets (S/. 50) para aumentar tus probabilidades. El domingo no hubo sorteo ni notaría. Perdiste S/. 50 y la página desapareció. Cuantos más tickets compras en una rifa fraudulenta, más pierdes.',
+      3: '❌ Buscaste la empresa en internet y encontraste un sitio web y comentarios positivos — todos creados por los mismos estafadores. Convencido, compraste tickets. El sorteo nunca ocurrió. Las rifas fraudulentas siempre tienen un rastro digital falso.',
+    },
     señales: [
       { icon: '⚖️', texto: 'Las rifas en Perú requieren autorización del MINCETUR. Una rifa sin verificación oficial es ilegal.' },
       { icon: '💰', texto: 'Yapear dinero a un número personal para "comprar tickets" es una señal clara de estafa.' },

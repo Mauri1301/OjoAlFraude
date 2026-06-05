@@ -34,7 +34,7 @@ import {
   cargarEscenarios, cargarPreguntas,
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
-  importarContenido, sincronizarEnlaces,
+  importarContenido, sincronizarEnlaces, sincronizarConsequencias,
 } from './admin-ui.js';
 
 
@@ -110,6 +110,7 @@ Object.assign(window, {
   guardarEdicion,
   importarContenido,
   sincronizarEnlaces,
+  sincronizarConsequencias,
 });
 
 /* ── Animación de entrada ── */

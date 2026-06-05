@@ -14,7 +14,7 @@ export const ESCENARIOS = [
     ],
     correcta: 1,
     consecuencia_ok: '✅ ¡Excelente decisión! Llamaste directamente al banco. El agente te confirmó que ese mensaje es un fraude. Nunca enviaron ese WhatsApp. Tu cuenta está segura.',
-    consecuencia_mal: '❌ Ingresaste al enlace. Era una página falsa que copió toda la información de tu tarjeta y clave. Al día siguiente, tu cuenta aparece con S/. 2,800 de movimientos no reconocidos.',
+    consecuencia_mal: '❌ Este es un fraude de phishing bancario. Los estafadores imitan mensajes del BCP para robarte los datos de tu cuenta. Cualquier respuesta que no sea verificar llamando al banco te expone: el enlace lleva a una página falsa que captura tus datos y puede generar cargos de S/. 2,800 o más.',
     señales: [
       { icon: '🔗', texto: 'El enlace NO es el sitio real del BCP. "bcp-seguridad-peru.verificacion.com" es un dominio falso. El real es viabcp.com.' },
       { icon: '⏰', texto: 'La urgencia extrema ("2 horas") es una táctica para que actúes sin pensar.' },
@@ -36,7 +36,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Marcaste el correo como spam y lo eliminaste. SUNAT confirmó que ellos nunca envían correos solicitando datos bancarios por enlace. Tu información está protegida.',
-    consecuencia_mal: '❌ Ingresaste al enlace y colocaste tus datos. La "devolución" nunca llegó, pero sí llegaron cargos no reconocidos a tu cuenta. Tus datos fueron robados.',
+    consecuencia_mal: '❌ Este es un fraude de phishing que suplanta a SUNAT. SUNAT nunca solicita datos bancarios por correo ni ofrece devoluciones por enlace. La única respuesta segura es no interactuar y reportarlo como spam. Cualquier otra acción — incluso entrar "con cuidado" — expone tus datos y puede generar cargos no reconocidos.',
     señales: [
       { icon: '📧', texto: 'El correo es "sunat-devolucion.net" — el correo oficial de SUNAT es @sunat.gob.pe. El ".net" es una señal de alerta.' },
       { icon: '💰', texto: 'SUNAT nunca solicita datos bancarios por correo electrónico para hacer devoluciones.' },
@@ -58,7 +58,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ ¡Muy bien! No compartiste el código. Llamaste al soporte de Yape y confirmaron que nadie de su equipo te contactó. El código SMS es la llave de tu cuenta.',
-    consecuencia_mal: '❌ Compartiste el código. En segundos, el estafador ingresó a tu Yape y transfirió todo tu saldo. Los códigos SMS son como la llave de tu billetera digital.',
+    consecuencia_mal: '❌ El código SMS que llega a tu celular es la llave maestra de tu cuenta Yape. Nadie legítimo — ni Yape, ni un banco, ni ninguna empresa — te lo pedirá jamás. La única respuesta segura es colgar de inmediato y llamar al soporte real. Cualquier duda o demora le da tiempo al estafador para vaciar tu cuenta en segundos.',
     señales: [
       { icon: '🔑', texto: 'Ningún banco, aplicación ni empresa JAMÁS te pedirá el código SMS que te llega. Ese código es solo para ti.' },
       { icon: '📞', texto: 'El soporte real de Yape nunca te contacta por WhatsApp para pedirte códigos.' },
@@ -82,7 +82,7 @@ export const ESCENARIOS = [
     ],
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al *104 de Movistar. El operador confirmó que tu línea está activa y que nunca envían SMS con enlaces para actualizar datos. El mensaje era un fraude.',
-    consecuencia_mal: '❌ Ingresaste al enlace y pusiste tu DNI y contraseña. Esa información fue capturada. Semanas después, descubriste que te habían sacado un crédito a tu nombre.',
+    consecuencia_mal: '❌ Este es un fraude de smishing (phishing por SMS). Las operadoras nunca suspenden líneas por "actualización de datos" vía SMS. La única acción segura es verificar llamando al *104. Ignorar sin reportar también es un riesgo: el enlace sigue activo y puede seguir captando víctimas. Si ingresas tus datos, pueden usarlos para sacar créditos a tu nombre.',
     señales: [
       { icon: '🌐', texto: 'El dominio "movistar-pe.actualiza.datos.com" no es el sitio oficial. El real es movistar.com.pe.' },
       { icon: '🔐', texto: 'Movistar nunca pide tu contraseña del portal cliente por SMS.' },
@@ -104,7 +104,7 @@ export const ESCENARIOS = [
     ],
     correcta: 1,
     consecuencia_ok: '✅ Llamaste al BCP. El asesor revisó tu cuenta y confirmó que no hubo ningún cargo de ese tipo. El SMS era un fraude. Bloquearon ese número en su sistema.',
-    consecuencia_mal: '❌ Entraste al enlace e ingresaste tus datos de tarjeta. En lugar de "bloquear" el cargo falso, los estafadores ahora tienen todos tus datos y sí hacen cargos reales.',
+    consecuencia_mal: '❌ Los bancos nunca envían enlaces por SMS para bloquear transacciones — eso solo se hace llamando al número del reverso de tu tarjeta. Este mensaje busca que actúes por pánico. Cualquier interacción con el enlace — ya sea tú mismo o a través de un familiar — entrega tus datos reales a los estafadores y genera cargos verdaderos.',
     señales: [
       { icon: '🔗', texto: '"bcp.alerta-fraude.com" no es un dominio del BCP. El sitio real es viabcp.com.' },
       { icon: '⏱️', texto: '"30 minutos" — Los fraudes siempre crean urgencia para que no tengas tiempo de verificar.' },
@@ -126,7 +126,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ Buscaste el número oficial de Olva Courier y los llamaste. No hay ningún paquete a tu nombre. El SMS era un fraude. El enlace pedía datos de tarjeta, no solo S/. 8.50.',
-    consecuencia_mal: '❌ El problema no fue pagar S/. 8.50. Al ingresar tu tarjeta, los estafadores guardaron todos tus datos y después hicieron compras mucho más grandes. El monto pequeño era solo el anzuelo.',
+    consecuencia_mal: '❌ Este fraude usa un monto pequeño (S/. 8.50) como anzuelo para capturar los datos de tu tarjeta. El pago en sí no es el problema — son los datos que ingresas al hacerlo. Cualquier interacción con el enlace, incluso ayudado por otra persona, puede resultar en cargos mucho mayores. Siempre verifica directamente en la web oficial de la empresa.',
     señales: [
       { icon: '📦', texto: 'Si no estás esperando ningún paquete, cualquier SMS de delivery es sospechoso.' },
       { icon: '💸', texto: 'El monto pequeño (S/. 8.50) es una trampa para que no te preocupes y pongas tus datos de tarjeta.' },
@@ -150,7 +150,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ Buscaste la página oficial verificada del BCP en Facebook. No hay ningún sorteo activo. La página del fraude tiene un nombre muy similar pero no es la oficial. Reportaste la página falsa.',
-    consecuencia_mal: '❌ Enviaste tu DNI y número de cuenta. Días después, alguien intentó hacer un préstamo rápido online usando tu identidad. Los datos que compartiste permitieron el intento de fraude.',
+    consecuencia_mal: '❌ Ningún banco sortea premios solicitando datos por redes sociales. Esta página falsa imita al BCP para robar tu identidad. La única acción segura es verificar en la página oficial verificada. Compartir datos, dar "me gusta" sin reportar, o llamar sin denunciar la página deja el fraude activo para otras víctimas — y si enviaste tus datos, pueden intentar sacar préstamos a tu nombre.',
     señales: [
       { icon: '✅', texto: 'Verifica la insignia de verificación azul (✓) real. Las páginas falsas imitan el nombre pero no tienen la verificación oficial de Facebook.' },
       { icon: '🏦', texto: 'Ningún banco serio pide DNI y número de cuenta por mensaje privado de Facebook para un sorteo.' },
@@ -172,7 +172,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ Llamaste a Carlos. "¿Qué link? ¡Yo no te mandé nada! Me hackearon la cuenta". Su cuenta de Facebook fue comprometida y usada para estafar a sus contactos. Carlos te agradeció el aviso.',
-    consecuencia_mal: '❌ Te registraste y enviaste S/. 500. Al principio "las ganancias" aparecían en la plataforma, pero cuando quisiste retirar, te pidieron pagar una "comisión de retiro". Nunca recuperaste el dinero.',
+    consecuencia_mal: '❌ Cuando la cuenta de un amigo es hackeada, los estafadores la usan para contactar a sus conocidos y promover inversiones falsas. No existe plataforma que garantice ganancias. La única acción segura es llamar directamente a tu amigo por teléfono. Cualquier otra respuesta — registrarse, pedir más detalles o exigir un anticipo — te mantiene en el juego del estafador y puede resultar en pérdidas irrecuperables.',
     señales: [
       { icon: '🤖', texto: 'Si un amigo te escribe de forma inusual sobre inversiones, su cuenta puede estar hackeada.' },
       { icon: '💰', texto: '"Ganancias garantizadas" no existe en ninguna inversión legítima. Es una señal clásica de fraude.' },
@@ -194,7 +194,7 @@ export const ESCENARIOS = [
     ],
     correcta: 2,
     consecuencia_ok: '✅ Correcto. Ninguna empresa legítima cobra por darte trabajo. Este es uno de los fraudes más comunes en grupos de empleo de Facebook. Reportaste la publicación y avisaste en el grupo.',
-    consecuencia_mal: '❌ Pagaste los S/. 80. Después te pidieron S/. 150 más para "uniforme virtual". Luego dejaron de responder. No hubo trabajo, no hubo devolución. El "kit" nunca llegó.',
+    consecuencia_mal: '❌ Ninguna empresa legítima cobra dinero para contratarte. Este es uno de los fraudes más comunes en grupos de empleo de Facebook. La única respuesta correcta es reconocerlo como fraude y reportarlo. Preguntar condiciones de pago o investigar sin reportar deja la oferta activa, y si llegas a pagar, los estafadores pedirán montos crecientes hasta desaparecer.',
     señales: [
       { icon: '💼', texto: 'NINGUNA empresa legítima cobra dinero para darte trabajo. El "pago de inscripción" es siempre una estafa.' },
       { icon: '🎯', texto: '"Sin experiencia", "mayores de 50 bienvenidos", "plazas limitadas" son señuelos para captar víctimas vulnerables.' },

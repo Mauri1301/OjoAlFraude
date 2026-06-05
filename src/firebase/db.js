@@ -81,6 +81,27 @@ export async function updateQuestion(firestoreId, data) {
 
 // Sincroniza el campo linkUrl de los escenarios locales hacia los docs ya existentes en Firestore,
 // emparejando por (nivel, idx). No duplica documentos.
+export async function syncConsequencias(localScenarios) {
+  const snap = await getDocs(collection(db, 'scenarios'));
+  const batch = writeBatch(db);
+  let count = 0;
+  snap.docs.forEach(d => {
+    const data  = d.data();
+    const local = localScenarios.find(s => s.nivel === data.nivel && s.idx === data.idx);
+    const updates = {};
+    if (local?.consecuencia_mal && local.consecuencia_mal !== data.consecuencia_mal)
+      updates.consecuencia_mal = local.consecuencia_mal;
+    if (local?.consecuencias_mal)
+      updates.consecuencias_mal = local.consecuencias_mal;
+    if (Object.keys(updates).length) {
+      batch.update(d.ref, updates);
+      count++;
+    }
+  });
+  if (count) await batch.commit();
+  return count;
+}
+
 export async function syncScenarioLinks(localScenarios) {
   const snap = await getDocs(collection(db, 'scenarios'));
   const batch = writeBatch(db);
