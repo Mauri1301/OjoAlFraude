@@ -3,7 +3,6 @@ import { STATE, goTo } from './state.js';
 import { TEST_QUESTIONS } from '../data/test-questions.js'; // fallback local
 import { goToIntroNivel } from './nivel.js';
 import { renderComparacion } from './results.js';
-import { renderSUS } from './sus.js';
 import { cargarContenido } from './content-loader.js';
 
 // Devuelve las preguntas activas para esta sesión (Firestore o fallback local)
@@ -207,7 +206,6 @@ export function finalizarPretest() {
 export function finalizarPosttest() {
   STATE.posttestScore = calcTestScore(STATE.posttest);
   renderComparacion();
-  renderSUS();
   goTo('p-comparacion');
 }
 

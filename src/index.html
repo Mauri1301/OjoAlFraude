@@ -387,14 +387,7 @@
       <div class="compare-bars" id="compare-bars"></div>
     </div>
     <div id="mejora-card" class="card flex-col gap-8"></div>
-    <div class="card flex-col gap-12">
-      <div class="title-sm">🧩 Encuesta de usabilidad (SUS)</div>
-      <p class="body-sm text-muted">5 preguntas cortas sobre tu experiencia con el juego. Escala del 1 al 5.</p>
-      <div id="sus-content" class="flex-col gap-20"></div>
-      <button id="btn-sus" class="btn btn-primary hidden mt-8" onclick="finalizarSUS()">
-        Ver resumen final →
-      </button>
-    </div>
+    <button class="btn btn-primary" onclick="abrirModalSUS()">Continuar →</button>
   </div>
 </div>
 
@@ -408,9 +401,11 @@
         <p class="body-lg text-muted mt-8">Has completado OjoAlFraude</p>
       </div>
     </div>
-    <div id="fin-summary" class="card flex-col gap-12"></div>
-    <!-- SDT – cierre del ciclo de competencia (Ryan & Deci, 2020) -->
-    <div id="fin-competencia" class="card flex-col gap-12"></div>
+    <div class="fin-grid">
+      <div id="fin-summary" class="card flex-col gap-12"></div>
+      <!-- SDT – cierre del ciclo de competencia (Ryan & Deci, 2020) -->
+      <div id="fin-competencia" class="card flex-col gap-12"></div>
+    </div>
     <div class="card flex-col gap-12">
       <div class="title-sm">🚨 ¿Qué hacer si recibes un fraude real?</div>
       <div class="flex-col gap-8">
@@ -441,6 +436,19 @@
 </div>
 
 <!-- OVERLAY: FEEDBACK -->
+<div id="overlay-sus" class="overlay">
+  <div class="modal sus-modal">
+    <div class="flex-col gap-4 mb-16">
+      <h3 class="title-md">🧩 Encuesta de usabilidad</h3>
+      <p class="body-sm text-muted">5 preguntas cortas sobre tu experiencia. Escala del 1 al 5.</p>
+    </div>
+    <div id="sus-content" class="flex-col gap-20"></div>
+    <button id="btn-sus" class="btn btn-primary hidden mt-16" onclick="finalizarSUS()">
+      Ver resumen final →
+    </button>
+  </div>
+</div>
+
 <div id="overlay-feedback" class="overlay">
   <div class="modal">
     <div id="feedback-content" class="flex-col gap-16"></div>

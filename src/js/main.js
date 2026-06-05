@@ -26,7 +26,7 @@ import {
   clicoEnlaceFraude,
 } from './nivel.js';
 
-import { finalizarSUS, selectSUS } from './sus.js';
+import { finalizarSUS, selectSUS, abrirModalSUS } from './sus.js';
 import { exportarResultados, reiniciarJuego } from './export.js';
 import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
 import {
@@ -89,6 +89,7 @@ Object.assign(window, {
   clicoEnlaceFraude,
   finalizarSUS,
   selectSUS,
+  abrirModalSUS,
   exportarResultados,
   reiniciarJuego,
   // carrusel test (desktop)

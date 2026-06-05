@@ -4,6 +4,11 @@ import { SUS_PREGUNTAS } from '../data/nivel-config.js';
 import { renderFin } from './results.js';
 import { saveSession } from '../firebase/db.js';
 
+export function abrirModalSUS() {
+  renderSUS();
+  document.getElementById('overlay-sus').classList.add('active');
+}
+
 export function renderSUS() {
   const container = document.getElementById('sus-content');
   container.innerHTML = '';
@@ -41,6 +46,7 @@ export function calcSUSScore() {
 
 export async function finalizarSUS() {
   STATE.susScore = calcSUSScore();
+  document.getElementById('overlay-sus').classList.remove('active');
   renderFin();
   goTo('p-fin');
 

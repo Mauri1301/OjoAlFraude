@@ -490,6 +490,19 @@ select.form-input option{background:var(--surface2)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
 
 /* ============================================================
+   PANTALLA FINAL + COMPARACIÓN (desktop)
+============================================================ */
+.fin-grid{display:flex;flex-direction:column;gap:16px}
+.comparacion-grid{display:flex;flex-direction:column;gap:20px}
+
+@media(min-width:768px){
+  .fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  #p-fin .container{max-width:900px}
+  #p-comparacion .container{max-width:700px}
+  .sus-modal{max-width:640px;border-radius:var(--radius);max-height:90vh}
+}
+
+/* ============================================================
    ESCENARIO DOS COLUMNAS (desktop)
 ============================================================ */
 .escenario-layout{display:flex;flex-direction:column;gap:16px}
