@@ -2,7 +2,8 @@
 import { STATE } from './state.js';
 import { loadScenarios, loadQuestions } from '../firebase/db.js';
 import { ESCENARIOS_FULL } from '../data/escenarios-full.js';
-import { TEST_QUESTIONS } from '../data/test-questions.js';
+import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
+import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
 
 function shuffle(arr) {
   const a = [...arr];
@@ -26,13 +27,14 @@ export async function cargarContenido() {
     [1, 2, 3].forEach(n => {
       STATE.escenariosActuales[n] = shuffle(pool.filter(e => e.nivel === n)).slice(0, 3);
     });
-    STATE.questionsActuales = shuffle(TEST_QUESTIONS);
+    STATE.questionsActuales = TEST_QUESTIONS_A;
+    STATE.posttestQuestions = TEST_QUESTIONS_B;
   } catch {
-    // Fallback 100% local
     STATE.escenariosActuales = {};
     [1, 2, 3].forEach(n => {
       STATE.escenariosActuales[n] = shuffle(ESCENARIOS_FULL.filter(e => e.nivel === n)).slice(0, 3);
     });
-    STATE.questionsActuales = shuffle(TEST_QUESTIONS);
+    STATE.questionsActuales = TEST_QUESTIONS_A;
+    STATE.posttestQuestions = TEST_QUESTIONS_B;
   }
 }

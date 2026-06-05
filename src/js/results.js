@@ -1,6 +1,7 @@
 /* Pantallas de resultado y comparación pre/post */
 import { STATE, goTo } from './state.js';
-import { TEST_QUESTIONS } from '../data/test-questions.js';
+import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
+import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
 
 export function mostrarResultado() {
   const total    = STATE.puntaje.reduce((a, b) => a + b, 0);
@@ -62,53 +63,42 @@ export function mostrarResultado() {
 }
 
 export function renderComparacion() {
-  const pre   = STATE.pretestScore;
-  const post  = STATE.posttestScore;
-  const maxQ  = TEST_QUESTIONS.length;
+  const pre    = STATE.pretestScore;
+  const post   = STATE.posttestScore;
+  const maxQ   = TEST_QUESTIONS_A.length;
   const mejora = post - pre;
+  const pregA  = STATE.questionsActuales?.length  ? STATE.questionsActuales  : TEST_QUESTIONS_A;
+  const pregB  = STATE.posttestQuestions?.length  ? STATE.posttestQuestions  : TEST_QUESTIONS_B;
 
   const bars = document.getElementById('compare-bars');
   bars.innerHTML = '';
 
-  TEST_QUESTIONS.forEach((q, i) => {
-    const preOk  = STATE.pretest[`q${i}`]  === q.correcta;
-    const postOk = STATE.posttest[`q${i}`] === q.correcta;
+  pregA.forEach((qA, i) => {
+    const qB    = pregB[i];
+    const preOk  = STATE.pretest[`q${i}`]  === qA.correcta;
+    const postOk = STATE.posttest[`q${i}`] === qB.correcta;
+    const arrow  = (!preOk && postOk) ? '↗️' : (preOk && !postOk) ? '↘️' : (preOk && postOk) ? '✓' : '✗';
+    const arrowColor = (!preOk && postOk) ? 'var(--accent3)' : (preOk && !postOk) ? 'var(--accent2)' : (preOk && postOk) ? 'var(--accent3)' : 'var(--text-muted)';
+
     bars.innerHTML += `
-      <div class="compare-bar-wrap">
-        <div class="compare-bar-label">
-          <span class="body-sm">P${i+1}: ${q.texto.substring(0, 40)}...</span>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center">
-          <span style="font-size:.75rem;color:var(--text-muted);width:50px">Antes</span>
-          <div class="bar-track" style="flex:1">
-            <div class="bar-fill bar-fill-pre" style="width:${preOk ? '100%' : '0%'}">
-              ${preOk ? '<span class="bar-pct" style="color:#fff">✓</span>' : ''}
-            </div>
-          </div>
-          <span style="font-size:.75rem;color:var(--text-muted);width:30px">${preOk ? '✅' : '❌'}</span>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center">
-          <span style="font-size:.75rem;color:var(--accent);width:50px">Después</span>
-          <div class="bar-track" style="flex:1">
-            <div class="bar-fill bar-fill-post" style="width:${postOk ? '100%' : '0%'}">
-              ${postOk ? '<span class="bar-pct">✓</span>' : ''}
-            </div>
-          </div>
-          <span style="font-size:.75rem;color:var(--text-muted);width:30px">${postOk ? '✅' : '❌'}</span>
-        </div>
+      <div class="compare-construct-row">
+        <span class="body-sm" style="flex:1">${qA.constructo}</span>
+        <span style="font-size:1.1rem">${preOk ? '✅' : '❌'}</span>
+        <span style="color:${arrowColor};font-size:.9rem;padding:0 4px">→</span>
+        <span style="font-size:1.1rem">${postOk ? '✅' : '❌'}</span>
       </div>`;
   });
 
   let mejoraEmoji, mejoraTexto;
-  if      (mejora > 0) { mejoraEmoji = '📈'; mejoraTexto = `Mejoraste ${mejora} pregunta${mejora > 1 ? 's' : ''} correctas. ¡El juego funcionó!`; }
+  if      (mejora > 0)  { mejoraEmoji = '📈'; mejoraTexto = `Mejoraste ${mejora} constructo${mejora > 1 ? 's' : ''}. ¡El juego funcionó!`; }
   else if (mejora === 0) { mejoraEmoji = '↔️'; mejoraTexto = `Mantuviste el mismo puntaje. Puede que ya tenías buen conocimiento previo.`; }
-  else                   { mejoraEmoji = '🔄'; mejoraTexto = `El post-test fue diferente. Sigue repasando los escenarios.`; }
+  else                   { mejoraEmoji = '🔄'; mejoraTexto = `Algunos conceptos necesitan más práctica. ¡Sigue adelante!`; }
 
   document.getElementById('mejora-card').innerHTML = `
     <div style="display:flex;gap:12px;align-items:center">
       <span style="font-size:2rem">${mejoraEmoji}</span>
       <div>
-        <div class="title-sm">Pre-test: ${pre}/${maxQ} correctas → Post-test: ${post}/${maxQ} correctas</div>
+        <div class="title-sm">Pre-test: ${pre}/${maxQ} → Post-test: ${post}/${maxQ} correctas</div>
         <p class="body-sm text-muted mt-4">${mejoraTexto}</p>
       </div>
     </div>`;
@@ -134,12 +124,12 @@ export function renderFin() {
       <div class="divider"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span class="body-md text-muted">Pre-test</span>
-        <span class="bold">${STATE.pretestScore} / 5 correctas</span>
+        <span class="bold">${STATE.pretestScore} / 10 correctas</span>
       </div>
       <div class="divider"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span class="body-md text-muted">Post-test</span>
-        <span class="bold">${STATE.posttestScore} / 5 correctas</span>
+        <span class="bold">${STATE.posttestScore} / 10 correctas</span>
       </div>
       ${STATE.maxWinstreak >= 2 ? `
       <div class="divider"></div>

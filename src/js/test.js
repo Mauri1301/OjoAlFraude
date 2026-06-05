@@ -1,13 +1,14 @@
 /* Pre-test / post-test */
 import { STATE, goTo } from './state.js';
-import { TEST_QUESTIONS } from '../data/test-questions.js'; // fallback local
+import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
+import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
 import { goToIntroNivel } from './nivel.js';
 import { renderComparacion } from './results.js';
 import { cargarContenido } from './content-loader.js';
 
-// Devuelve las preguntas activas para esta sesión (Firestore o fallback local)
-function getPreguntas() {
-  return STATE.questionsActuales?.length ? STATE.questionsActuales : TEST_QUESTIONS;
+function getPreguntas(which = 'pretest') {
+  if (which === 'posttest') return STATE.posttestQuestions?.length ? STATE.posttestQuestions : TEST_QUESTIONS_B;
+  return STATE.questionsActuales?.length ? STATE.questionsActuales : TEST_QUESTIONS_A;
 }
 
 function isDesktop() {
@@ -22,30 +23,32 @@ export async function iniciarPretest() {
 }
 
 export function renderTest(containerId, stateObj, btnId) {
+  const which = containerId.includes('posttest') ? 'posttest' : 'pretest';
   if (isDesktop()) {
-    _initCarousel(containerId, stateObj, btnId);
+    _initCarousel(containerId, stateObj, btnId, which);
     return;
   }
 
+  const preguntas = getPreguntas(which);
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
   let dots = '<div class="step-indicator">';
-  getPreguntas().forEach((_, i) => dots += `<div class="step-dot" id="${containerId}-dot-${i}"></div>`);
+  preguntas.forEach((_, i) => dots += `<div class="step-dot" id="${containerId}-dot-${i}"></div>`);
   dots += '</div>';
   container.innerHTML += dots;
 
-  getPreguntas().forEach((q, qi) => {
+  preguntas.forEach((q, qi) => {
     const div = document.createElement('div');
     div.className = 'flex-col gap-12';
     div.id = `${containerId}-q${qi}`;
     div.innerHTML = `
       <div class="card flex-col gap-12">
-        <div class="badge badge-warning">Pregunta ${qi + 1} de ${getPreguntas().length}</div>
+        <div class="badge badge-warning">Pregunta ${qi + 1} de ${preguntas.length}</div>
         <p class="body-md bold">${q.texto}</p>
         <div class="option-list" id="${containerId}-opts-${qi}">
           ${q.opciones.map((op, oi) => `
-            <div class="option-item" onclick="selectTestOption('${containerId}', ${qi}, ${oi}, '${stateObj === STATE.pretest ? 'pretest' : 'posttest'}')">
+            <div class="option-item" onclick="selectTestOption('${containerId}', ${qi}, ${oi}, '${which}')">
               <div class="option-letter">${['A','B','C','D'][oi]}</div>
               <span>${op}</span>
               <input type="radio" name="${containerId}-q${qi}" value="${oi}">
@@ -57,22 +60,22 @@ export function renderTest(containerId, stateObj, btnId) {
   });
 
   updateTestDots(containerId);
-  checkTestComplete(stateObj, btnId);
+  checkTestComplete(stateObj, btnId, which);
 }
 
 /* ── Carrusel (desktop ≥768px) ── */
 
 let _carousel = null;
 
-function _initCarousel(containerId, stateObj, btnId) {
-  _carousel = { containerId, stateObj, btnId, idx: 0, answers: {} };
+function _initCarousel(containerId, stateObj, btnId, which = 'pretest') {
+  _carousel = { containerId, stateObj, btnId, which, idx: 0, answers: {} };
   document.getElementById(btnId)?.classList.add('hidden');
   _renderCarouselSlide();
 }
 
 function _renderCarouselSlide() {
-  const { containerId, idx, answers } = _carousel;
-  const preguntas = getPreguntas();
+  const { containerId, idx, answers, which } = _carousel;
+  const preguntas = getPreguntas(which);
   const total = preguntas.length;
   const q = preguntas[idx];
   const allAnswered = Object.keys(answers).length === total;
@@ -144,7 +147,7 @@ export function selectCarouselOption(qi, oi) {
 }
 
 export function nextCarouselQuestion() {
-  if (_carousel.idx < getPreguntas().length - 1) {
+  if (_carousel.idx < getPreguntas(_carousel.which).length - 1) {
     _carousel.idx++;
     _renderCarouselSlide();
   }
@@ -169,13 +172,14 @@ export function selectTestOption(containerId, qi, oi, which) {
   opts[oi].classList.add('selected');
   const stateObj = which === 'pretest' ? STATE.pretest : STATE.posttest;
   stateObj[`q${qi}`] = oi;
-  updateTestDots(containerId);
-  checkTestComplete(stateObj, which === 'pretest' ? 'btn-pretest' : 'btn-posttest');
+  updateTestDots(containerId, which);
+  checkTestComplete(stateObj, which === 'pretest' ? 'btn-pretest' : 'btn-posttest', which);
 }
 
-export function updateTestDots(containerId) {
-  const stateObj = containerId === 'pretest-content' ? STATE.pretest : STATE.posttest;
-  getPreguntas().forEach((_, i) => {
+export function updateTestDots(containerId, which) {
+  const w = which || (containerId === 'pretest-content' ? 'pretest' : 'posttest');
+  const stateObj = w === 'pretest' ? STATE.pretest : STATE.posttest;
+  getPreguntas(w).forEach((_, i) => {
     const dot = document.getElementById(`${containerId}-dot-${i}`);
     if (!dot) return;
     dot.className = 'step-dot';
@@ -183,16 +187,17 @@ export function updateTestDots(containerId) {
   });
 }
 
-export function checkTestComplete(stateObj, btnId) {
+export function checkTestComplete(stateObj, btnId, which = 'pretest') {
   const answered = Object.keys(stateObj).length;
   const btn = document.getElementById(btnId);
-  if (answered >= getPreguntas().length) btn.classList.remove('hidden');
+  if (answered >= getPreguntas(which).length) btn.classList.remove('hidden');
   else btn.classList.add('hidden');
 }
 
 export function calcTestScore(stateObj) {
+  const which = stateObj === STATE.pretest ? 'pretest' : 'posttest';
   let score = 0;
-  getPreguntas().forEach((q, i) => {
+  getPreguntas(which).forEach((q, i) => {
     if (stateObj[`q${i}`] === q.correcta) score++;
   });
   return score;

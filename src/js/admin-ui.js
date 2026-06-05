@@ -2,7 +2,8 @@
 import { goTo } from './state.js';
 import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
-import { TEST_QUESTIONS } from '../data/test-questions.js';
+import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
+import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
 import { ESCENARIOS_FULL } from '../data/escenarios-full.js';
 import { TEST_QUESTIONS_FULL } from '../data/test-questions-full.js';
 import { ESCENARIOS } from '../data/escenarios.js';
@@ -135,11 +136,11 @@ export async function verDetalleParticipante(uid) {
           <div class="admin-scores-grid" style="${tiempoStr ? 'grid-template-columns:repeat(5,1fr)' : ''}">
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Pre-test</span>
-              <span class="title-sm" style="color:${preColor}">${pre}/5</span>
+              <span class="title-sm" style="color:${preColor}">${pre}/10</span>
             </div>
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Post-test</span>
-              <span class="title-sm" style="color:${postColor}">${post}/5</span>
+              <span class="title-sm" style="color:${postColor}">${post}/10</span>
             </div>
             <div class="admin-score-cell">
               <span class="body-sm text-muted">Juego</span>
@@ -196,11 +197,11 @@ export function verDetalleSesion(sessionId) {
     <div class="session-scores-bar">
       <div class="admin-score-cell">
         <span class="body-sm text-muted">Pre-test</span>
-        <span class="title-md" style="color:${preColor}">${pre}/5</span>
+        <span class="title-md" style="color:${preColor}">${pre}/10</span>
       </div>
       <div class="admin-score-cell">
         <span class="body-sm text-muted">Post-test</span>
-        <span class="title-md" style="color:${postColor}">${post}/5</span>
+        <span class="title-md" style="color:${postColor}">${post}/10</span>
       </div>
       <div class="admin-score-cell">
         <span class="body-sm text-muted">Juego</span>
@@ -252,17 +253,18 @@ function buildSessionDetail(s) {
 }
 
 function buildTestCompare(pre = {}, post = {}) {
-  const rows = TEST_QUESTIONS.map((q, i) => {
+  const rows = TEST_QUESTIONS_A.map((qA, i) => {
+    const qB     = TEST_QUESTIONS_B[i];
     const preIdx  = pre?.[`q${i}`];
     const postIdx = post?.[`q${i}`];
-    const preOk   = preIdx  === q.correcta;
-    const postOk  = postIdx === q.correcta;
+    const preOk   = preIdx  === qA.correcta;
+    const postOk  = postIdx === qB.correcta;
 
-    const cell = (idx, ok) => idx !== undefined
-      ? `<div class="flex-col gap-2">
-           <span style="font-size:1rem">${ok ? '✅' : '❌'}</span>
-           <span class="body-sm text-muted" style="font-size:.75rem">${q.opciones[idx].substring(0, 32)}${q.opciones[idx].length > 32 ? '…' : ''}</span>
-         </div>`
+    const cellPre  = preIdx  !== undefined
+      ? `<div class="flex-col gap-2"><span style="font-size:1rem">${preOk  ? '✅' : '❌'}</span><span class="body-sm text-muted" style="font-size:.72rem">${qA.opciones[preIdx].substring(0,30)}${qA.opciones[preIdx].length > 30 ? '…' : ''}</span></div>`
+      : '<span class="body-sm text-muted">—</span>';
+    const cellPost = postIdx !== undefined
+      ? `<div class="flex-col gap-2"><span style="font-size:1rem">${postOk ? '✅' : '❌'}</span><span class="body-sm text-muted" style="font-size:.72rem">${qB.opciones[postIdx].substring(0,30)}${qB.opciones[postIdx].length > 30 ? '…' : ''}</span></div>`
       : '<span class="body-sm text-muted">—</span>';
 
     const arrow = (!preOk && postOk) ? '↗️' : (preOk && !postOk) ? '↘️' : (preOk && postOk) ? '✓' : '✗';
@@ -270,21 +272,21 @@ function buildTestCompare(pre = {}, post = {}) {
 
     return `
       <div class="test-compare-row">
-        <span class="body-sm"><strong>P${i + 1}</strong> ${q.texto}</span>
-        ${cell(preIdx, preOk)}
+        <span class="body-sm"><strong>${qA.constructo}</strong></span>
+        ${cellPre}
         <span style="color:${arrowColor};font-size:1rem;text-align:center">${arrow}</span>
-        ${cell(postIdx, postOk)}
+        ${cellPost}
       </div>`;
   }).join('');
 
   return `
     <div class="flex-col gap-12">
-      <div class="title-sm">📝 Pre-test vs Post-test</div>
+      <div class="title-sm">📝 Pre-test vs Post-test (por constructo)</div>
       <div class="test-compare-header">
-        <span class="body-sm text-muted">Pregunta</span>
-        <span class="body-sm text-muted">Antes</span>
+        <span class="body-sm text-muted">Constructo</span>
+        <span class="body-sm text-muted">Antes (A)</span>
         <span></span>
-        <span class="body-sm text-muted">Después</span>
+        <span class="body-sm text-muted">Después (B)</span>
       </div>
       ${rows}
     </div>`;

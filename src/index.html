@@ -300,12 +300,15 @@
 <div id="p-pretest" class="screen">
   <div class="topbar">
     <span class="topbar-logo">🛡️ OjoAlFraude</span>
-    <span class="badge badge-info">Pre-test</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="badge badge-info">Pre-test</span>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
   </div>
   <div class="container content-z flex-col gap-20">
     <div class="flex-col gap-4 mt-8">
       <h2 class="title-lg">Antes de jugar...</h2>
-      <p class="body-md text-muted">5 preguntas rápidas para conocer lo que ya sabes. No hay respuestas malas.</p>
+      <p class="body-md text-muted">10 preguntas para conocer lo que ya sabes. No hay respuestas malas.</p>
     </div>
     <div id="pretest-content" class="flex-col gap-20"></div>
     <button id="btn-pretest" class="btn btn-primary hidden" onclick="finalizarPretest()">
@@ -345,6 +348,7 @@
     <div class="flex-center" style="gap:8px">
       <div id="streak-nivel" class="streak-pill hidden"></div>
       <div class="score-pill">⭐ <span id="score-nivel">0</span></div>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
     </div>
   </div>
   <div id="nivel-content" class="container content-z flex-col gap-20"></div>
@@ -373,12 +377,15 @@
 <div id="p-posttest" class="screen">
   <div class="topbar">
     <span class="topbar-logo">🛡️ OjoAlFraude</span>
-    <span class="badge badge-info">Post-test</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="badge badge-info">Post-test</span>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
   </div>
   <div class="container content-z flex-col gap-20">
     <div class="flex-col gap-4 mt-8">
       <h2 class="title-lg">Después de jugar...</h2>
-      <p class="body-md text-muted">Las mismas 5 preguntas de antes. ¿Cuánto aprendiste?</p>
+      <p class="body-md text-muted">10 nuevas preguntas sobre los mismos temas. ¿Cuánto aprendiste?</p>
     </div>
     <div id="posttest-content" class="flex-col gap-20"></div>
     <button id="btn-posttest" class="btn btn-primary hidden" onclick="finalizarPosttest()">
