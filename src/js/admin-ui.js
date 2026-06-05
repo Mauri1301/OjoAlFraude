@@ -13,6 +13,11 @@ let _allUsers = [];
 let _sessions = [];
 let _currentUid = null;
 
+function calcTasaExito(historial) {
+  if (!historial?.length) return null;
+  return Math.round(historial.filter(h => h.correcto).length / historial.length * 100);
+}
+
 /* ── Lista de participantes ── */
 export async function cargarPanelAdmin() {
   goTo('p-admin');
@@ -24,9 +29,34 @@ export async function cargarPanelAdmin() {
   try {
     _allUsers = await getAllUsers();
     renderParticipantes(_allUsers.filter(u => u.role !== 'admin'));
+    calcularTasaGeneral();
   } catch (err) {
     container.innerHTML = `<span class="form-error">Error al cargar: ${err.message}</span>`;
   }
+}
+
+async function calcularTasaGeneral() {
+  const card = document.getElementById('admin-tasa-general');
+  if (!card) return;
+  const participantes = _allUsers.filter(u => u.role !== 'admin');
+  if (!participantes.length) return;
+
+  try {
+    const todasLasSesiones = await Promise.all(participantes.map(u => getUserSessions(u.uid)));
+    let totalCorrectos = 0, totalIntentos = 0;
+    todasLasSesiones.flat().forEach(s => {
+      (s.juego?.historial || []).forEach(h => {
+        totalIntentos++;
+        if (h.correcto) totalCorrectos++;
+      });
+    });
+    if (!totalIntentos) return;
+    const tasa = Math.round(totalCorrectos / totalIntentos * 100);
+    document.getElementById('admin-tasa-valor').textContent = tasa + '%';
+    document.getElementById('admin-tasa-detalle').textContent =
+      `${totalCorrectos} escenarios correctos de ${totalIntentos} intentos totales — ${participantes.length} participante${participantes.length !== 1 ? 's' : ''}`;
+    card.style.display = 'flex';
+  } catch { }
 }
 
 function renderParticipantes(participantes) {
@@ -95,6 +125,22 @@ export async function verDetalleParticipante(uid) {
 
     const maxPuntaje = Math.max(..._sessions.map(s => s.juego?.puntaje_total ?? -Infinity));
 
+    let totalCorrectos = 0, totalIntentos = 0;
+    _sessions.forEach(s => {
+      (s.juego?.historial || []).forEach(h => {
+        totalIntentos++;
+        if (h.correcto) totalCorrectos++;
+      });
+    });
+    const tasaParticipante = totalIntentos ? Math.round(totalCorrectos / totalIntentos * 100) : null;
+    const detalleTasa = document.getElementById('detail-tasa');
+    if (tasaParticipante !== null && detalleTasa) {
+      document.getElementById('detail-tasa-valor').textContent = tasaParticipante + '%';
+      document.getElementById('detail-tasa-detalle').textContent =
+        `${totalCorrectos} de ${totalIntentos} escenarios correctos en ${_sessions.length} sesión${_sessions.length !== 1 ? 'es' : ''}`;
+      detalleTasa.style.display = 'flex';
+    }
+
     container.innerHTML = _sessions.map(s => {
       const fecha  = s.completadoEn?.toDate
         ? s.completadoEn.toDate().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -102,7 +148,7 @@ export async function verDetalleParticipante(uid) {
       const pre    = s.pretest?.score  ?? '—';
       const post   = s.posttest?.score ?? '—';
       const game   = s.juego?.puntaje_total ?? '—';
-      const sus    = s.sus?.score      ?? '—';
+      const tasa   = calcTasaExito(s.juego?.historial);
       const mejora = (typeof pre === 'number' && typeof post === 'number') ? post - pre : null;
 
       const mejoraHtml = mejora === null ? '' : `
@@ -147,8 +193,8 @@ export async function verDetalleParticipante(uid) {
               <span class="title-sm">${game} pts</span>
             </div>
             <div class="admin-score-cell">
-              <span class="body-sm text-muted">SUS</span>
-              <span class="title-sm">${sus}%</span>
+              <span class="body-sm text-muted">Tasa éxito</span>
+              <span class="title-sm">${tasa !== null ? tasa + '%' : '—'}</span>
             </div>
             ${tiempoStr ? `
             <div class="admin-score-cell">
@@ -185,7 +231,7 @@ export function verDetalleSesion(sessionId) {
   const pre  = s.pretest?.score  ?? '—';
   const post = s.posttest?.score ?? '—';
   const game = s.juego?.puntaje_total ?? '—';
-  const sus  = s.sus?.score ?? '—';
+  const tasa = calcTasaExito(s.juego?.historial);
   const preColor  = typeof pre  === 'number' ? (pre  >= 4 ? 'var(--accent3)' : pre  >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
   const postColor = typeof post === 'number' ? (post >= 4 ? 'var(--accent3)' : post >= 2 ? 'var(--accent)' : 'var(--accent2)') : 'var(--text)';
 
@@ -208,8 +254,8 @@ export function verDetalleSesion(sessionId) {
         <span class="title-md">${game} pts</span>
       </div>
       <div class="admin-score-cell">
-        <span class="body-sm text-muted">SUS</span>
-        <span class="title-md">${sus}%</span>
+        <span class="body-sm text-muted">Tasa éxito</span>
+        <span class="title-md">${tasa !== null ? tasa + '%' : '—'}</span>
       </div>
       ${tiempoStr ? `<div class="admin-score-cell">
         <span class="body-sm text-muted">Tiempo</span>

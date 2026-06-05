@@ -28,6 +28,13 @@
       <h2 class="title-lg">Participantes</h2>
       <p class="body-sm text-muted">Toca un participante para ver su historial de sesiones</p>
     </div>
+    <div id="admin-tasa-general" class="card flex-col gap-8" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="title-sm">📊 Tasa de éxito general</span>
+        <span id="admin-tasa-valor" class="title-lg text-accent">—</span>
+      </div>
+      <p class="body-sm text-muted" id="admin-tasa-detalle"></p>
+    </div>
     <input id="admin-search" class="form-input" type="text" placeholder="🔍 Buscar por nombre..." oninput="filtrarParticipantes(this.value)">
     <div id="admin-participants" class="flex-col gap-8"></div>
   </div>
@@ -43,6 +50,13 @@
     <div class="flex-col gap-4 mt-8">
       <h2 class="title-lg" id="detail-nombre"></h2>
       <p class="body-sm text-muted" id="detail-info"></p>
+    </div>
+    <div id="detail-tasa" class="card flex-col gap-4" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="title-sm">📊 Tasa de éxito del participante</span>
+        <span id="detail-tasa-valor" class="title-lg text-accent">—</span>
+      </div>
+      <p class="body-sm text-muted" id="detail-tasa-detalle"></p>
     </div>
     <div id="detail-sessions" class="flex-col gap-12"></div>
   </div>
@@ -268,11 +282,11 @@
       <span class="shield-big">🛡️</span>
       <div class="flex-col gap-8">
         <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
-        <p class="body-md text-muted">Aprende a protegerte de los engaños digitales más comunes en Perú</p>
+        <p class="body-md text-muted">Enterate como protegerte de los engaños digitales más comunes en Perú</p>
       </div>
     </div>
     <div class="card flex-col gap-12">
-      <div class="title-sm">¿Qué vas a aprender?</div>
+      <div class="title-sm">¿Qué vas a entender?</div>
       <div class="flex-col gap-8">
         <div class="flex-center" style="gap:10px;justify-content:flex-start">
           <span>🎯</span>
@@ -385,7 +399,7 @@
   <div class="container content-z flex-col gap-20">
     <div class="flex-col gap-4 mt-8">
       <h2 class="title-lg">Después de jugar...</h2>
-      <p class="body-md text-muted">10 nuevas preguntas sobre los mismos temas. ¿Cuánto aprendiste?</p>
+      <p class="body-md text-muted">10 nuevas preguntas sobre los mismos temas. ¿Cuánto mejoraste?</p>
     </div>
     <div id="posttest-content" class="flex-col gap-20"></div>
     <button id="btn-posttest" class="btn btn-primary hidden" onclick="finalizarPosttest()">
@@ -405,11 +419,11 @@
       <h2 class="title-lg">Tu progreso</h2>
       <p class="body-md text-muted">Así cambió tu conocimiento sobre fraudes digitales</p>
     </div>
+    <div id="mejora-card" class="card flex-col gap-8"></div>
     <div class="card flex-col gap-16">
-      <div class="title-sm">📊 Pre-test vs Post-test</div>
+      <div class="title-sm">📊 Detalle por pregunta</div>
       <div class="compare-bars" id="compare-bars"></div>
     </div>
-    <div id="mejora-card" class="card flex-col gap-8"></div>
     <button class="btn btn-primary" onclick="abrirModalSUS()">Continuar →</button>
   </div>
 </div>
@@ -462,7 +476,7 @@
   <div class="modal sus-modal">
     <div class="flex-col gap-4 mb-16">
       <h3 class="title-md">🧩 Encuesta de concientización</h3>
-      <p class="body-sm text-muted">3 preguntas cortas sobre lo que aprendiste.</p>
+      <p class="body-sm text-muted" style="margin-bottom:8px">Indica qué tan de acuerdo estás con cada afirmación sobre esta experiencia.</p>
     </div>
     <div id="sus-content" class="flex-col gap-20"></div>
     <button id="btn-sus" class="btn btn-primary hidden mt-16" onclick="finalizarSUS()">

@@ -8,10 +8,10 @@ export function mostrarResultado() {
   const bonusPts = STATE.historial.filter(h => h.streakBonus).length * 5;
 
   let emoji, title, subtitle;
-  if      (total >= 72) { emoji = '🏆'; title = '¡Experto en seguridad!';    subtitle = 'Tienes un gran ojo para detectar fraudes. ¡Comparte lo aprendido con tu familia!'; }
+  if      (total >= 72) { emoji = '🏆'; title = '¡Experto en seguridad!';    subtitle = 'Tienes un gran ojo para detectar fraudes.'; }
   else if (total >= 54) { emoji = '🛡️'; title = '¡Muy bien hecho!';          subtitle = 'Identificaste la mayoría de los fraudes. Sigue practicando para mejorar aún más.'; }
-  else if (total >= 36) { emoji = '📚'; title = '¡Buen intento!';             subtitle = 'Aprendiste varias cosas importantes. Te recomendamos repasar los escenarios que fallaste.'; }
-  else                  { emoji = '🌱'; title = '¡Gracias por participar!';   subtitle = 'Este juego te mostró los riesgos. Ahora ya conoces las señales de alerta. ¡Sigue aprendiendo!'; }
+  else if (total >= 36) { emoji = '📚'; title = '¡Buen intento!';             subtitle = 'Te enteraste de varias cosas importantes. Te recomendamos repasar los escenarios que fallaste.'; }
+  else                  { emoji = '🌱'; title = '¡Gracias por participar!';   subtitle = 'Este juego te mostró los riesgos que te puedes encontrar el tu dia a dia.'; }
 
   document.getElementById('result-emoji').textContent    = emoji;
   document.getElementById('result-title').textContent    = title;
@@ -55,7 +55,7 @@ export function mostrarResultado() {
         <span class="bold">🔥 ${STATE.maxWinstreak} seguidos</span>
       </div>
       <div style="background:rgba(107,203,119,.08);border-radius:6px;padding:8px 10px">
-        <span class="body-sm" style="color:var(--accent3)">✅ Demostraste aprendizaje progresivo: ${STATE.maxWinstreak} escenarios resueltos consecutivamente</span>
+        <span class="body-sm" style="color:var(--accent3)">✅ Demostraste mejora progresiva: ${STATE.maxWinstreak} escenarios resueltos consecutivamente</span>
       </div>`;
   }
 
@@ -65,9 +65,9 @@ export function mostrarResultado() {
 export function renderComparacion() {
   const pre    = STATE.pretestScore;
   const post   = STATE.posttestScore;
-  const maxQ   = TEST_QUESTIONS_A.length;
-  const mejora = post - pre;
   const pregA  = STATE.questionsActuales?.length  ? STATE.questionsActuales  : TEST_QUESTIONS_A;
+  const maxQ   = pregA.length;
+  const mejora = post - pre;
   const pregB  = STATE.posttestQuestions?.length  ? STATE.posttestQuestions  : TEST_QUESTIONS_B;
 
   const bars = document.getElementById('compare-bars');
@@ -145,10 +145,10 @@ export function renderFin() {
   const nivelComp = aciertos >= 7 ? 'alta' : aciertos >= 4 ? 'media' : 'en desarrollo';
   const compIcon  = aciertos >= 7 ? '🏅' : aciertos >= 4 ? '📈' : '🌱';
   const compDesc  = aciertos >= 7
-    ? 'Tu capacidad para identificar fraudes digitales es sólida. Estás en condición de protegerte y de enseñarle a otros.'
+    ? 'Tu capacidad para identificar fraudes digitales es sólida. Estás en buena posición para protegerte y cuidar también a quienes te rodean.'
     : aciertos >= 4
     ? 'Tu capacidad de detección es buena y seguirá creciendo con la práctica.'
-    : 'Este juego fue tu primer paso. Ahora conoces las señales de alerta — sigue aprendiendo.';
+    : 'Este juego fue tu primer paso. Ahora conoces las señales de alerta — sigue practicando.';
   compEl.innerHTML = `
     <div class="title-sm mb-4">🧠 Tu competencia en seguridad digital</div>
     <div style="background:rgba(107,203,119,.08);border:1px solid rgba(107,203,119,.25);border-radius:8px;padding:12px 14px">
@@ -161,6 +161,6 @@ export function renderFin() {
       </div>
     </div>
     ${STATE.maxWinstreak >= 2
-      ? `<p class="body-sm text-muted mt-4">🔥 Alcanzaste una racha de <strong>${STATE.maxWinstreak} aciertos consecutivos</strong>, lo que refleja aprendizaje progresivo durante el juego.</p>`
+      ? `<p class="body-sm text-muted mt-4">🔥 Alcanzaste una racha de <strong>${STATE.maxWinstreak} aciertos consecutivos</strong>, lo que refleja tu mejora progresiva durante el juego.</p>`
       : ''}`;
 }
