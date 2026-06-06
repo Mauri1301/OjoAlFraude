@@ -35,6 +35,7 @@ import {
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
   importarContenido, sincronizarEnlaces, sincronizarConsequencias, sincronizarOpciones, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab, eliminarParticipante,
+  cargarEstadisticas, exportarEstadisticasCSV, migrarKAB,
 } from './admin-ui.js';
 
 
@@ -122,6 +123,9 @@ Object.assign(window, {
   volverADetalle,
   switchTestTab,
   eliminarParticipante,
+  cargarEstadisticas,
+  exportarEstadisticasCSV,
+  migrarKAB,
   // admin — contenido
   cargarEscenarios,
   cargarPreguntas,

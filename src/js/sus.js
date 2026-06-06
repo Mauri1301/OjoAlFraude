@@ -54,7 +54,7 @@ export async function finalizarSUS() {
         historial:           STATE.historial,
       },
       posttest: { respuestas: STATE.posttest, score: STATE.posttestScore },
-      sus:      { respuestas: STATE.sus },
+      kab:      { respuestas: STATE.sus },
     }).catch(err => console.error('Error al guardar sesión:', err));
   }
 }

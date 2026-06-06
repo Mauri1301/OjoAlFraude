@@ -1,13 +1,14 @@
 /* Panel de administrador */
 import { goTo } from './state.js';
-import { getAllUsers, getUserSessions, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias, syncOpciones, deleteParticipante } from '../firebase/db.js';
+import { getAllUsers, getUserSessions, getAllSessions, migrarSusAKab, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias, syncOpciones, deleteParticipante } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
 import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
 import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
 import { ESCENARIOS_FULL } from '../data/escenarios-full.js';
 import { TEST_QUESTIONS_FULL } from '../data/test-questions-full.js';
 import { ESCENARIOS } from '../data/escenarios.js';
-import { SUS_PREGUNTAS } from '../data/nivel-config.js';
+import { SUS_PREGUNTAS, LIKERT_LABELS } from '../data/nivel-config.js';
+import { mean, stdDev, pairedTTest } from './stats.js';
 
 let _allUsers = [];
 let _sessions = [];
@@ -281,7 +282,7 @@ export function verDetalleSesion(sessionId) {
     <div class="session-bottom-grid">
       ${buildGameSection(s.juego?.historial)}
       <div class="divider session-bottom-divider"></div>
-      ${buildSUSSection(s.sus?.respuestas)}
+      ${buildSUSSection(s.kab?.respuestas ?? s.sus?.respuestas)}
     </div>`;
 
   goTo('p-admin-session');
@@ -308,6 +309,269 @@ export async function eliminarParticipante(uid) {
   }
 }
 
+/* ══════════════════════════════════════════════
+   VISTA 2 — RESUMEN ESTADÍSTICO AGREGADO
+══════════════════════════════════════════════ */
+
+let _statsRows = [];   // filas para exportar CSV
+
+// Devuelve la PRIMERA sesión de cada participante (menor timestamp)
+function primeraSesionPorParticipante(participantes, sesiones) {
+  const porUsuario = {};
+  sesiones.forEach(s => {
+    if (!porUsuario[s.userId]) porUsuario[s.userId] = [];
+    porUsuario[s.userId].push(s);
+  });
+  const ts = s => (s.completadoEn?.toMillis ? s.completadoEn.toMillis()
+    : s.completadoEn?.seconds ? s.completadoEn.seconds * 1000
+    : (s.sessionNumber || 0));
+  const out = [];
+  participantes.forEach(u => {
+    const lista = porUsuario[u.uid];
+    if (!lista?.length) return;
+    const primera = [...lista].sort((a, b) => ts(a) - ts(b))[0];
+    out.push({ user: u, sesion: primera });
+  });
+  return out;
+}
+
+export async function cargarEstadisticas() {
+  goTo('p-admin-stats');
+  const cont = document.getElementById('admin-stats-container');
+  cont.innerHTML = '<p class="body-sm text-muted">Cargando estadísticas...</p>';
+
+  try {
+    const [users, sesiones] = await Promise.all([getAllUsers(), getAllSessions()]);
+    const participantes = users.filter(u => u.role !== 'admin');
+    const registros = primeraSesionPorParticipante(participantes, sesiones);
+
+    // Solo incluir registros con O₁ y O₂ numéricos
+    const validos = registros.filter(r =>
+      typeof r.sesion.pretest?.score === 'number' &&
+      typeof r.sesion.posttest?.score === 'number');
+
+    if (validos.length < 1) {
+      cont.innerHTML = `
+        <div class="flex-col gap-4 mt-8">
+          <h2 class="title-lg">📊 Resumen estadístico</h2>
+          <p class="body-sm text-muted">No hay participantes con pre-test y post-test completos para analizar.</p>
+        </div>
+        <div class="card flex-col gap-8">
+          <span class="body-sm text-muted">Participantes registrados: <strong>${participantes.length}</strong></span>
+        </div>`;
+      _statsRows = [];
+      return;
+    }
+
+    const O1 = validos.map(r => r.sesion.pretest.score);
+    const O2 = validos.map(r => r.sesion.posttest.score);
+    const deltas = O1.map((v, i) => O2[i] - v);
+    const juego = validos
+      .map(r => r.sesion.juego?.puntaje_total)
+      .filter(v => typeof v === 'number');
+
+    // Construir filas para CSV + KAB
+    _statsRows = validos.map((r, i) => {
+      const kab = r.sesion.kab?.respuestas ?? r.sesion.sus?.respuestas ?? {};
+      const a1 = kab.q0 ?? '', a2 = kab.q1 ?? '', a3 = kab.q2 ?? '';
+      const kabVals = [a1, a2, a3].filter(v => typeof v === 'number');
+      const kabMedia = kabVals.length ? mean(kabVals) : '';
+      const fecha = r.sesion.completadoEn?.toDate
+        ? r.sesion.completadoEn.toDate().toLocaleDateString('es-PE')
+        : '—';
+      return {
+        nombre: r.user.nombre || 'Sin nombre',
+        fecha,
+        o1: O1[i], o2: O2[i], delta: deltas[i],
+        juego: r.sesion.juego?.puntaje_total ?? '',
+        a1, a2, a3,
+        kabMedia: kabMedia === '' ? '' : Number(kabMedia.toFixed(2)),
+      };
+    });
+
+    // Estadística descriptiva
+    const desc = {
+      nRegistrados: participantes.length,
+      n: validos.length,
+      mediaO1: mean(O1),
+      mediaO2: mean(O2),
+      mediaDelta: mean(deltas),
+      sdDelta: stdDev(deltas),
+      minDelta: Math.min(...deltas),
+      maxDelta: Math.max(...deltas),
+      mejoraron: deltas.filter(d => d > 0).length,
+      iguales: deltas.filter(d => d === 0).length,
+      bajaron: deltas.filter(d => d < 0).length,
+      mediaJuego: juego.length ? mean(juego) : null,
+    };
+
+    // Prueba t (requiere n ≥ 2)
+    const tt = validos.length >= 2 ? pairedTTest(O1, O2) : null;
+
+    // KAB: medias y distribuciones por ítem
+    const kabPorItem = [0, 1, 2].map(qi => {
+      const vals = validos
+        .map(r => (r.sesion.kab?.respuestas ?? r.sesion.sus?.respuestas ?? {})[`q${qi}`])
+        .filter(v => typeof v === 'number');
+      const dist = [1, 2, 3, 4, 5].map(n => vals.filter(v => v === n).length);
+      return { media: vals.length ? mean(vals) : null, dist, n: vals.length };
+    });
+    const kabGlobal = (() => {
+      const todos = kabPorItem.flatMap((it, qi) => validos
+        .map(r => (r.sesion.kab?.respuestas ?? r.sesion.sus?.respuestas ?? {})[`q${qi}`])
+        .filter(v => typeof v === 'number'));
+      return todos.length ? mean(todos) : null;
+    })();
+
+    cont.innerHTML = renderEstadisticas(desc, tt, kabPorItem, kabGlobal);
+  } catch (err) {
+    cont.innerHTML = `<span class="form-error">Error al calcular: ${err.message}</span>`;
+  }
+}
+
+function renderEstadisticas(d, tt, kabPorItem, kabGlobal) {
+  const fmt = (x, dec = 2) => (x === null || x === undefined || Number.isNaN(x)) ? '—' : Number(x).toFixed(dec);
+
+  // Tarjetas descriptivas
+  const descCells = [
+    ['N participantes (analizados)', `${d.n}`],
+    ['Media O₁ (pre-test)', `${fmt(d.mediaO1)} / 10`],
+    ['Media O₂ (post-test)', `${fmt(d.mediaO2)} / 10`],
+    ['Media Δ (O₂ − O₁)', fmt(d.mediaDelta)],
+    ['Desviación estándar de Δ', fmt(d.sdDelta)],
+    ['Δ mínimo / máximo', `${fmt(d.minDelta, 0)} / ${fmt(d.maxDelta, 0)}`],
+    ['Media puntaje del juego', d.mediaJuego === null ? '—' : `${fmt(d.mediaJuego)} pts`],
+  ].map(([k, v]) => `
+    <div class="stats-cell">
+      <span class="body-sm text-muted">${k}</span>
+      <span class="title-sm">${v}</span>
+    </div>`).join('');
+
+  // Distribución de Δ
+  const totalDist = d.mejoraron + d.iguales + d.bajaron || 1;
+  const distBar = (label, val, color) => {
+    const pct = Math.round(val / totalDist * 100);
+    return `
+      <div class="flex-col gap-4">
+        <div style="display:flex;justify-content:space-between">
+          <span class="body-sm">${label}</span>
+          <span class="body-sm bold">${val} (${pct}%)</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+  };
+
+  // Prueba t
+  let tHtml;
+  if (!tt) {
+    tHtml = '<p class="body-sm text-muted">Se requieren al menos 2 participantes para la prueba t.</p>';
+  } else {
+    const significativo = tt.pOne < 0.05;
+    const conclusion = significativo
+      ? 'Se rechaza H₀. OjoAlFraude produjo una mejora significativa en la concientización.'
+      : 'No se rechaza H₀. No es posible afirmar que la mejora no sea producto del azar.';
+    tHtml = `
+      <div class="stats-grid">
+        <div class="stats-cell"><span class="body-sm text-muted">Estadístico t</span><span class="title-sm">${fmt(tt.t, 4)}</span></div>
+        <div class="stats-cell"><span class="body-sm text-muted">Grados de libertad (N−1)</span><span class="title-sm">${tt.df}</span></div>
+        <div class="stats-cell"><span class="body-sm text-muted">Valor p (una cola)</span><span class="title-sm">${fmt(tt.pOne, 4)}</span></div>
+        <div class="stats-cell"><span class="body-sm text-muted">α</span><span class="title-sm">0.05</span></div>
+      </div>
+      <div class="card" style="background:${significativo ? 'rgba(107,203,119,.1)' : 'rgba(235,77,75,.08)'};border-color:${significativo ? 'var(--accent3)' : 'var(--accent2)'}">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.4rem">${significativo ? '✅' : '⚠️'}</span>
+          <div class="flex-col gap-2">
+            <span class="body-md bold">${conclusion}</span>
+            <span class="body-sm text-muted">H₁: μO₂ &gt; μO₁ · Prueba t de Student para muestras relacionadas (una cola)</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // KAB
+  const kabRows = kabPorItem.map((it, i) => {
+    const etiqueta = it.media === null ? '—' : LIKERT_LABELS[Math.round(it.media) - 1];
+    const distTxt = it.dist.map((c, n) => `${n + 1}:${c}`).join('  ');
+    return `
+      <div class="flex-col gap-6" style="padding:10px 0;border-bottom:1px solid var(--surface2)">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+          <span class="body-sm" style="flex:1"><strong>A${i + 1}.</strong> ${SUS_PREGUNTAS[i]}</span>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="title-sm">${fmt(it.media)}</div>
+            <div class="body-sm text-muted" style="font-size:.72rem">${etiqueta}</div>
+          </div>
+        </div>
+        <div class="body-sm text-muted" style="font-size:.72rem">Frecuencias (1→5): ${distTxt}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="flex-col gap-4 mt-8">
+      <h2 class="title-lg">📊 Resumen estadístico</h2>
+      <p class="body-sm text-muted">Análisis sobre la primera sesión de cada participante · ${d.nRegistrados} registrado(s), ${d.n} analizado(s)</p>
+    </div>
+
+    <div class="card flex-col gap-12">
+      <div class="title-sm">📈 Estadística descriptiva</div>
+      <div class="stats-grid">${descCells}</div>
+    </div>
+
+    <div class="card flex-col gap-12">
+      <div class="title-sm">📊 Distribución de Δ (cambio pre→post)</div>
+      ${distBar('Mejoraron (Δ &gt; 0)', d.mejoraron, 'var(--accent3)')}
+      ${distBar('Sin cambio (Δ = 0)', d.iguales, 'var(--text-muted)')}
+      ${distBar('Bajaron (Δ &lt; 0)', d.bajaron, 'var(--accent2)')}
+    </div>
+
+    <div class="card flex-col gap-12">
+      <div class="title-sm">🧪 Prueba t de Student (muestras relacionadas)</div>
+      ${tHtml}
+    </div>
+
+    <div class="card flex-col gap-8">
+      <div class="title-sm">🧠 Encuesta de concientización (KAB)</div>
+      ${kabRows}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px">
+        <span class="body-md bold">Media global (A1–A3)</span>
+        <span class="title-sm text-accent">${fmt(kabGlobal)}</span>
+      </div>
+    </div>`;
+}
+
+export function exportarEstadisticasCSV() {
+  if (!_statsRows.length) { alert('No hay datos para exportar.'); return; }
+  const headers = ['nombre', 'fecha', 'O1', 'O2', 'delta', 'puntaje_juego', 'KAB_A1', 'KAB_A2', 'KAB_A3', 'KAB_media'];
+  const esc = v => {
+    const s = String(v ?? '');
+    return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const lines = [headers.join(',')];
+  _statsRows.forEach(r => {
+    lines.push([r.nombre, r.fecha, r.o1, r.o2, r.delta, r.juego, r.a1, r.a2, r.a3, r.kabMedia].map(esc).join(','));
+  });
+  const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `OjoAlFraude_estadisticas_${Date.now()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export async function migrarKAB() {
+  if (!confirm('¿Migrar el campo "sus" a "kab" en las sesiones existentes? Es seguro y no borra datos.')) return;
+  const btn = event?.target;
+  if (btn) { btn.disabled = true; btn.textContent = 'Migrando...'; }
+  try {
+    const n = await migrarSusAKab();
+    alert(`✅ ${n} sesión(es) migrada(s) de "sus" a "kab".`);
+  } catch (err) {
+    alert('Error al migrar: ' + err.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔁 Migrar SUS → KAB'; }
+  }
+}
+
 export function switchTestTab(tab) {
   document.getElementById('tab-content-pre').classList.toggle('hidden', tab !== 'pre');
   document.getElementById('tab-content-post').classList.toggle('hidden', tab !== 'post');
@@ -326,7 +590,7 @@ function buildSessionDetail(s) {
       ${buildTestSection('📝 Post-test', s.posttest?.respuestas)}
     </div>
     <div class="divider mt-8"></div>
-    ${buildSUSSection(s.sus?.respuestas)}`;
+    ${buildSUSSection(s.kab?.respuestas ?? s.sus?.respuestas)}`;
 }
 
 function buildTestCompare(pre = {}, post = {}) {

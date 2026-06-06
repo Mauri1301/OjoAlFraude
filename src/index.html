@@ -18,6 +18,7 @@
   <div class="topbar">
     <span class="topbar-logo">⚙️ Panel Admin</span>
     <div style="display:flex;gap:8px">
+      <button class="topbar-btn" onclick="cargarEstadisticas()">📊 Estadísticas</button>
       <button class="topbar-btn" onclick="cargarEscenarios()">Escenarios</button>
       <button class="topbar-btn" onclick="cargarPreguntas()">Preguntas</button>
       <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
@@ -37,6 +38,21 @@
     </div>
     <input id="admin-search" class="form-input" type="text" placeholder="🔍 Buscar por nombre..." oninput="filtrarParticipantes(this.value)">
     <div id="admin-participants" class="flex-col gap-8"></div>
+  </div>
+</div>
+
+<!-- ADMIN: ESTADÍSTICAS (Vista 2) -->
+<div id="p-admin-stats" class="screen">
+  <div class="topbar">
+    <button class="topbar-btn" onclick="cargarPanelAdmin()">← Participantes</button>
+    <div style="display:flex;gap:8px">
+      <button class="topbar-btn" onclick="migrarKAB()">🔁 Migrar SUS → KAB</button>
+      <button class="topbar-btn" id="btn-export-stats" onclick="exportarEstadisticasCSV()">⬇️ Exportar CSV</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
+  </div>
+  <div class="container content-z flex-col gap-20" id="admin-stats-container" style="padding-bottom:40px">
+    <p class="body-sm text-muted">Cargando estadísticas...</p>
   </div>
 </div>
 

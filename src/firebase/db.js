@@ -55,6 +55,28 @@ export async function getAllUsers() {
   return snap.docs.map(d => ({ uid: d.id, ...d.data() }));
 }
 
+// Lee TODA la colección de sesiones de una vez (para análisis agregado)
+export async function getAllSessions() {
+  const snap = await getDocs(collection(db, 'sessions'));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+// Migra el campo `sus` a `kab` en sesiones existentes que aún no lo tengan
+export async function migrarSusAKab() {
+  const snap = await getDocs(collection(db, 'sessions'));
+  const batch = writeBatch(db);
+  let count = 0;
+  snap.docs.forEach(d => {
+    const data = d.data();
+    if (data.sus && !data.kab) {
+      batch.update(d.ref, { kab: data.sus });
+      count++;
+    }
+  });
+  if (count) await batch.commit();
+  return count;
+}
+
 /* ── Contenido del juego ── */
 
 export async function loadScenarios() {
