@@ -293,42 +293,34 @@
   </div>
 </div>
 
-<!-- SCREEN 1: BIENVENIDA -->
-<div id="p-bienvenida" class="screen">
+<!-- SCREEN 1: MAPA DE NIVELES (pantalla de inicio de los participantes) -->
+<div id="p-mapa" class="screen">
   <div class="topbar">
     <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
-    <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="topbar-btn" onclick="abrirRecord()">🏆 Mi récord</button>
+      <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
+    </div>
   </div>
-  <div class="container content-z flex-col gap-24" style="padding-top:32px;padding-bottom:40px">
-    <div class="text-center flex-col gap-16">
-      <div class="buho-hero"><img src="/img/buho5.png" alt="OjoAlFraude" width="140" style="height:auto"></div>
-      <div class="flex-col gap-8">
-        <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
-        <p class="body-md text-muted">Enterate como protegerte de los engaños digitales más comunes en Perú</p>
-      </div>
+  <div class="container content-z mapa-wrap">
+    <div class="mapa-saludo text-center">
+      <h2 class="title-lg" id="mapa-saludo">¡Hola!</h2>
+      <p class="body-md text-muted" id="mapa-sub"></p>
     </div>
-    <div class="card flex-col gap-12">
-      <div class="title-sm">¿Qué vas a entender?</div>
-      <div class="flex-col gap-8">
-        <div class="flex-center" style="gap:10px;justify-content:flex-start">
-          <span>🎯</span>
-          <span class="body-md">Identificar fraudes en WhatsApp, correo, SMS y redes sociales</span>
-        </div>
-        <div class="flex-center" style="gap:10px;justify-content:flex-start">
-          <span>🧠</span>
-          <span class="body-md">3 niveles con 9 escenarios reales del contexto peruano</span>
-        </div>
-        <div class="flex-center" style="gap:10px;justify-content:flex-start">
-          <span>⏱️</span>
-          <span class="body-md">Duración aproximada: 20 a 30 minutos</span>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-primary" onclick="iniciarPretest()">🚀 ¡Empezar ahora!</button>
-    <div class="card flex-col gap-12">
-      <div class="title-sm">📋 Mis sesiones anteriores</div>
-      <div id="bienvenida-historial" class="bienvenida-historial-list"><p class="body-sm text-muted">Cargando...</p></div>
-    </div>
+    <div id="mapa-camino" class="mapa-camino"></div>
+  </div>
+</div>
+
+<!-- RÉCORD E INTENTOS -->
+<div id="p-record" class="screen">
+  <div class="topbar">
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
+    <button class="topbar-btn" onclick="irAlMapa()">← Volver al mapa</button>
+  </div>
+  <div class="container content-z record-wrap">
+    <h2 class="title-lg text-center">Mi récord</h2>
+    <p class="body-md text-muted text-center" id="record-sub"></p>
+    <div id="record-lista"></div>
   </div>
 </div>
 
@@ -374,6 +366,7 @@
       </div>
     </div>
     <button id="intro-btn" class="btn btn-primary"></button>
+    <button class="btn btn-ghost" onclick="irAlMapa()">← Volver al mapa</button>
   </div>
 </div>
 
@@ -407,8 +400,9 @@
       <span class="pts-label">PUNTOS</span>
     </div>
     <div id="result-breakdown" class="card flex-col gap-12"></div>
+    <p class="body-md text-center">Para terminar, queda una última prueba corta para conocer cuánto sabes ahora, después de jugar.</p>
     <div class="flex-col gap-12">
-      <button class="btn btn-primary" onclick="iniciarPosttest()">Continuar al Post-test →</button>
+      <button class="btn btn-primary" onclick="iniciarPosttest()">Hacer la prueba final →</button>
     </div>
   </div>
 </div>
@@ -494,7 +488,7 @@
       </div>
     </div>
     <div class="flex-col gap-12">
-      <button class="btn btn-primary" onclick="reiniciarJuego()">🔄 Jugar de nuevo</button>
+      <button class="btn btn-primary" onclick="irAlMapa()">🗺️ Ir al mapa</button>
     </div>
     <p class="body-sm text-muted text-center">Gracias por participar en esta investigación — Universidad de Lima 2025</p>
   </div>
@@ -513,6 +507,22 @@
     </button>
   </div>
 </div>
+
+<div id="overlay-info" class="overlay">
+  <div class="modal">
+    <div class="text-center flex-col gap-12">
+      <img id="info-buho" src="/img/buho6.png" alt="" class="buho-pic" style="width:110px;height:auto">
+      <h3 class="title-md" id="info-titulo"></h3>
+      <p class="body-md text-muted" id="info-texto"></p>
+    </div>
+    <div class="flex-col gap-8 mt-24">
+      <button class="btn btn-primary" id="info-ok"></button>
+      <button class="btn btn-ghost" id="info-cancel"></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <div id="overlay-feedback" class="overlay">
   <div class="modal">

@@ -2,7 +2,8 @@
 import { STATE, goTo } from './state.js';
 import { SUS_PREGUNTAS, LIKERT_LABELS } from '../data/nivel-config.js';
 import { renderFin } from './results.js';
-import { saveSession } from '../firebase/db.js';
+import { almacen } from './recorrido.js';
+import { aplicarProgresoLocal } from './progreso.js';
 
 export function abrirModalSUS() {
   renderSUS();
@@ -41,7 +42,8 @@ export async function finalizarSUS() {
 
   if (STATE.currentUser) {
     const bonusPts = STATE.historial.filter(h => h.streakBonus).length * 5;
-    saveSession(STATE.currentUser.uid, {
+    const kab = { respuestas: { ...STATE.sus } };
+    almacen.guardarSesion(STATE.currentUser.uid, {
       participante: STATE.participante,
       pretest:  { respuestas: STATE.pretest,  score: STATE.pretestScore },
       juego: {
@@ -54,7 +56,17 @@ export async function finalizarSUS() {
         historial:           STATE.historial,
       },
       posttest: { respuestas: STATE.posttest, score: STATE.posttestScore },
-      kab:      { respuestas: STATE.sus },
-    }).catch(err => console.error('Error al guardar sesión:', err));
+      kab,
+    }, {
+      // Se marcan en el mismo lote que la sesión: desde aquí el usuario ya practica
+      'progreso.kab': kab,
+      'progreso.completo': true,
+    }).then(() => {
+      aplicarProgresoLocal('kab', kab);
+      aplicarProgresoLocal('completo', true);
+    }).catch(err => {
+      console.error('Error al guardar sesión:', err);
+      window.mostrarAviso?.('No pudimos guardar tus respuestas. Puedes intentarlo de nuevo desde el mapa.');
+    });
   }
 }

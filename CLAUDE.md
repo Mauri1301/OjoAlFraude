@@ -78,6 +78,22 @@
 
 ---
 
+## 🗺️ Mapa de niveles y recorrido (inspirado en Duolingo, identidad propia)
+
+Al loguearse, el jugador ve el **mapa de niveles** (`p-mapa`); ya no existe la pantalla de bienvenida ni el historial de sesiones.
+
+- **Nodos**: **3 círculos grandes (uno por nivel)** en zigzag + trofeo final, unidos por un trazo punteado (SVG dibujado en `mapa.js`). Cada círculo lleva debajo una etiqueta del mismo tamaño (190 px) con nombre y subtítulo del nivel; no hay banners rectangulares. El búho se anima hasta el nodo actual. Colores por nivel: teal / azul / morado (sin verde ni rojo).
+- **Mi récord** (`record.js`, pantalla `p-record`): botón "🏆 Mi récord" en el topbar del mapa. Muestra por nivel el mejor puntaje, nº de intentos y lista (fecha, puntaje, "Primer recorrido"/"Práctica"). Lee `progreso.niveles` + colección `practicas` (`getMisPracticas`); para usuarios heredados usa su sesión más antigua.
+- **Primer recorrido**: solo el nivel actual es jugable; los demás en gris. Al elegir el Nivel 1 aparece un modal que avisa del **pre-test**; al terminarlo entra directo al Nivel 1. Cada nivel terminado vuelve al mapa y desbloquea el siguiente. Al terminar el Nivel 3 → resultados → aviso del **post-test** → comparación → encuesta KAB → pantalla final.
+- **Después del recorrido**: todos los niveles se pueden rejugar sin límite; ya no hay pre/post. Las partidas rejugadas se guardan en `/practicas` y **no entran a la estadística**.
+- **Sin repetir antes del post-test**: no se puede rejugar un nivel hasta completar el recorrido.
+- **Salir a mitad de un nivel** lo reinicia (no se guarda avance parcial). La racha (winstreak) se reinicia al empezar cada nivel.
+- **Usuarios previos** (`sessionCount > 0` y sin `progreso`) se consideran recorrido completado.
+- **Módulos**: `progreso.js` (lógica pura, con tests), `recorrido.js` (orquesta; objeto `almacen` como punto de inyección para tests), `mapa.js` (render), `record.js` (récord e intentos), `ui.js` (modal informativo `mostrarInfo` y toast `mostrarAviso`). Comunicación por eventos: `nivel-terminado`, `pretest-terminado`, `posttest-terminado`, `ir-al-mapa`, `entrar-al-juego`.
+- **Datos**: `users/{uid}.progreso = {pretest, niveles{1,2,3}, posttest, kab, completo}`. La sesión del primer recorrido se guarda con `writeBatch` junto con `progreso.kab/completo`.
+
+---
+
 ## 🧪 Vista 2 — Resumen Estadístico (para la tesis)
 
 Accesible desde el topbar del admin ("📊 Estadísticas"). Calcula automáticamente sobre **la primera sesión de cada participante** (menor timestamp).
@@ -118,6 +134,11 @@ raíz/
     │   ├── state.js            # STATE + goTo(id) (dispara evento 'screen-change')
     │   ├── auth-ui.js          # Login / Registro (maneja re-registro de perfil eliminado)
     │   ├── content-loader.js   # Carga y selección aleatoria de escenarios/preguntas por sesión
+    │   ├── progreso.js         # Estado del recorrido (puro): qué nivel toca, estado de nodos
+    │   ├── recorrido.js        # Orquesta mapa → pre-test → niveles → post-test; `almacen` (guardado)
+    │   ├── mapa.js             # Render del mapa de niveles
+    │   ├── record.js           # Pantalla "Mi récord" (mejor puntaje e intentos por nivel)
+    │   ├── ui.js               # mostrarInfo (modal) y mostrarAviso (toast)
     │   ├── nivel.js            # Motor del juego (renderEscenario, responderEscenario, clicoEnlaceFraude, opciones de colores)
     │   ├── buho.js             # Búho: buhoImg(), buildBuho(texto) (nube de diálogo), buhoSVG() (SVG dibujado a mano, ya sin uso en pantalla)
     │   ├── test.js            # Pre/Post-test (carrusel de una pregunta a la vez, celular y desktop)
@@ -150,7 +171,7 @@ raíz/
 ### Firestore Collections
 ```
 /users/{uid}
-    nombre, edad, genero, email, role, sessionCount, creadoEn, …
+    nombre, edad, genero, email, role, sessionCount, creadoEn, progreso{…}, …
     (role === 'admin' habilita el panel; los demás son participantes)
 
 /sessions/{docId}
@@ -160,6 +181,9 @@ raíz/
     posttest: { respuestas: {q0..q9}, score },   // O₂ (0–10)
     juego:    { puntaje_total, puntaje_por_nivel, historial[], max_winstreak, … },
     kab:      { respuestas: {q0,q1,q2} }          // Likert 1–5 (antes se llamaba `sus`)
+
+/practicas/{docId}   (rejugadas tras completar el recorrido; NO entran al análisis)
+    userId, nivel, puntaje, historial[], completadoEn, …
 
 /scenarios/   (contenido del juego, importado/seedeado desde admin)
     nivel, idx, titulo, mensaje, pregunta, opciones, correcta,
@@ -227,6 +251,11 @@ npm run deploy   # build + deploy hosting y firestore rules (requiere firebase l
 
 ## ⚠️ Gotchas
 
+- **Desplegar `firestore.rules` antes de usar el modo práctica**: la colección `practicas` es nueva; sin las reglas nuevas el guardado de prácticas falla (se captura y registra en consola).
+- El servidor local usa el Firestore **de producción**: jugar en local con una cuenta real escribe datos reales.
+- El panel admin aún **no muestra** prácticas ni progreso parcial.
+- Regla preexistente: el dueño puede escribir su propio doc en `users`, lo que le permitiría editar su `role`. Pendiente de endurecer.
+
 - En un iPhone SE con Safari (≈550px de alto útil), las preguntas del test **más largas** pueden dejar los botones apenas bajo el borde; las de largo normal entran.
 - El favicon se cachea fuerte: al cambiarlo, recargar con Cmd+Shift+R.
 - `main.js` aún importa `buhoSVG` sin usarlo (import muerto, inofensivo).
@@ -256,9 +285,14 @@ npm run deploy   # build + deploy hosting y firestore rules (requiere firebase l
 - Commit de todos los cambios pendientes (ver `git log`). El despliegue en producción ya incluía este código.
 - Pendiente para el equipo: pulsar **"🦉 Sincronizar narración del búho"** en el admin (sin esto el búho muestra el texto genérico).
 
+**2026-11-08 · Mapa de niveles**
+- Mapa estilo Duolingo (3 círculos con etiqueta y ruta punteada), pantalla "Mi récord", recorrido guiado pre-test → 3 niveles → post-test → KAB, modo práctica separado, progreso persistente en `users.progreso`, reglas para `practicas`. Verificado con tests de lógica, 92 comprobaciones E2E con Firestore simulado y capturas; **sin desplegar**.
+
 ---
 
 ## 📞 Contacto
 
 - **Propietario**: Mauricio Cuentas (mauriciocuentas0@gmail.com)
 - **Firebase Project**: ojoalfraude-2c2a7
+
+> Decisión: se evaluó reducir pre/post a 5 preguntas y se **descartó**; siguen en 10.

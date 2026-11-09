@@ -2,7 +2,6 @@
 import { STATE, goTo } from './state.js';
 import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
 import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
-import { goToIntroNivel } from './nivel.js';
 import { renderComparacion } from './results.js';
 import { cargarContenido } from './content-loader.js';
 
@@ -11,7 +10,7 @@ function getPreguntas(which = 'pretest') {
   return STATE.questionsActuales?.length ? STATE.questionsActuales : TEST_QUESTIONS_A;
 }
 
-// Llamada desde el botón "Empezar" en p-bienvenida — recarga contenido aleatorio
+// Llamada desde el mapa (ventana previa al Nivel 1) — recarga el contenido
 export async function iniciarPretest() {
   await cargarContenido();
   renderTest('pretest-content', STATE.pretest, 'btn-pretest');
@@ -169,15 +168,17 @@ export function calcTestScore(stateObj) {
   return score;
 }
 
+// Al terminar el pre-test, recorrido.js guarda el avance y pasa al Nivel 1
 export function finalizarPretest() {
   STATE.pretestScore = calcTestScore(STATE.pretest);
-  goToIntroNivel(1);
+  window.dispatchEvent(new CustomEvent('pretest-terminado'));
 }
 
 export function finalizarPosttest() {
   STATE.posttestScore = calcTestScore(STATE.posttest);
   renderComparacion();
   goTo('p-comparacion');
+  window.dispatchEvent(new CustomEvent('posttest-terminado'));
 }
 
 export function iniciarPosttest() {

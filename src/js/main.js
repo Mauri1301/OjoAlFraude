@@ -1,9 +1,8 @@
 /* ── Punto de entrada de la aplicación ── */
 
-import { STATE, goTo } from './state.js';
+import { STATE, goTo, resetJuego } from './state.js';
 import { onAuthChange } from '../firebase/auth.js';
-import { getUserProfile, getUserSessions } from '../firebase/db.js';
-import { cargarContenido } from './content-loader.js';
+import { getUserProfile } from '../firebase/db.js';
 
 import {
   iniciarPretest,
@@ -27,8 +26,10 @@ import {
 } from './nivel.js';
 
 import { finalizarSUS, selectSUS, abrirModalSUS } from './sus.js';
-import { buhoSVG } from './buho.js';
-import { exportarResultados, reiniciarJuego } from './export.js';
+import { exportarResultados } from './export.js';
+import { entrarAlJuego, mostrarMapa, abrirNivel, abrirEtapaFinal } from './recorrido.js';
+import { mostrarAviso } from './ui.js';
+import { abrirRecord } from './record.js';
 import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
 import {
   cargarPanelAdmin, verDetalleParticipante,
@@ -68,21 +69,18 @@ onAuthChange(async (user) => {
       } catch { }
     }
 
-    // Cargar contenido aleatorio para esta sesión
-    await cargarContenido();
-
     const active = document.querySelector('.screen.active')?.id;
     if (!active || active === 'p-login' || active === 'p-register' || active === 'p-loading') {
       if (STATE.participante.role === 'admin') {
         cargarPanelAdmin();
       } else {
-        goTo('p-bienvenida');
-        cargarHistorialBienvenida(user.uid);
+        entrarAlJuego();      // estado limpio + progreso guardado → mapa de niveles
       }
     }
   } else {
     STATE.currentUser  = null;
     STATE.participante = {};
+    resetJuego();
     resetLoginForm();
     goTo('p-login');
   }
@@ -110,7 +108,12 @@ Object.assign(window, {
   selectSUS,
   abrirModalSUS,
   exportarResultados,
-  reiniciarJuego,
+  // recorrido (mapa de niveles)
+  abrirNivel,
+  abrirEtapaFinal,
+  irAlMapa: mostrarMapa,
+  abrirRecord,
+  mostrarAviso,
   // carrusel test (desktop)
   selectCarouselOption,
   nextCarouselQuestion,
@@ -140,62 +143,12 @@ Object.assign(window, {
   sincronizarConsequencias,
   sincronizarOpciones,
   sincronizarNarracion,
-  cargarHistorialBienvenida,
 });
-
-/* ── Historial de sesiones en bienvenida ── */
-export async function cargarHistorialBienvenida(uid) {
-  const el = document.getElementById('bienvenida-historial');
-  if (!el) return;
-  try {
-    const sessions = await getUserSessions(uid);
-    if (!sessions.length) {
-      el.innerHTML = '<p class="body-sm text-muted">Aún no has completado ninguna sesión.</p>';
-      return;
-    }
-    el.innerHTML = sessions.map(s => {
-      const fecha    = s.completadoEn?.toDate
-        ? s.completadoEn.toDate().toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        : '—';
-      const pts      = s.juego?.puntaje_total ?? null;
-      const streak   = s.juego?.max_winstreak ?? 0;
-      const ptsColor = pts === null ? 'var(--text-muted)' : pts >= 60 ? 'var(--accent3)' : pts >= 36 ? 'var(--accent)' : 'var(--accent2)';
-
-      return `
-        <div class="bienvenida-session-item">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span class="body-sm bold">Sesión ${s.sessionNumber}</span>
-            <span class="body-sm text-muted">${fecha}</span>
-          </div>
-          <div class="bienvenida-scores">
-            <div class="bienvenida-stat">
-              <span class="body-sm text-muted">Puntaje</span>
-              <span class="title-sm" style="color:${ptsColor}">${pts !== null ? pts + ' pts' : '—'}</span>
-            </div>
-            ${streak >= 2 ? `
-            <div class="bienvenida-stat">
-              <span class="body-sm text-muted">Mejor racha</span>
-              <span class="title-sm" style="color:#b5560c">🔥 x${streak}</span>
-            </div>` : ''}
-          </div>
-        </div>`;
-    }).join('');
-  } catch {
-    el.innerHTML = '<p class="body-sm text-muted">No se pudo cargar el historial.</p>';
-  }
-}
 
 /* ── Búho en la pantalla de login (PNG ilustrado) ── */
 const _loginBuho = document.getElementById('login-buho');
 if (_loginBuho) _loginBuho.innerHTML =
   '<img src="/img/buho1.png" alt="OjoAlFraude" width="160" style="display:block;height:auto;filter:drop-shadow(0 6px 18px rgba(0,0,0,.4))">';
-
-/* ── Cargar historial al entrar a bienvenida ── */
-window.addEventListener('screen-change', ({ detail }) => {
-  if (detail.screen === 'p-bienvenida' && STATE.currentUser?.uid) {
-    cargarHistorialBienvenida(STATE.currentUser.uid);
-  }
-});
 
 /* ── Animación de entrada ── */
 document.addEventListener('DOMContentLoaded', () => {

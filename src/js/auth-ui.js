@@ -124,7 +124,7 @@ export async function submitRegister() {
     if (emailEl) { emailEl.readOnly = false; emailEl.style.opacity = ''; emailEl.style.cursor = ''; }
 
     STATE.participante = profile;
-    goTo('p-bienvenida');
+    window.dispatchEvent(new CustomEvent('entrar-al-juego'));
   } catch (err) {
     btn.disabled    = false;
     btn.textContent = 'Crear cuenta';

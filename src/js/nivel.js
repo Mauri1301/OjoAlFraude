@@ -2,7 +2,6 @@
 import { STATE, goTo } from './state.js';
 import { ESCENARIOS } from '../data/escenarios.js';       // fallback local
 import { NIVEL_CONFIG } from '../data/nivel-config.js';
-import { mostrarResultado } from './results.js';
 import { renderMensaje } from './mensaje-renderer.js';
 import { buildBuho, buhoImg } from './buho.js';
 
@@ -178,6 +177,8 @@ export function updateStreakDisplay(n) {
 }
 
 export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, prevStreak, opcion) {
+  const esUltimo = STATE.escenarioIdx >= getEscenariosNivel(STATE.nivelActual).length - 1;
+  document.getElementById('btn-feedback-next').textContent = esUltimo ? 'Terminar nivel →' : 'Siguiente →';
   const consecuenciaMal = esc.consecuencias_mal?.[opcion] ?? esc.consecuencia_mal ?? '❌ Respuesta incorrecta.';
   const fraudeLink = STATE.fraudeLink; STATE.fraudeLink = false;
   const buhoFeedback = correcto ? 'buho7' : (fraudeLink ? 'buho12' : 'buho4');
@@ -240,10 +241,8 @@ export function siguienteEscenario() {
 
   if (STATE.escenarioIdx >= escenarios.length) {
     document.getElementById('prog-nivel').style.width = '100%';
-    setTimeout(() => {
-      if (n < 3) goToIntroNivel(n + 1);
-      else mostrarResultado();
-    }, 300);
+    // El recorrido (recorrido.js) decide qué sigue: mapa, resultados o práctica
+    setTimeout(() => window.dispatchEvent(new CustomEvent('nivel-terminado', { detail: { n } })), 300);
   } else {
     renderEscenario(n);
   }

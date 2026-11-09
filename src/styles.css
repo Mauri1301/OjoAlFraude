@@ -584,22 +584,104 @@ select.form-input option{background:var(--surface2)}
 .test-compare-row{padding:10px 0;border-bottom:1px solid var(--surface2)}
 .test-compare-row:last-child{border-bottom:none}
 
-.bienvenida-historial-list{max-height:320px;overflow-y:auto;padding-right:4px}
-.bienvenida-session-item{
-  display:flex;flex-direction:column;gap:10px;
-  padding:14px 0;border-bottom:1px solid var(--surface2);
+/* ============================================================
+   MAPA DE NIVELES
+   Camino de nodos en zigzag: un nodo por escenario, un banner por nivel.
+============================================================ */
+.mapa-wrap{max-width:520px;padding-bottom:70px}
+.mapa-saludo{margin:6px 0 18px}
+.mapa-camino{position:relative;display:flex;flex-direction:column;gap:6px}
+
+.mapa-ruta{position:absolute;left:0;top:0;pointer-events:none;z-index:0;overflow:visible}
+.mapa-ruta path{fill:none;stroke:#d6c9b0;stroke-width:6;stroke-linecap:round;stroke-dasharray:1 14}
+.mapa-ruta path.ruta-hecha{stroke:#b9a77f}
+
+.mapa-fila{
+  position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;
+  padding-top:38px;margin-bottom:26px;transform:translateX(var(--dx,0));
 }
-.bienvenida-session-item:last-child{border-bottom:none}
-.bienvenida-scores{display:flex;gap:12px}
-.bienvenida-stat{
-  display:flex;flex-direction:column;gap:2px;align-items:center;
-  background:var(--surface2);border-radius:var(--radius-sm);
-  padding:8px 14px;flex:1;text-align:center;
+.mapa-fila-final{margin-bottom:0}
+
+.mapa-nodo{
+  position:relative;width:96px;height:96px;border-radius:50%;border:0;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-family:var(--font);font-weight:800;
+  background:var(--nv);box-shadow:0 8px 0 var(--nd);
+  transition:transform .12s,box-shadow .12s;
+}
+.mapa-nodo svg{width:44px;height:44px}
+.mapa-nodo:active{transform:translateY(5px);box-shadow:0 3px 0 var(--nd)}
+
+/* Rótulo pegado al círculo */
+.mapa-rotulo{
+  margin-top:18px;width:190px;min-height:84px;justify-content:center;text-align:center;cursor:pointer;
+  background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:7px 14px;
+  display:flex;flex-direction:column;box-shadow:0 3px 0 var(--border);
+}
+.mapa-rotulo-n{font-family:var(--font);font-weight:800;font-size:.68rem;letter-spacing:.09em;color:var(--nv)}
+.mapa-rotulo-t{font-family:var(--font);font-weight:800;font-size:1.1rem;line-height:1.2;color:var(--text)}
+.mapa-rotulo-s{font-size:.8rem;line-height:1.3;color:var(--text-muted)}
+
+/* Estados del nodo */
+.mn-hecho{}
+.mn-actual::before{
+  content:'';position:absolute;inset:-9px;border-radius:50%;
+  border:5px solid var(--nv);opacity:.35;
+  animation:mapaLatido 1.8s ease-in-out infinite;
+}
+.mn-pendiente,.mn-bloqueado{
+  background:#e4dac9;color:#a39682;box-shadow:0 7px 0 #c9bda8;
+}
+.mn-bloqueado{cursor:default}
+.mn-pendiente:active,.mn-bloqueado:active{transform:none;box-shadow:0 7px 0 #c9bda8}
+
+/* Trofeo final */
+.mapa-trofeo{width:84px;height:84px;background:#e0a526;box-shadow:0 7px 0 #a8761a}
+.mapa-trofeo svg{width:42px;height:42px}
+.mapa-trofeo.mn-bloqueado{background:#e4dac9;color:#a39682;box-shadow:0 7px 0 #c9bda8}
+.mapa-trofeo.mn-actual::before{border-color:#e0a526}
+.mapa-trofeo:active{box-shadow:0 2px 0 #a8761a}
+.mapa-trofeo.mn-bloqueado:active{box-shadow:0 7px 0 #c9bda8}
+
+/* Globo "COMENZAR" sobre el nodo actual */
+.mapa-burbuja{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  background:#fff;color:var(--nv,#9c5e0f);border:2px solid var(--border);border-radius:12px;
+  padding:5px 12px;font-family:var(--font);font-weight:800;font-size:.74rem;letter-spacing:.05em;
+  white-space:nowrap;box-shadow:0 3px 0 var(--border);z-index:2;animation:mapaFlota 1.6s ease-in-out infinite;
+}
+.mapa-burbuja::after{
+  content:'';position:absolute;left:50%;bottom:-8px;width:12px;height:12px;background:#fff;
+  border-right:2px solid var(--border);border-bottom:2px solid var(--border);
+  transform:translateX(-50%) rotate(45deg);
+}
+.mapa-fila-final .mapa-burbuja{color:#a8761a}
+
+/* Búho: se coloca por JS junto al nodo actual */
+.mapa-buho{
+  position:absolute;left:0;top:0;width:84px;z-index:3;pointer-events:none;
+  transition:transform 1.1s cubic-bezier(.45,.05,.25,1);
+  will-change:transform;
+}
+.mapa-buho img{width:84px;height:auto;filter:drop-shadow(0 5px 8px rgba(80,60,30,.25))}
+.mapa-buho.voltear img{transform:scaleX(-1)}
+
+@keyframes mapaLatido{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(1.1);opacity:.15}}
+@keyframes mapaFlota{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+@media(prefers-reduced-motion:reduce){
+  .mn-actual::before,.mapa-burbuja{animation:none}
+  .mapa-buho{transition:none}
 }
 
-@media(min-width:768px){
-  #p-bienvenida .container{max-width:600px}
+/* Aviso breve */
+.toast{
+  position:fixed;left:50%;bottom:22px;transform:translate(-50%,24px);z-index:300;
+  max-width:min(92vw,420px);background:var(--text);color:#fff;
+  padding:11px 18px;border-radius:14px;font-size:.9rem;text-align:center;line-height:1.35;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
 }
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
 .tab-bar{display:flex;gap:8px}
 .tab-btn{
@@ -790,3 +872,17 @@ select.form-input option{background:var(--surface2)}
   .topbar .badge{font-size:.7rem;padding:3px 8px}
   .topbar-btn{padding:4px 10px;font-size:.72rem}
 }
+
+/* ── Mi récord ── */
+.record-wrap{max-width:560px;padding-top:12px;padding-bottom:40px}
+.record-nivel{background:var(--surface);border:1.5px solid var(--border);border-left:6px solid var(--nv);border-radius:14px;padding:14px 16px;margin-top:14px}
+.record-cab{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.record-n{display:block;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:var(--nv)}
+.record-t{font-family:var(--font);font-weight:800;font-size:1.15rem;color:var(--text)}
+.record-mejor{text-align:right;line-height:1.1}
+.record-mejor small{display:block;font-size:.68rem;font-weight:700;color:var(--text-muted);letter-spacing:.08em}
+.record-mejor b{font-family:var(--font);font-size:1.7rem;color:var(--nv)}
+.record-int{margin:6px 0 0;font-size:.9rem;color:var(--text-muted)}
+.record-filas{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--border)}
+.record-fila{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.92rem;color:var(--text)}
+.record-fila:last-child{border-bottom:0}

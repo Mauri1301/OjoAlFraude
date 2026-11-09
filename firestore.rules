@@ -24,6 +24,13 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // Partidas rejugadas después de completar el recorrido (no entran al análisis)
+    match /practicas/{practicaId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
     // Escenarios y preguntas (contenido del juego)
     match /scenarios/{scenarioId} {
       allow read: if isAuthenticated();

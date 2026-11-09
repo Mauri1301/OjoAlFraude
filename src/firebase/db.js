@@ -16,28 +16,60 @@ export async function getUserProfile(uid) {
 }
 
 export async function deleteParticipante(uid) {
-  const sessionsSnap = await getDocs(query(collection(db, 'sessions'), where('userId', '==', uid)));
-  const batch = writeBatch(db);
-  sessionsSnap.docs.forEach(d => batch.delete(d.ref));
-  batch.delete(doc(db, 'users', uid));
-  await batch.commit();
+  const [sesiones, practicas] = await Promise.all([
+    getDocs(query(collection(db, 'sessions'), where('userId', '==', uid))),
+    getDocs(query(collection(db, 'practicas'), where('userId', '==', uid))),
+  ]);
+  const refs = [...sesiones.docs, ...practicas.docs].map(d => d.ref);
+  refs.push(doc(db, 'users', uid));
+
+  // Un lote admite hasta 500 operaciones: se borra en tandas
+  for (let i = 0; i < refs.length; i += 400) {
+    const batch = writeBatch(db);
+    refs.slice(i, i + 400).forEach(r => batch.delete(r));
+    await batch.commit();
+  }
 }
 
-export async function saveSession(uid, data) {
+// Guarda la sesión del primer recorrido. `userExtra` son campos del perfil que se
+// actualizan en el mismo lote (ej. 'progreso.completo'), así quedan ambos o ninguno.
+export async function saveSession(uid, data, userExtra = {}) {
   const sessionsRef = collection(db, 'sessions');
-  const q = query(sessionsRef, where('userId', '==', uid));
-  const existing = await getDocs(q);
+  const existing = await getDocs(query(sessionsRef, where('userId', '==', uid)));
   const sessionNumber = existing.size + 1;
 
-  await addDoc(sessionsRef, {
+  const batch = writeBatch(db);
+  batch.set(doc(sessionsRef), {
     userId: uid,
     sessionNumber,
     ...data,
     completadoEn: serverTimestamp(),
   });
+  // Contador en el perfil del usuario (para el panel admin)
+  batch.update(doc(db, 'users', uid), { sessionCount: sessionNumber, ...userExtra });
+  await batch.commit();
+}
 
-  // Actualizar contador en el perfil del usuario (para el panel admin)
-  await setDoc(doc(db, 'users', uid), { sessionCount: sessionNumber }, { merge: true });
+// Avance del recorrido en users/{uid}.progreso. `ruta` va sin el prefijo:
+// 'pretest', 'niveles.2', 'posttest'…
+export async function saveProgreso(uid, ruta, valor) {
+  await updateDoc(doc(db, 'users', uid), { [`progreso.${ruta}`]: valor });
+}
+
+// Partida rejugada (después de completar el recorrido). Queda aparte de `sessions`
+// y no entra al análisis de la tesis.
+export async function savePractica(uid, data) {
+  await addDoc(collection(db, 'practicas'), {
+    userId: uid,
+    ...data,
+    completadoEn: serverTimestamp(),
+  });
+}
+
+// Rejugadas del usuario (se ordenan en el cliente para no requerir índice)
+export async function getMisPracticas(uid) {
+  const snap = await getDocs(query(collection(db, 'practicas'), where('userId', '==', uid)));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 
 export async function getUserSessions(uid) {
