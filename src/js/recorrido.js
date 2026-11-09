@@ -44,7 +44,7 @@ export function entrarAlJuego() {
 
 export function mostrarMapa() {
   goTo('p-mapa');                       // primero visible: el mapa mide el layout para ubicar al búho
-  renderMapa(estadoActual(), STATE.participante?.nombre);
+  renderMapa(estadoActual(), STATE.participante?.nombres || STATE.participante?.nombre);
 }
 
 /* ── Guardado ── */
@@ -161,3 +161,23 @@ window.addEventListener('posttest-terminado', alTerminarPosttest);
 window.addEventListener('nivel-terminado', e => alTerminarNivel(e.detail.n));
 window.addEventListener('ir-al-mapa', mostrarMapa);
 window.addEventListener('entrar-al-juego', entrarAlJuego);
+
+/* ── Salir al mapa desde un nivel o el pre-test (con confirmación) ── */
+
+export function salirAlMapa(donde) {
+  const esNivel = donde === 'nivel';
+  mostrarInfo({
+    buho: 'buho6',
+    titulo: '¿Volver al menú de niveles?',
+    texto: esNivel
+      ? 'Si sales ahora, este nivel empezará de nuevo.'
+      : 'Si sales ahora, la prueba empezará de nuevo.',
+    ok: 'Volver al menú',
+    cancelar: 'Seguir jugando',
+    onOk: () => {
+      if (!esNivel) STATE.pretest = {};          // la prueba se rehace completa
+      document.getElementById('overlay-feedback')?.classList.remove('active');
+      mostrarMapa();
+    },
+  });
+}

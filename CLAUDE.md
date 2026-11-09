@@ -87,6 +87,7 @@ Al loguearse, el jugador ve el **mapa de niveles** (`p-mapa`); ya no existe la p
 - **Primer recorrido**: solo el nivel actual es jugable; los demás en gris. Al elegir el Nivel 1 aparece un modal que avisa del **pre-test**; al terminarlo entra directo al Nivel 1. Cada nivel terminado vuelve al mapa y desbloquea el siguiente. Al terminar el Nivel 3 → resultados → aviso del **post-test** → comparación → encuesta KAB → pantalla final.
 - **Después del recorrido**: todos los niveles se pueden rejugar sin límite; ya no hay pre/post. Las partidas rejugadas se guardan en `/practicas` y **no entran a la estadística**.
 - **Sin repetir antes del post-test**: no se puede rejugar un nivel hasta completar el recorrido.
+- **Navegación**: el mapa tiene un **menú hamburguesa ☰** (solo ahí) con "Hola, <nombres>", "Ver mi récord" y "Salir" (cerrar sesión). Dentro de un nivel y en el pre-test el botón es "← Menú de niveles" ("← Menú" en pantallas <430 px) y **pide confirmación**; el post-test y la comparación conservan "Salir". La pantalla del mapa ya no lleva el saludo "¡Hola, X!".
 - **Salir a mitad de un nivel** lo reinicia (no se guarda avance parcial). La racha (winstreak) se reinicia al empezar cada nivel.
 - **Usuarios previos** (`sessionCount > 0` y sin `progreso`) se consideran recorrido completado.
 - **Módulos**: `progreso.js` (lógica pura, con tests), `recorrido.js` (orquesta; objeto `almacen` como punto de inyección para tests), `mapa.js` (render), `record.js` (récord e intentos), `ui.js` (modal informativo `mostrarInfo` y toast `mostrarAviso`). Comunicación por eventos: `nivel-terminado`, `pretest-terminado`, `posttest-terminado`, `ir-al-mapa`, `entrar-al-juego`.
@@ -171,7 +172,7 @@ raíz/
 ### Firestore Collections
 ```
 /users/{uid}
-    nombre, edad, genero, email, role, sessionCount, creadoEn, progreso{…}, …
+    nombre (= nombres + apellidos), nombres, apellidos, edad, genero, email, role, sessionCount, creadoEn, progreso{…}, …
     (role === 'admin' habilita el panel; los demás son participantes)
 
 /sessions/{docId}
@@ -287,6 +288,13 @@ npm run deploy   # build + deploy hosting y firestore rules (requiere firebase l
 
 **2026-11-08 · Mapa de niveles**
 - Mapa estilo Duolingo (3 círculos con etiqueta y ruta punteada), pantalla "Mi récord", recorrido guiado pre-test → 3 niveles → post-test → KAB, modo práctica separado, progreso persistente en `users.progreso`, reglas para `practicas`. Verificado con tests de lógica, 92 comprobaciones E2E con Firestore simulado y capturas; **sin desplegar**.
+
+**2026-11-08 · Pulido de UX**
+- Modales siempre centrados (antes en celular eran hoja inferior; `dvh` para la altura máxima).
+- Feedback simplificado: búho, puntos, veredicto, racha en una línea y consecuencia; señales de alerta y "¿Por qué es un fraude?" plegados en "Ver señales y explicación". Pendiente opcional: acortar `consecuencias_mal` (párrafos largos al fallar).
+- Menú hamburguesa y botón "Menú de niveles" con confirmación (ver Mapa).
+- Registro con campos **Nombres** y **Apellidos** (se guarda además `nombre` combinado por compatibilidad con admin/CSV).
+- Se evaluó reducir pre/post a 5 preguntas y se descartó.
 
 ---
 

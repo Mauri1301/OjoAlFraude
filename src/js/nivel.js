@@ -177,6 +177,8 @@ export function updateStreakDisplay(n) {
 }
 
 export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, prevStreak, opcion) {
+  // Si salió al mapa justo después de responder, no mostrar el popup encima del mapa
+  if (!document.getElementById('p-nivel')?.classList.contains('active')) return;
   const esUltimo = STATE.escenarioIdx >= getEscenariosNivel(STATE.nivelActual).length - 1;
   document.getElementById('btn-feedback-next').textContent = esUltimo ? 'Terminar nivel →' : 'Siguiente →';
   const consecuenciaMal = esc.consecuencias_mal?.[opcion] ?? esc.consecuencia_mal ?? '❌ Respuesta incorrecta.';
@@ -186,27 +188,16 @@ export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, pr
   const deltaColor = delta > 0 ? 'text-success' : 'text-danger';
   const deltaStr  = delta > 0 ? `+${delta}` : `${delta}`;
 
-  let streakMsgHtml = '';
-  if (streakBonus) {
-    // SDT – competencia: confirma eficacia y refuerza la sensación de logro
-    streakMsgHtml = `<div style="background:rgba(255,120,0,.12);border:1px solid rgba(255,120,0,.3);border-radius:8px;padding:8px 12px;text-align:center;margin-top:4px">
-      <span style="color:#b5560c;font-family:var(--font);font-weight:700;font-size:.9rem">🔥 ¡${newStreak} aciertos seguidos! Tu capacidad de detección sigue creciendo — +5 pts de bono</span>
-    </div>`;
-  } else if (correcto && newStreak === 2) {
-    // SDT – competencia: hace visible el avance consecutivo (Ryan & Deci, 2020)
-    streakMsgHtml = `<div style="background:rgba(255,120,0,.08);border:1px solid rgba(255,120,0,.2);border-radius:8px;padding:8px 12px;text-align:center;margin-top:4px">
-      <span style="color:#b5560c;font-family:var(--font);font-weight:600;font-size:.85rem">🔥 ¡Dos aciertos consecutivos! Estás demostrando progreso — el siguiente vale +15 pts</span>
-    </div>`;
-  } else if (!correcto && prevStreak >= 2) {
-    // SDT – competencia: error como parte del aprendizaje, no como fracaso definitivo
-    streakMsgHtml = `<div style="background:rgba(235,77,75,.08);border:1px solid rgba(235,77,75,.2);border-radius:8px;padding:8px 12px;text-align:center;margin-top:4px">
-      <span style="color:var(--accent2);font-family:var(--font);font-weight:600;font-size:.85rem">💔 Racha de ${prevStreak} terminada — lo aprendido no se pierde. ¡Sigue adelante!</span>
-    </div>`;
-  }
+  // Una sola línea corta sobre la racha (competencia, SDT)
+  let racha = '';
+  if (streakBonus) racha = `🔥 ¡${newStreak} seguidos! +5 pts de bono`;
+  else if (correcto && newStreak === 2) racha = '🔥 ¡2 seguidos! El siguiente vale +15';
+  else if (!correcto && prevStreak >= 2) racha = `💔 Se acabó la racha de ${prevStreak}. ¡Sigue!`;
+  const streakMsgHtml = racha ? `<div class="fb-racha">${racha}</div>` : '';
 
   content.innerHTML = `
     <div class="text-center">
-      ${buhoImg(buhoFeedback, 104)}
+      ${buhoImg(buhoFeedback, 96)}
       <div class="score-delta ${deltaColor} mt-8">${deltaStr} pts</div>
       <div class="title-sm mt-8">${correcto ? '¡Correcto!' : 'Incorrecto'}</div>
     </div>
@@ -214,21 +205,26 @@ export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, pr
     <div class="consequence-card ${correcto ? 'consequence-correct' : 'consequence-wrong'}">
       <p class="body-md">${correcto ? esc.consecuencia_ok : consecuenciaMal}</p>
     </div>
-    <div class="flex-col gap-8">
-      <div class="title-sm text-danger">🔍 Señales de alerta en este mensaje:</div>
-      <div class="alert-markers">
-        ${esc.señales.map(s => `
-          <div class="alert-marker">
-            <span class="alert-marker-icon">${s.icon}</span>
-            <span class="alert-marker-text">${s.texto}</span>
+    <details class="fb-mas">
+      <summary>Ver señales y explicación</summary>
+      <div class="fb-mas-cuerpo">
+        <div class="flex-col gap-8">
+          <div class="title-sm text-danger">🔍 Señales de alerta:</div>
+          <div class="alert-markers">
+            ${esc.señales.map(s => `
+              <div class="alert-marker">
+                <span class="alert-marker-icon">${s.icon}</span>
+                <span class="alert-marker-text">${s.texto}</span>
+              </div>
+            `).join('')}
           </div>
-        `).join('')}
+        </div>
+        <div>
+          <div class="title-sm mb-8">💡 ¿Por qué es un fraude?</div>
+          <p class="body-sm">${esc.explicacion}</p>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="title-sm mb-8">💡 ¿Por qué es un fraude?</div>
-      <p class="body-sm">${esc.explicacion}</p>
-    </div>`;
+    </details>`;
 
   document.getElementById('overlay-feedback').classList.add('active');
 }

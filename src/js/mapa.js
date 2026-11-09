@@ -32,8 +32,9 @@ export function renderMapa(est, nombre) {
   if (!cont) return;
 
   const primerNombre = (nombre || '').trim().split(/\s+/)[0];
-  document.getElementById('mapa-saludo').textContent = primerNombre ? `¡Hola, ${primerNombre}!` : '¡Hola!';
   document.getElementById('mapa-sub').textContent = subtitulo(est);
+  const ms = document.getElementById('menu-saludo');
+  if (ms) ms.textContent = primerNombre ? `Hola, ${primerNombre}` : 'Hola';
 
   const DX = [-46, 46, -46, 46];                           // zigzag: nivel 1, 2, 3 y trofeo
 

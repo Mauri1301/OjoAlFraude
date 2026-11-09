@@ -27,9 +27,10 @@ import {
 
 import { finalizarSUS, selectSUS, abrirModalSUS } from './sus.js';
 import { exportarResultados } from './export.js';
-import { entrarAlJuego, mostrarMapa, abrirNivel, abrirEtapaFinal } from './recorrido.js';
+import { entrarAlJuego, mostrarMapa, abrirNivel, abrirEtapaFinal, salirAlMapa } from './recorrido.js';
 import { mostrarAviso } from './ui.js';
 import { abrirRecord } from './record.js';
+import { toggleMenu, cerrarMenu } from './ui.js';
 import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
 import {
   cargarPanelAdmin, verDetalleParticipante,
@@ -112,6 +113,9 @@ Object.assign(window, {
   abrirNivel,
   abrirEtapaFinal,
   irAlMapa: mostrarMapa,
+  salirAlMapa,
+  toggleMenu,
+  cerrarMenu,
   abrirRecord,
   mostrarAviso,
   // carrusel test (desktop)

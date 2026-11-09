@@ -28,3 +28,19 @@ export function mostrarAviso(mensaje) {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.remove('show'), 3400);
 }
+
+// Menú hamburguesa del mapa
+export function cerrarMenu() {
+  document.getElementById('menu-panel')?.classList.remove('open');
+  document.getElementById('menu-hamb-btn')?.setAttribute('aria-expanded', 'false');
+}
+export function toggleMenu(e) {
+  e?.stopPropagation();
+  const p = document.getElementById('menu-panel');
+  if (!p) return;
+  const abierto = p.classList.toggle('open');
+  document.getElementById('menu-hamb-btn')?.setAttribute('aria-expanded', String(abierto));
+}
+document.addEventListener('click', e => { if (!e.target.closest?.('#menu-hamb')) cerrarMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarMenu(); });
+window.addEventListener('screen-change', cerrarMenu);

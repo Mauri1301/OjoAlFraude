@@ -42,7 +42,8 @@ export async function submitLogin() {
 
 export async function submitRegister() {
   const campos = [
-    { id: 'reg-nombre', err: 'reg-nombre-err', check: v => v.trim().length >= 2 },
+    { id: 'reg-nombres',   err: 'reg-nombres-err',   check: v => v.trim().length >= 2 },
+    { id: 'reg-apellidos', err: 'reg-apellidos-err', check: v => v.trim().length >= 2 },
     { id: 'reg-edad',   err: 'reg-edad-err',   check: v => v >= 55 && v <= 100 },
     { id: 'reg-genero', err: 'reg-genero-err', check: v => v !== '' },
     { id: 'reg-uso',    err: 'reg-uso-err',    check: v => v !== '' },
@@ -60,7 +61,7 @@ export async function submitRegister() {
       ok = false;
     } else {
       err.classList.add('hidden');
-      profileData[c.id.replace('reg-', '')] = val;
+      profileData[c.id.replace('reg-', '')] = typeof val === 'string' ? val.trim().replace(/\s+/g, ' ') : val;
     }
   });
 
@@ -108,6 +109,8 @@ export async function submitRegister() {
 
     const profile = {
       ...profileData,
+      // `nombre` completo se conserva: el panel admin, el buscador y el CSV ya lo usan
+      nombre: `${profileData.nombres} ${profileData.apellidos}`,
       email: userEmail,
       uid,
       creadoEn: new Date().toISOString(),
