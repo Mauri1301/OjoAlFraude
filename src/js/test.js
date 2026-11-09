@@ -11,10 +11,6 @@ function getPreguntas(which = 'pretest') {
   return STATE.questionsActuales?.length ? STATE.questionsActuales : TEST_QUESTIONS_A;
 }
 
-function isDesktop() {
-  return window.matchMedia('(min-width: 768px)').matches;
-}
-
 // Llamada desde el botón "Empezar" en p-bienvenida — recarga contenido aleatorio
 export async function iniciarPretest() {
   await cargarContenido();
@@ -22,48 +18,13 @@ export async function iniciarPretest() {
   goTo('p-pretest');
 }
 
+// Pre/post-test: una pregunta a la vez (carrusel) en celular y desktop
 export function renderTest(containerId, stateObj, btnId) {
   const which = containerId.includes('posttest') ? 'posttest' : 'pretest';
-  if (isDesktop()) {
-    _initCarousel(containerId, stateObj, btnId, which);
-    return;
-  }
-
-  const preguntas = getPreguntas(which);
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-
-  let dots = '<div class="step-indicator">';
-  preguntas.forEach((_, i) => dots += `<div class="step-dot" id="${containerId}-dot-${i}"></div>`);
-  dots += '</div>';
-  container.innerHTML += dots;
-
-  preguntas.forEach((q, qi) => {
-    const div = document.createElement('div');
-    div.className = 'flex-col gap-12';
-    div.id = `${containerId}-q${qi}`;
-    div.innerHTML = `
-      <div class="card flex-col gap-12">
-        <div class="badge badge-warning">Pregunta ${qi + 1} de ${preguntas.length}</div>
-        <p class="body-md bold">${q.texto}</p>
-        <div class="option-list" id="${containerId}-opts-${qi}">
-          ${q.opciones.map((op, oi) => `
-            <div class="option-item" onclick="selectTestOption('${containerId}', ${qi}, ${oi}, '${which}')">
-              <div class="option-letter">${['A','B','C','D'][oi]}</div>
-              <span>${op}</span>
-              <input type="radio" name="${containerId}-q${qi}" value="${oi}">
-            </div>
-          `).join('')}
-        </div>
-      </div>`;
-    container.appendChild(div);
-  });
-
-  updateTestDots(containerId);
-  checkTestComplete(stateObj, btnId, which);
+  _initCarousel(containerId, stateObj, btnId, which);
 }
 
-/* ── Carrusel (desktop ≥768px) ── */
+/* ── Carrusel ── */
 
 let _carousel = null;
 
@@ -110,11 +71,14 @@ function _renderCarouselSlide() {
       <div class="carousel-nav">
         <button class="btn btn-secondary btn-sm carousel-nav-btn ${idx === 0 ? 'invisible' : ''}"
                 onclick="prevCarouselQuestion()">← Anterior</button>
-        <button class="btn btn-primary btn-sm carousel-nav-btn ${!currentAnswered || isLast ? 'hidden' : ''}"
-                onclick="nextCarouselQuestion()">Siguiente →</button>
+        ${isLast
+          ? `<button class="btn btn-primary btn-sm carousel-nav-btn ${allAnswered ? '' : 'hidden'}"
+                onclick="confirmCarousel()">Guardar y continuar →</button>`
+          : `<button class="btn btn-primary btn-sm carousel-nav-btn ${!currentAnswered ? 'hidden' : ''}"
+                onclick="nextCarouselQuestion()">Siguiente →</button>`}
       </div>
-      <button class="btn btn-primary ${allAnswered ? '' : 'hidden'}"
-              onclick="confirmCarousel()">Guardar y continuar →</button>
+      ${isLast ? '' : `<button class="btn btn-primary ${allAnswered ? '' : 'hidden'}"
+              onclick="confirmCarousel()">Guardar y continuar →</button>`}
     </div>`;
 }
 
@@ -122,7 +86,7 @@ export function selectCarouselOption(qi, oi) {
   _carousel.answers[`q${qi}`] = oi;
 
   const container = document.getElementById(_carousel.containerId);
-  const total = getPreguntas().length;
+  const total = getPreguntas(_carousel.which).length;
   const allAnswered = Object.keys(_carousel.answers).length === total;
   const isLast = _carousel.idx === total - 1;
 
@@ -150,6 +114,7 @@ export function nextCarouselQuestion() {
   if (_carousel.idx < getPreguntas(_carousel.which).length - 1) {
     _carousel.idx++;
     _renderCarouselSlide();
+    window.scrollTo(0, 0);
   }
 }
 
@@ -157,6 +122,7 @@ export function prevCarouselQuestion() {
   if (_carousel.idx > 0) {
     _carousel.idx--;
     _renderCarouselSlide();
+    window.scrollTo(0, 0);
   }
 }
 

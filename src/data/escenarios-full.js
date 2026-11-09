@@ -9,6 +9,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 0, activo: true, linkUrl: '/fake/bcp.html?u=bcp-seguridad-peru.verificacion.com',
     titulo: 'El mensaje del banco',
+    narracion: 'Mira, te llegó un WhatsApp que dice ser del BCP sobre tu cuenta. Leámoslo juntos con calma.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'B', avatarColor: '#25D366',
@@ -37,6 +38,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 1, activo: true, linkUrl: '/fake/sunat.html',
     titulo: 'El correo de SUNAT',
+    narracion: 'Te llegó un correo que parece de SUNAT sobre una devolución. Veámoslo con cuidado antes de decidir.',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
       tipo: 'email',
@@ -66,6 +68,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 2, activo: true,
     titulo: 'El código de Yape',
+    narracion: 'Alguien te escribe por WhatsApp sobre tu Yape y un código. Léelo conmigo y piensa bien qué harías.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'Y', avatarColor: '#8B5CF6',
@@ -94,6 +97,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 3, activo: true, linkUrl: '/fake/bbva.html?u=bbva-reactivacion.cuenta-pe.net',
     titulo: 'La cuenta de BBVA por cerrarse',
+    narracion: 'Este correo dice ser del BBVA y habla de tu cuenta. Revisémoslo con calma, juntos.',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
       tipo: 'email',
@@ -123,6 +127,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 4, activo: true, linkUrl: '/fake/interbank.html',
     titulo: 'El bono de Interbank',
+    narracion: 'Te llegó un WhatsApp que ofrece un bono de Interbank. Veámoslo tranquilos, tú decides.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'I', avatarColor: '#00A3E0',
@@ -151,6 +156,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 5, activo: true, linkUrl: '/fake/reniec.html',
     titulo: 'El DNI digital de RENIEC',
+    narracion: 'Un correo que dice ser de RENIEC te habla de tu DNI. Leámoslo con atención.',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
       tipo: 'email',
@@ -180,6 +186,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 6, activo: true, linkUrl: '/fake/claro.html',
     titulo: 'La recarga gratis de Claro',
+    narracion: 'Te escriben por WhatsApp con una recarga gratis de Claro. Miremos bien de qué se trata.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'C', avatarColor: '#DA291C',
@@ -208,6 +215,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 7, activo: true, linkUrl: '/fake/mintra.html',
     titulo: 'El bono del Ministerio de Trabajo',
+    narracion: 'Este correo dice venir del Ministerio de Trabajo con un bono. Revisémoslo juntos con calma.',
     canal: 'Correo', badge: 'badge-info', badgeLabel: 'Email',
     mensaje: {
       tipo: 'email',
@@ -237,6 +245,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 1, idx: 8, activo: true,
     titulo: 'El agente de seguridad del BCP',
+    narracion: 'Alguien te escribe diciendo ser un agente del BCP. Léelo conmigo antes de responder.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'B', avatarColor: '#003DA5',
@@ -269,6 +278,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 0, activo: true, linkUrl: '/fake/movistar.html',
     titulo: 'El SMS de Movistar',
+    narracion: 'Te llegó un SMS que dice ser de Movistar sobre tu línea. Veámoslo con calma.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: '📱', iconColor: '#6b4ee6',
@@ -296,6 +306,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 1, activo: true, linkUrl: '/fake/bcp.html?u=bcp.alerta-fraude.com/bloquear',
     titulo: 'La compra sospechosa',
+    narracion: 'Un SMS avisa de un cargo en tu tarjeta del BCP. Leámoslo juntos, sin apurarnos.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'B', iconColor: '#005da6',
@@ -323,6 +334,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 2, activo: true, linkUrl: '/fake/olva.html',
     titulo: 'El pago del delivery',
+    narracion: 'Te escriben por SMS sobre un paquete de Olva. Miremos bien qué te pide.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'O', iconColor: '#e74c3c',
@@ -350,6 +362,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 3, activo: true, linkUrl: '/fake/claro.html?u=claro-pagos.deuda-pe.net',
     titulo: 'La deuda de Claro',
+    narracion: 'Este SMS habla de una deuda con Claro. Revisémoslo con calma, tú decides.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'C', iconColor: '#DA291C',
@@ -377,6 +390,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 4, activo: true, linkUrl: '/fake/bbva.html?u=bbva-bloqueo.alerta-pe.net',
     titulo: 'La transferencia del BBVA',
+    narracion: 'Un SMS avisa de una transferencia en tu cuenta del BBVA. Leámoslo juntos con atención.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'B', iconColor: '#004A97',
@@ -404,6 +418,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 5, activo: true, linkUrl: '/fake/interbank.html?u=interbank-cashback.bonos.pe/activar',
     titulo: 'El cashback de Interbank',
+    narracion: 'Te llegó un SMS con un cashback de Interbank. Veámoslo con calma antes de actuar.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'I', iconColor: '#00A3E0',
@@ -431,6 +446,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 6, activo: true, linkUrl: '/fake/bcp.html?u=bcp-cancelar.pin-alerta.com',
     titulo: 'El cambio de PIN del BCP',
+    narracion: 'Un SMS dice que alguien quiere cambiar el PIN de tu tarjeta. Léelo conmigo con cuidado.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'B', iconColor: '#005da6',
@@ -458,6 +474,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 7, activo: true, linkUrl: '/fake/entel.html',
     titulo: 'El iPhone de Entel',
+    narracion: 'Te escriben por SMS diciendo que ganaste un iPhone de Entel. Miremos bien de qué se trata.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'E', iconColor: '#00C5B1',
@@ -485,6 +502,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 2, idx: 8, activo: true, linkUrl: '/fake/scotiabank.html',
     titulo: 'El cargo del Scotiabank',
+    narracion: 'Un SMS avisa de un cargo en tu tarjeta del Scotiabank. Leámoslo juntos con calma.',
     canal: 'SMS', badge: 'badge-purple', badgeLabel: 'SMS',
     mensaje: {
       tipo: 'sms', iconLetra: 'S', iconColor: '#EC111A',
@@ -516,6 +534,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 0, activo: true,
     titulo: 'El sorteo del BCP',
+    narracion: 'Mira esta publicación de Facebook con un sorteo del BCP. Veámosla con calma, juntos.',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
       tipo: 'facebook', subheader: 'BCP Perú Oficial',
@@ -546,6 +565,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 1, activo: true, linkUrl: '/fake/cripto.html',
     titulo: 'El amigo hackeado',
+    narracion: 'Tu amigo Carlos te escribe sobre una inversión que le fue muy bien. Léelo conmigo y piensa bien.',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
       tipo: 'messenger', subheader: 'Messenger',
@@ -574,6 +594,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 2, activo: true,
     titulo: 'La oferta de trabajo',
+    narracion: 'Encontraste esta oferta de trabajo en un grupo de Facebook. Revisémosla juntos con calma.',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
       tipo: 'facebook', subheader: 'Empleo Perú 2025 (Grupo)',
@@ -602,6 +623,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 3, activo: true,
     titulo: 'El accidente del familiar',
+    narracion: 'Te escribe un número desconocido diciendo ser tu hijo con una urgencia. Leámoslo con calma antes de actuar.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: '?', avatarColor: '#636e72',
@@ -630,6 +652,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 4, activo: true, linkUrl: '/fake/instagram.html',
     titulo: 'El sorteo de Instagram',
+    narracion: 'Por Instagram te dicen que ganaste un premio. Miremos bien qué te piden.',
     canal: 'Instagram', badge: 'badge-danger', badgeLabel: 'Instagram',
     mensaje: {
       tipo: 'messenger', subheader: 'Instagram — Mensaje Directo',
@@ -658,6 +681,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 5, activo: true,
     titulo: 'El canal de inversiones en Telegram',
+    narracion: 'Este canal de Telegram promete ganancias grandes. Veámoslo con calma, sin apurarnos.',
     canal: 'Telegram', badge: 'badge-info', badgeLabel: 'Telegram',
     mensaje: {
       tipo: 'messenger', subheader: 'Telegram — Canal',
@@ -686,6 +710,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 6, activo: true, linkUrl: '/fake/midis.html',
     titulo: 'El bono del gobierno en Facebook',
+    narracion: 'Una página de Facebook anuncia un bono del gobierno. Revisémoslo juntos con cuidado.',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
       tipo: 'facebook', subheader: 'MIDIS Perú — Página',
@@ -715,6 +740,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 7, activo: true, linkUrl: '/fake/rappi.html',
     titulo: 'El pago pendiente del delivery',
+    narracion: 'Te escriben por WhatsApp sobre un pedido de Rappi pendiente. Leámoslo con calma.',
     canal: 'WhatsApp', badge: 'badge-success', badgeLabel: 'WhatsApp',
     mensaje: {
       tipo: 'whatsapp', avatarLetra: 'R', avatarColor: '#FF6B35',
@@ -743,6 +769,7 @@ export const ESCENARIOS_FULL = [
   {
     nivel: 3, idx: 8, activo: true,
     titulo: 'La rifa de la camioneta',
+    narracion: 'En un grupo de Facebook rifan una camioneta bien barata. Miremos bien de qué se trata.',
     canal: 'Facebook', badge: 'badge-info', badgeLabel: 'Facebook',
     mensaje: {
       tipo: 'facebook', subheader: 'Sorteos Perú 2025 (Grupo)',

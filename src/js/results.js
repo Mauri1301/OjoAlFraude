@@ -7,13 +7,12 @@ export function mostrarResultado() {
   const total    = STATE.puntaje.reduce((a, b) => a + b, 0);
   const bonusPts = STATE.historial.filter(h => h.streakBonus).length * 5;
 
-  let emoji, title, subtitle;
-  if      (total >= 72) { emoji = '🏆'; title = '¡Experto en seguridad!';    subtitle = 'Tienes un gran ojo para detectar fraudes.'; }
-  else if (total >= 54) { emoji = '🛡️'; title = '¡Muy bien hecho!';          subtitle = 'Identificaste la mayoría de los fraudes. Sigue practicando para mejorar aún más.'; }
-  else if (total >= 36) { emoji = '📚'; title = '¡Buen intento!';             subtitle = 'Te enteraste de varias cosas importantes. Te recomendamos repasar los escenarios que fallaste.'; }
-  else                  { emoji = '🌱'; title = '¡Gracias por participar!';   subtitle = 'Este juego te mostró los riesgos que te puedes encontrar el tu dia a dia.'; }
+  let title, subtitle;
+  if      (total >= 72) { title = '¡Experto en seguridad!';    subtitle = 'Tienes un gran ojo para detectar fraudes.'; }
+  else if (total >= 54) { title = '¡Muy bien hecho!';          subtitle = 'Identificaste la mayoría de los fraudes. Sigue practicando para mejorar aún más.'; }
+  else if (total >= 36) { title = '¡Buen intento!';             subtitle = 'Te enteraste de varias cosas importantes. Te recomendamos repasar los escenarios que fallaste.'; }
+  else                  { title = '¡Gracias por participar!';   subtitle = 'Este juego te mostró los riesgos que te puedes encontrar el tu dia a dia.'; }
 
-  document.getElementById('result-emoji').textContent    = emoji;
   document.getElementById('result-title').textContent    = title;
   document.getElementById('result-subtitle').textContent = subtitle;
   document.getElementById('result-pts').textContent      = total;
@@ -43,8 +42,8 @@ export function mostrarResultado() {
     breakdown.innerHTML += `
       <div class="divider"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span class="body-sm" style="color:#ff8c42">🔥 Bonos de racha ganados</span>
-        <span class="bold" style="color:#ff8c42">+${bonusPts} pts</span>
+        <span class="body-sm" style="color:#b5560c">🔥 Bonos de racha ganados</span>
+        <span class="bold" style="color:#b5560c">+${bonusPts} pts</span>
       </div>`;
   }
   if (STATE.maxWinstreak >= 2) {
@@ -135,7 +134,7 @@ export function renderFin() {
       <div class="divider"></div>
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span class="body-md text-muted">Mejor racha</span>
-        <span class="bold" style="color:#ff7c2a">🔥 ${STATE.maxWinstreak} seguidos</span>
+        <span class="bold" style="color:#b5560c">🔥 ${STATE.maxWinstreak} seguidos</span>
       </div>` : ''}
     </div>`;
 

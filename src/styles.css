@@ -2,22 +2,23 @@
    VARIABLES & RESET
 ============================================================ */
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface2: #1e2530;
-  --border: #30363d;
-  --accent: #f7b731;
-  --accent2: #eb4d4b;
-  --accent3: #6bcb77;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
+  --bg: #f6efe2;
+  --surface: #fffdf9;
+  --surface2: #efe7d8;
+  --border: #e4dac9;
+  --accent: #f2a81d;
+  --accent-ink: #9c5e0f;   /* acento para texto sobre fondo claro */
+  --accent2: #cc3b39;
+  --accent3: #3d9c52;
+  --text: #2b2521;
+  --text-muted: #776d5e;
   --whatsapp: #25d366;
   --email-blue: #4f9cf9;
   --sms-purple: #a29bfe;
   --fb-blue: #1877f2;
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow: 0 8px 28px rgba(80,60,30,0.12);
   --font: 'Sora', sans-serif;
   --font-body: 'DM Sans', sans-serif;
 }
@@ -69,7 +70,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
 .body-md{font-size:.95rem;line-height:1.6}
 .body-sm{font-size:.85rem;line-height:1.55}
 .text-muted{color:var(--text-muted)}
-.text-accent{color:var(--accent)}
+.text-accent{color:var(--accent-ink)}
 .text-danger{color:var(--accent2)}
 .text-success{color:var(--accent3)}
 .bold{font-weight:700}
@@ -92,7 +93,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
   background:var(--surface2);color:var(--text);
   border:1.5px solid var(--border);
 }
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent-ink)}
 .btn-danger{background:var(--accent2);color:#fff;box-shadow:0 4px 20px rgba(235,77,75,.3)}
 .btn-ghost{background:transparent;color:var(--text-muted);border:1.5px solid var(--border)}
 .btn-ghost:hover{color:var(--text);border-color:var(--text-muted)}
@@ -122,7 +123,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
   padding:4px 10px;border-radius:99px;font-size:.78rem;font-weight:600;
   font-family:var(--font);
 }
-.badge-warning{background:rgba(247,183,49,.15);color:var(--accent);border:1px solid rgba(247,183,49,.3)}
+.badge-warning{background:rgba(247,183,49,.15);color:var(--accent-ink);border:1px solid rgba(247,183,49,.3)}
 .badge-danger{background:rgba(235,77,75,.15);color:var(--accent2);border:1px solid rgba(235,77,75,.3)}
 .badge-success{background:rgba(107,203,119,.15);color:var(--accent3);border:1px solid rgba(107,203,119,.3)}
 .badge-info{background:rgba(79,156,249,.15);color:var(--email-blue);border:1px solid rgba(79,156,249,.3)}
@@ -136,7 +137,8 @@ input,select,textarea{font-family:var(--font-body);outline:none}
   padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:100;
 }
-.topbar-logo{font-family:var(--font);font-weight:800;font-size:1.1rem;color:var(--accent)}
+.topbar-logo{font-family:var(--font);font-weight:800;font-size:1.1rem;color:var(--accent-ink);display:inline-flex;align-items:center;gap:6px;line-height:1}
+.topbar-logo img{display:block;flex-shrink:0}
 .topbar-score{font-family:var(--font);font-weight:700;font-size:.95rem}
 .topbar-btn{
   background:transparent;border:1px solid var(--border);border-radius:99px;
@@ -151,7 +153,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
   transition:color .2s;text-decoration:underline;text-underline-offset:3px;
   text-decoration-color:transparent;
 }
-.btn-link:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.btn-link:hover{color:var(--accent-ink);text-decoration-color:var(--accent)}
 
 /* ============================================================
    SCORE DISPLAY
@@ -160,7 +162,7 @@ input,select,textarea{font-family:var(--font-body);outline:none}
   display:inline-flex;align-items:center;gap:6px;
   background:rgba(247,183,49,.12);border:1.5px solid rgba(247,183,49,.3);
   border-radius:99px;padding:6px 14px;
-  font-family:var(--font);font-weight:700;color:var(--accent);font-size:.95rem;
+  font-family:var(--font);font-weight:700;color:var(--accent-ink);font-size:.95rem;
 }
 
 /* ============================================================
@@ -206,7 +208,7 @@ select.form-input option{background:var(--surface2)}
   transition:all .2s;font-family:var(--font-body);font-size:.95rem;
 }
 .option-item:hover{border-color:var(--accent);background:rgba(247,183,49,.06)}
-.option-item.selected{border-color:var(--accent);background:rgba(247,183,49,.1);color:var(--accent)}
+.option-item.selected{border-color:var(--accent);background:rgba(247,183,49,.1);color:var(--accent-ink)}
 .option-item.correct{border-color:var(--accent3);background:rgba(107,203,119,.12);color:var(--accent3)}
 .option-item.wrong{border-color:var(--accent2);background:rgba(235,77,75,.12);color:var(--accent2)}
 .option-item input[type=radio]{display:none}
@@ -220,6 +222,53 @@ select.form-input option{background:var(--surface2)}
 .option-item.selected .option-letter{background:var(--accent);border-color:var(--accent);color:#000}
 .option-item.correct .option-letter{background:var(--accent3);border-color:var(--accent3);color:#000}
 .option-item.wrong .option-letter{background:var(--accent2);border-color:var(--accent2);color:#fff}
+
+/* ============================================================
+   ALTERNATIVAS DE ESCENARIOS (estilo Kahoot)
+   Un color + una forma por opción; botón con relieve 3D.
+============================================================ */
+.kh-list{display:flex;flex-direction:column;gap:10px}
+.kh-opt{
+  display:flex;align-items:center;gap:12px;width:100%;
+  border:0;border-radius:14px;padding:12px 14px;text-align:left;
+  background:var(--kh);color:#fff;
+  font-family:var(--font-body);font-size:.95rem;font-weight:600;line-height:1.35;
+  box-shadow:0 4px 0 var(--kh-dark);cursor:pointer;
+  transition:transform .12s,box-shadow .12s,filter .15s,opacity .25s;
+}
+.kh-opt:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.kh-opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--kh-dark)}
+.kh-opt:focus-visible{outline:3px solid var(--text);outline-offset:3px}
+.kh-num{
+  flex-shrink:0;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--kh);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font);font-weight:800;font-size:1.15rem;line-height:1;
+}
+.kh-text{flex:1}
+.kh-mark{
+  flex-shrink:0;width:34px;height:34px;border-radius:50%;background:#fff;
+  display:none;align-items:center;justify-content:center;
+  font-size:1.25rem;font-weight:800;line-height:1;
+}
+
+/* Colores sin rojo ni verde (azul, morado, naranja, turquesa): así el verde/rojo
+   queda reservado para mostrar el resultado de la respuesta elegida. */
+.kh-c0{--kh:#1a6fd0;--kh-dark:#0e4c94}
+.kh-c1{--kh:#7b3fbf;--kh-dark:#55278a}
+.kh-c2{--kh:#c25a00;--kh-dark:#843d00}
+.kh-c3{--kh:#0b7d86;--kh-dark:#05565c}
+
+/* Al responder: se bloquean, las demás se apagan y la elegida se vuelve
+   verde (acierto) o roja (error) con ✓ / ✗ */
+.kh-done .kh-opt{cursor:default;transform:none}
+.kh-done .kh-opt:hover{filter:none}
+.kh-done .kh-opt:not(.kh-chosen){opacity:.45}
+.kh-done .kh-chosen .kh-mark{display:flex}
+.kh-done .kh-chosen{transform:scale(1.02)}
+.kh-chosen.kh-ok{--kh:#2a8a12;--kh-dark:#1a5f09}
+.kh-chosen.kh-bad{--kh:#d6243f;--kh-dark:#9c1029}
+.kh-ok .kh-mark{color:#1f8a3a}
+.kh-bad .kh-mark{color:#c81e36}
 
 /* ============================================================
    MESSAGE SIMULATORS
@@ -257,9 +306,9 @@ select.form-input option{background:var(--surface2)}
   background:#1a1d23;border-radius:12px;border:1.5px solid #2d3748;overflow:hidden;
 }
 .email-header{background:#1e2530;padding:14px 16px;border-bottom:1px solid #2d3748}
-.email-from{font-size:.82rem;color:var(--text-muted)}
-.email-from span{color:var(--text);font-weight:600}
-.email-subject{font-weight:700;font-size:.95rem;margin-top:4px}
+.email-from{font-size:.82rem;color:#9aa4b2}
+.email-from span{color:#e6edf3;font-weight:600}
+.email-subject{font-weight:700;font-size:.95rem;margin-top:4px;color:#e6edf3}
 .email-body{padding:16px;font-size:.9rem;line-height:1.65;color:#c8cfd8}
 .email-logo{
   background:#005da6;color:#fff;font-weight:800;
@@ -277,7 +326,7 @@ select.form-input option{background:var(--surface2)}
   background:var(--sms-purple);display:flex;align-items:center;justify-content:center;
   font-size:.85rem;color:#fff;flex-shrink:0;
 }
-.sms-sender{font-weight:700;font-size:.88rem}
+.sms-sender{font-weight:700;font-size:.88rem;color:#e0e0f0}
 .sms-bubble{
   background:#252542;border-radius:8px 8px 8px 0;
   padding:10px 14px;font-size:.9rem;line-height:1.55;color:#e0e0f0;
@@ -297,7 +346,7 @@ select.form-input option{background:var(--surface2)}
   background:var(--fb-blue);display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0;
 }
-.fb-author-name{font-weight:700;font-size:.9rem}
+.fb-author-name{font-weight:700;font-size:.9rem;color:#e4e6eb}
 .fb-author-sub{font-size:.75rem;color:#b0b3b8}
 .fb-text{font-size:.9rem;line-height:1.55;color:#e4e6eb;margin-bottom:10px}
 .fb-img{background:#3a3b3c;border-radius:6px;padding:20px;text-align:center;color:#b0b3b8;font-size:.85rem}
@@ -351,21 +400,21 @@ select.form-input option{background:var(--surface2)}
 ============================================================ */
 .streak-pill{
   display:inline-flex;align-items:center;gap:5px;
-  background:rgba(255,120,0,.15);border:1.5px solid rgba(255,120,0,.4);
+  background:rgba(230,120,20,.16);border:1.5px solid rgba(230,120,20,.45);
   border-radius:99px;padding:5px 12px;
-  font-family:var(--font);font-weight:700;color:#ff7c2a;font-size:.88rem;
+  font-family:var(--font);font-weight:700;color:#b5560c;font-size:.88rem;
   animation:streakGlow 1.5s ease-in-out infinite alternate;
 }
 .streak-banner{
-  background:linear-gradient(135deg,rgba(255,120,0,.12),rgba(247,183,49,.08));
-  border:1.5px solid rgba(255,120,0,.35);border-radius:var(--radius-sm);
-  padding:10px 14px;font-family:var(--font);font-size:.9rem;color:#ff8c42;
+  background:linear-gradient(135deg,rgba(230,120,20,.18),rgba(242,168,29,.16));
+  border:1.5px solid rgba(230,120,20,.4);border-radius:var(--radius-sm);
+  padding:10px 14px;font-family:var(--font);font-size:.9rem;font-weight:600;color:#b5560c;
   text-align:center;
 }
 .streak-hint{
-  background:rgba(107,203,119,.07);border:1px solid rgba(107,203,119,.2);
+  background:rgba(61,156,82,.15);border:1px solid rgba(61,156,82,.4);
   border-radius:var(--radius-sm);padding:8px 12px;
-  font-size:.85rem;color:var(--accent3);text-align:center;
+  font-size:.85rem;font-weight:600;color:#2f7d42;text-align:center;
 }
 @keyframes streakGlow{
   from{box-shadow:0 0 0 0 rgba(255,120,0,0)}
@@ -395,7 +444,7 @@ select.form-input option{background:var(--surface2)}
   align-items:center;justify-content:center;margin:0 auto;
   box-shadow:0 0 40px rgba(247,183,49,.3);
 }
-.result-ring .pts{font-family:var(--font);font-size:2rem;font-weight:800;color:var(--accent)}
+.result-ring .pts{font-family:var(--font);font-size:2rem;font-weight:800;color:var(--accent-ink)}
 .result-ring .pts-label{font-size:.7rem;font-weight:600;color:var(--text-muted)}
 
 /* ============================================================
@@ -410,7 +459,7 @@ select.form-input option{background:var(--surface2)}
   color:var(--text-muted);font-size:.95rem;cursor:pointer;transition:all .2s;
   display:flex;align-items:center;justify-content:center;
 }
-.likert-btn:hover{border-color:var(--accent);color:var(--accent)}
+.likert-btn:hover{border-color:var(--accent);color:var(--accent-ink)}
 .likert-btn.selected{background:var(--accent);border-color:var(--accent);color:#000}
 .likert-labels{display:flex;justify-content:space-between;margin-top:4px}
 .likert-label{font-size:.7rem;color:var(--text-muted)}
@@ -423,8 +472,8 @@ select.form-input option{background:var(--surface2)}
   color:var(--text-muted);font-family:var(--font-body);font-size:.9rem;
   cursor:pointer;transition:all .2s;text-align:left;
 }
-.likert-text-btn:hover{border-color:var(--accent);color:var(--accent)}
-.likert-text-btn.selected{background:rgba(247,183,49,.12);border-color:var(--accent);color:var(--accent);font-weight:600}
+.likert-text-btn:hover{border-color:var(--accent);color:var(--accent-ink)}
+.likert-text-btn.selected{background:rgba(247,183,49,.12);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
 
 /* ============================================================
    COMPARISON CHART (pre/post)
@@ -447,12 +496,12 @@ select.form-input option{background:var(--surface2)}
 }
 .dots-grid{
   position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-image:radial-gradient(rgba(120,90,50,.06) 1px,transparent 1px);
   background-size:28px 28px;
 }
 .glow-accent{
   position:fixed;width:300px;height:300px;border-radius:50%;pointer-events:none;
-  background:radial-gradient(circle,rgba(247,183,49,.08) 0%,transparent 70%);
+  background:radial-gradient(circle,rgba(247,183,49,.14) 0%,transparent 70%);
   top:-80px;right:-80px;z-index:0;
 }
 .content-z{position:relative;z-index:1}
@@ -559,7 +608,7 @@ select.form-input option{background:var(--surface2)}
   color:var(--text-muted);font-family:var(--font);font-size:.85rem;
   cursor:pointer;transition:all .2s;
 }
-.tab-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tab-btn:hover{border-color:var(--accent);color:var(--accent-ink)}
 .tab-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
 
 .session-scores-bar{
@@ -592,6 +641,32 @@ select.form-input option{background:var(--surface2)}
 }
 
 /* ============================================================
+   BÚHO GUÍA "OJITO"
+============================================================ */
+.buho-wrap{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,rgba(247,183,49,.06),rgba(247,183,49,.02));
+  border:1.5px solid rgba(247,183,49,.22);
+  border-radius:var(--radius);padding:12px 14px;
+}
+.buho-svg{flex-shrink:0;animation:buhoFloat 3s ease-in-out infinite alternate}
+.buho-hero{display:flex;justify-content:center;margin:0 auto 4px}
+.buho-hero svg,.buho-hero img{filter:drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+.buho-pic{display:block;margin:0 auto;height:auto}
+.buho-svg img{display:block}
+.buho-svg svg{display:block;overflow:visible}
+.buho-eye{transform-box:fill-box;transform-origin:center;animation:buhoBlink 2.4s infinite}
+.buho-bubble{position:relative;flex:1;min-width:0}
+.buho-nombre{font-family:var(--font);font-weight:700;font-size:.78rem;color:var(--accent-ink)}
+.buho-bubble .body-sm{color:var(--text)}
+
+@keyframes buhoFloat{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes buhoBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.08)}}
+@media(prefers-reduced-motion:reduce){
+  .buho-svg,.buho-eye{animation:none}
+}
+
+/* ============================================================
    ESCENARIO DOS COLUMNAS (desktop)
 ============================================================ */
 .escenario-layout{display:flex;flex-direction:column;gap:16px}
@@ -615,21 +690,103 @@ select.form-input option{background:var(--surface2)}
 }
 
 /* ============================================================
-   CAROUSEL (Pre/Post-test en desktop)
+   CAROUSEL (Pre/Post-test, celular y desktop)
 ============================================================ */
-@media(min-width:768px){
-  .carousel-wrap{max-width:600px;margin:0 auto;width:100%}
-  .carousel-header{
-    display:flex;justify-content:space-between;align-items:center;
-  }
-  .invisible{visibility:hidden;pointer-events:none}
+.carousel-wrap{max-width:600px;margin:0 auto;width:100%}
+.carousel-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.invisible{visibility:hidden;pointer-events:none}
+
+/* Cabecera del pre/post-test: búho + título */
+.test-head{display:flex;flex-direction:column;align-items:center;gap:16px}
+.test-head-buho{margin-bottom:-4px}
+
+/* Celular (<600px): pregunta, opciones y botones caben en una pantalla.
+   El tamaño depende del ALTO disponible, no solo del ancho. */
+
+/* Celular alto (>800px de alto): letra cómoda, aprovecha el espacio */
+@media(max-width:599px){
+  .test-screen .container{padding:14px 16px 16px;gap:14px}
+  /* Búho y título en una línea (título a la base del búho); subtítulo debajo */
+  .test-head{display:grid;grid-template-columns:auto 1fr;align-items:end;column-gap:12px;row-gap:6px}
+  .test-head-buho{margin:0}
+  .test-head-buho img{width:72px}
+  .test-head-text{display:contents}
+  .test-head-text .title-lg{grid-column:2;text-align:left;padding-bottom:4px}
+  .test-head-text .body-md{grid-column:1 / -1;text-align:left}
+  .test-head-text .title-lg{font-size:1.3rem}
+  .test-head-text .body-md{font-size:.85rem;line-height:1.4}
+  .test-screen .carousel-wrap{gap:14px}
+  .test-screen .card{padding:16px;gap:14px}
+  .test-screen .card > .body-md{font-size:1rem;line-height:1.5}
+  .test-screen .option-list{gap:10px}
+  .test-screen .option-item{padding:12px 14px;gap:12px;font-size:.95rem;line-height:1.4}
+  .test-screen .carousel-nav-btn{padding:11px 20px;font-size:.95rem}
+}
+
+/* Celular bajo (≤800px de alto) o celular en horizontal: compacto */
+@media(max-width:599px) and (max-height:800px), (max-height:500px){
+  .test-screen .container{padding:10px 14px 14px;gap:10px}
+  .test-head{column-gap:10px;row-gap:4px}
+  .test-head-buho img{width:62px}
+  .test-head-text .title-lg{font-size:1.15rem}
+  .test-head-text .body-md{font-size:.8rem;line-height:1.35}
+  .test-screen .carousel-wrap{gap:10px}
+  .test-screen .carousel-header .body-sm{font-size:.78rem}
+  .test-screen .card{padding:12px 14px;gap:10px}
+  .test-screen .card > .body-md{font-size:.92rem;line-height:1.42}
+  .test-screen .option-list{gap:7px}
+  .test-screen .option-item{padding:8px 11px;gap:10px;font-size:.88rem;line-height:1.35}
+  .test-screen .option-letter{width:24px;height:24px;font-size:.72rem}
+  .test-screen .carousel-nav-btn{padding:9px 18px;font-size:.88rem}
+}
+
+/* Muy bajo (≤640px de alto) o en horizontal: se oculta el subtítulo */
+@media(max-width:599px) and (max-height:640px), (max-height:500px){
+  .test-head-text .body-md{display:none}
+}
+
+/* Extremadamente bajo (≤600px de alto) o en horizontal: se oculta la
+   cabecera (el badge "Pre-test"/"Post-test" del header ya indica la sección) */
+@media(max-width:599px) and (max-height:600px), (max-height:500px){
+  .test-head{display:none}
+  .test-screen .topbar{padding-top:8px;padding-bottom:8px}
+  .test-screen .card{padding:10px 12px;gap:8px}
+  .test-screen .card > .body-md{line-height:1.35}
+  .test-screen .option-list{gap:6px}
+  .test-screen .option-item{padding:7px 10px;line-height:1.3}
+}
+
+/* Celular muy angosto (≤360px): botones sin partirse en dos líneas */
+@media(max-width:360px){
+  .test-screen .carousel-nav-btn{padding:8px 12px;font-size:.85rem;white-space:nowrap}
+}
+/* Celular muy angosto y bajo (ej. 320×568): letra apenas menor */
+@media(max-width:360px) and (max-height:600px){
+  .test-screen .card > .body-md{font-size:.88rem}
+  .test-screen .option-item{font-size:.85rem}
+}
+
+/* Celular en horizontal: pregunta a la izquierda, opciones a la derecha */
+@media(max-height:500px) and (min-width:600px){
+  .test-screen .container{max-width:860px;padding:6px 14px 8px;gap:6px}
+  .test-screen .carousel-wrap{max-width:860px;gap:6px}
+  .test-screen .card{display:grid;grid-template-columns:1fr 1.15fr;gap:14px;align-items:start}
+  .test-screen .option-list{gap:5px}
+  .test-screen .option-item{padding:6px 10px}
 }
 
 /* ============================================================
    RESPONSIVE TWEAKS
 ============================================================ */
+.topbar .badge,.topbar-btn{white-space:nowrap}
 @media(max-width:380px){
   .title-xl{font-size:1.7rem}
   .container{padding:20px 16px}
   .modal{padding:24px 18px}
+  /* Header angosto: que logo, badge y botón entren en una línea */
+  .topbar{padding:10px 12px;gap:8px}
+  .topbar-logo{font-size:1rem;gap:5px}
+  .topbar-logo img{width:22px;height:22px}
+  .topbar .badge{font-size:.7rem;padding:3px 8px}
+  .topbar-btn{padding:4px 10px;font-size:.72rem}
 }

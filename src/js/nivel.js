@@ -4,6 +4,7 @@ import { ESCENARIOS } from '../data/escenarios.js';       // fallback local
 import { NIVEL_CONFIG } from '../data/nivel-config.js';
 import { mostrarResultado } from './results.js';
 import { renderMensaje } from './mensaje-renderer.js';
+import { buildBuho, buhoImg } from './buho.js';
 
 export function goToIntroNivel(n) {
   const cfg = NIVEL_CONFIG[n - 1];
@@ -62,6 +63,7 @@ export function renderEscenario(n) {
         <h3 class="title-md">${esc.titulo}</h3>
         <p class="body-sm text-muted mt-8">Lee el mensaje con atención antes de responder</p>
       </div>
+      ${buildBuho(esc.narracion || 'Mira con calma este mensaje. Yo te acompaño en cada paso — tú decides qué hacer.')}
       <div class="escenario-layout">
         <div class="escenario-mensaje">
           <div id="msg-placeholder"></div>
@@ -69,12 +71,13 @@ export function renderEscenario(n) {
         <div class="escenario-pregunta flex-col gap-16">
           <div class="divider escenario-divider"></div>
           <p class="body-md bold">${esc.pregunta}</p>
-          <div class="option-list" id="esc-opts">
+          <div class="kh-list" id="esc-opts">
             ${esc.opciones.map((op, oi) => `
-              <div class="option-item" id="esc-opt-${oi}" onclick="responderEscenario(${n}, ${oi})">
-                <div class="option-letter">${['A','B','C','D'][oi]}</div>
-                <span>${op}</span>
-              </div>
+              <button type="button" class="kh-opt kh-c${oi % 4}" id="esc-opt-${oi}" onclick="responderEscenario(${n}, ${oi})">
+                <span class="kh-num" aria-hidden="true">${oi + 1}</span>
+                <span class="kh-text">${op}</span>
+                <span class="kh-mark" aria-hidden="true"></span>
+              </button>
             `).join('')}
           </div>
         </div>
@@ -116,6 +119,7 @@ export function clicoEnlaceFraude(n) {
   const esc = escenarios[STATE.escenarioIdx];
   // Seleccionar cualquier opción incorrecta
   const wrongIdx = esc.correcta === 0 ? 1 : 0;
+  STATE.fraudeLink = true;   // marca: entró al enlace fraudulento
   responderEscenario(n, wrongIdx);
 }
 
@@ -126,12 +130,17 @@ export function responderEscenario(n, opcion) {
   const prevStreak = STATE.winstreak;
   const streakBonus = correcto && prevStreak >= 2;
 
-  for (let i = 0; i < esc.opciones.length; i++) {
-    const el = document.getElementById(`esc-opt-${i}`);
-    if (!el) continue;
-    el.style.pointerEvents = 'none';
-    if (correcto && i === esc.correcta) el.classList.add('correct');
-    else if (i === opcion && !correcto) el.classList.add('wrong');
+  // Marca la opción elegida con ✓/✗ y bloquea las demás. Si respondió entrando
+  // al enlace fraudulento, no eligió ninguna opción: no se marca ninguna.
+  const lista = document.getElementById('esc-opts');
+  if (lista) {
+    lista.classList.add('kh-done');
+    lista.querySelectorAll('.kh-opt').forEach(b => { b.disabled = true; });
+    const elegido = STATE.fraudeLink ? null : document.getElementById(`esc-opt-${opcion}`);
+    if (elegido) {
+      elegido.classList.add('kh-chosen', correcto ? 'kh-ok' : 'kh-bad');
+      elegido.querySelector('.kh-mark').textContent = correcto ? '✓' : '✗';
+    }
   }
 
   const delta = correcto ? (streakBonus ? 15 : 10) : -5;
@@ -170,6 +179,8 @@ export function updateStreakDisplay(n) {
 
 export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, prevStreak, opcion) {
   const consecuenciaMal = esc.consecuencias_mal?.[opcion] ?? esc.consecuencia_mal ?? '❌ Respuesta incorrecta.';
+  const fraudeLink = STATE.fraudeLink; STATE.fraudeLink = false;
+  const buhoFeedback = correcto ? 'buho7' : (fraudeLink ? 'buho12' : 'buho4');
   const content = document.getElementById('feedback-content');
   const deltaColor = delta > 0 ? 'text-success' : 'text-danger';
   const deltaStr  = delta > 0 ? `+${delta}` : `${delta}`;
@@ -178,12 +189,12 @@ export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, pr
   if (streakBonus) {
     // SDT – competencia: confirma eficacia y refuerza la sensación de logro
     streakMsgHtml = `<div style="background:rgba(255,120,0,.12);border:1px solid rgba(255,120,0,.3);border-radius:8px;padding:8px 12px;text-align:center;margin-top:4px">
-      <span style="color:#ff8c42;font-family:var(--font);font-weight:700;font-size:.9rem">🔥 ¡${newStreak} aciertos seguidos! Tu capacidad de detección sigue creciendo — +5 pts de bono</span>
+      <span style="color:#b5560c;font-family:var(--font);font-weight:700;font-size:.9rem">🔥 ¡${newStreak} aciertos seguidos! Tu capacidad de detección sigue creciendo — +5 pts de bono</span>
     </div>`;
   } else if (correcto && newStreak === 2) {
     // SDT – competencia: hace visible el avance consecutivo (Ryan & Deci, 2020)
     streakMsgHtml = `<div style="background:rgba(255,120,0,.08);border:1px solid rgba(255,120,0,.2);border-radius:8px;padding:8px 12px;text-align:center;margin-top:4px">
-      <span style="color:#ff8c42;font-family:var(--font);font-weight:600;font-size:.85rem">🔥 ¡Dos aciertos consecutivos! Estás demostrando progreso — el siguiente vale +15 pts</span>
+      <span style="color:#b5560c;font-family:var(--font);font-weight:600;font-size:.85rem">🔥 ¡Dos aciertos consecutivos! Estás demostrando progreso — el siguiente vale +15 pts</span>
     </div>`;
   } else if (!correcto && prevStreak >= 2) {
     // SDT – competencia: error como parte del aprendizaje, no como fracaso definitivo
@@ -194,7 +205,7 @@ export function mostrarFeedback(esc, correcto, delta, streakBonus, newStreak, pr
 
   content.innerHTML = `
     <div class="text-center">
-      <div style="font-size:2.5rem">${correcto ? '✅' : '❌'}</div>
+      ${buhoImg(buhoFeedback, 104)}
       <div class="score-delta ${deltaColor} mt-8">${deltaStr} pts</div>
       <div class="title-sm mt-8">${correcto ? '¡Correcto!' : 'Incorrecto'}</div>
     </div>

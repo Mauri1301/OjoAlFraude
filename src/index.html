@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>OjoAlFraude — Protégete del engaño digital</title>
+<link rel="icon" type="image/svg+xml" href="/buho-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
@@ -111,6 +112,7 @@
     <button class="btn btn-ghost" onclick="sincronizarEnlaces()">🔗 Sincronizar enlaces de páginas falsas</button>
     <button class="btn btn-ghost" onclick="sincronizarConsequencias()">📝 Sincronizar consecuencias</button>
     <button class="btn btn-ghost" onclick="sincronizarOpciones()">🔄 Sincronizar opciones y respuestas</button>
+    <button class="btn btn-ghost" onclick="sincronizarNarracion()">🦉 Sincronizar narración del búho</button>
     <div id="admin-scenarios-list" class="flex-col gap-8"></div>
   </div>
 </div>
@@ -187,7 +189,7 @@
 <!-- SCREEN: LOADING (inicial mientras Firebase verifica sesión) -->
 <div id="p-loading" class="screen active">
   <div class="container flex-col gap-16" style="min-height:100vh;justify-content:center;align-items:center">
-    <span style="font-size:3rem">🛡️</span>
+    <img src="/buho-icon.svg" alt="OjoAlFraude" width="92" height="92" class="buho-svg">
     <p class="body-md text-muted">Cargando...</p>
   </div>
 </div>
@@ -196,7 +198,7 @@
 <div id="p-login" class="screen">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
     <div class="text-center flex-col gap-16">
-      <span class="shield-big">🛡️</span>
+      <div class="buho-hero buho-svg" id="login-buho" aria-hidden="true"></div>
       <div class="flex-col gap-8">
         <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
         <p class="body-md text-muted">Inicia sesión para continuar</p>
@@ -221,7 +223,7 @@
 <!-- SCREEN 0b: REGISTRO CON AUTH -->
 <div id="p-register" class="screen">
   <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
     <span class="badge badge-warning">Registro</span>
   </div>
   <div class="container content-z flex-col gap-20">
@@ -294,12 +296,12 @@
 <!-- SCREEN 1: BIENVENIDA -->
 <div id="p-bienvenida" class="screen">
   <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
     <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
   </div>
   <div class="container content-z flex-col gap-24" style="padding-top:32px;padding-bottom:40px">
     <div class="text-center flex-col gap-16">
-      <span class="shield-big">🛡️</span>
+      <div class="buho-hero"><img src="/img/buho5.png" alt="OjoAlFraude" width="140" style="height:auto"></div>
       <div class="flex-col gap-8">
         <h1 class="title-xl">Ojo<span class="text-accent">Al</span>Fraude</h1>
         <p class="body-md text-muted">Enterate como protegerte de los engaños digitales más comunes en Perú</p>
@@ -331,18 +333,21 @@
 </div>
 
 <!-- SCREEN 3: PRE-TEST -->
-<div id="p-pretest" class="screen">
+<div id="p-pretest" class="screen test-screen">
   <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
     <div style="display:flex;gap:8px;align-items:center">
       <span class="badge badge-info">Pre-test</span>
       <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
     </div>
   </div>
   <div class="container content-z flex-col gap-20">
-    <div class="flex-col gap-4 mt-8">
-      <h2 class="title-lg">Antes de jugar...</h2>
-      <p class="body-md text-muted">10 preguntas para conocer lo que ya sabes. No hay respuestas malas.</p>
+    <div class="test-head">
+      <div class="buho-hero test-head-buho"><img src="/img/buho6.png" alt="" width="120" style="height:auto"></div>
+      <div class="test-head-text flex-col gap-4 text-center">
+        <h2 class="title-lg">Antes de jugar...</h2>
+        <p class="body-md text-muted">10 preguntas para conocer lo que ya sabes. No hay respuestas malas.</p>
+      </div>
     </div>
     <div id="pretest-content" class="flex-col gap-20"></div>
     <button id="btn-pretest" class="btn btn-primary hidden" onclick="finalizarPretest()">
@@ -354,6 +359,7 @@
 <!-- SCREENS 4–9: INTRO NIVEL + NIVEL ACTIVO (unificados) -->
 <div id="p-intro-nivel" class="screen">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
+    <div class="buho-hero"><img src="/img/buho3.png" alt="" width="120" style="height:auto"></div>
     <div class="level-hero flex-col gap-12 text-center">
       <div id="intro-icon" class="level-icon"></div>
       <div>
@@ -392,7 +398,7 @@
 <div id="p-resultado" class="screen">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
     <div class="text-center flex-col gap-16">
-      <div id="result-emoji" style="font-size:4rem"></div>
+      <div class="buho-hero"><img src="/img/buho8.png" alt="Antes de hacer clic, ¡piensa!" width="150" style="height:auto"></div>
       <h2 class="title-lg" id="result-title"></h2>
       <p class="body-md text-muted" id="result-subtitle"></p>
     </div>
@@ -408,18 +414,21 @@
 </div>
 
 <!-- SCREEN 11: POST-TEST -->
-<div id="p-posttest" class="screen">
+<div id="p-posttest" class="screen test-screen">
   <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
     <div style="display:flex;gap:8px;align-items:center">
       <span class="badge badge-info">Post-test</span>
       <button class="topbar-btn" onclick="logoutUser()">↩ Salir</button>
     </div>
   </div>
   <div class="container content-z flex-col gap-20">
-    <div class="flex-col gap-4 mt-8">
-      <h2 class="title-lg">Después de jugar...</h2>
-      <p class="body-md text-muted">10 nuevas preguntas sobre los mismos temas. ¿Cuánto mejoraste?</p>
+    <div class="test-head">
+      <div class="buho-hero test-head-buho"><img src="/img/buho6.png" alt="" width="120" style="height:auto"></div>
+      <div class="test-head-text flex-col gap-4 text-center">
+        <h2 class="title-lg">Después de jugar...</h2>
+        <p class="body-md text-muted">10 nuevas preguntas sobre los mismos temas. ¿Cuánto mejoraste?</p>
+      </div>
     </div>
     <div id="posttest-content" class="flex-col gap-20"></div>
     <button id="btn-posttest" class="btn btn-primary hidden" onclick="finalizarPosttest()">
@@ -431,7 +440,7 @@
 <!-- SCREEN 12: COMPARACIÓN -->
 <div id="p-comparacion" class="screen">
   <div class="topbar">
-    <span class="topbar-logo">🛡️ OjoAlFraude</span>
+    <span class="topbar-logo"><img src="/buho-icon.svg" width="26" height="26" alt="">OjoAlFraude</span>
     <span class="badge badge-success">Resultados</span>
   </div>
   <div class="container content-z flex-col gap-20" style="padding-bottom:40px">
@@ -452,7 +461,7 @@
 <div id="p-fin" class="screen">
   <div class="container content-z flex-col gap-24" style="min-height:100vh;justify-content:center">
     <div class="text-center flex-col gap-16">
-      <span style="font-size:4rem">🎉</span>
+      <div class="buho-hero"><img src="/img/buho10.png" alt="" width="150" style="height:auto"></div>
       <div>
         <h2 class="title-xl">¡Felicitaciones!</h2>
         <p class="body-lg text-muted mt-8">Has completado OjoAlFraude</p>

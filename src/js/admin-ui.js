@@ -1,6 +1,6 @@
 /* Panel de administrador */
 import { goTo } from './state.js';
-import { getAllUsers, getUserSessions, getAllSessions, migrarSusAKab, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias, syncOpciones, deleteParticipante } from '../firebase/db.js';
+import { getAllUsers, getUserSessions, getAllSessions, migrarSusAKab, loadAllScenarios, loadAllQuestions, updateScenario, updateQuestion, seedContent, syncScenarioLinks, syncConsequencias, syncOpciones, syncNarracion, deleteParticipante } from '../firebase/db.js';
 import { logoutUser } from '../firebase/auth.js';
 import { TEST_QUESTIONS_A } from '../data/test-questions-a.js';
 import { TEST_QUESTIONS_B } from '../data/test-questions-b.js';
@@ -941,6 +941,22 @@ export async function sincronizarOpciones() {
     alert('Error al sincronizar: ' + err.message);
     btn.disabled = false;
     btn.textContent = '🔄 Sincronizar opciones y respuestas';
+  }
+}
+
+export async function sincronizarNarracion() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = 'Sincronizando...';
+  try {
+    const n = await syncNarracion(ESCENARIOS_FULL);
+    alert(`✅ ${n} escenario(s) actualizado(s) con la narración del búho.`);
+    btn.disabled = false;
+    btn.textContent = '🦉 Sincronizar narración del búho';
+  } catch (err) {
+    alert('Error al sincronizar: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '🦉 Sincronizar narración del búho';
   }
 }
 

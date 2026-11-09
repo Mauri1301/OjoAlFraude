@@ -27,6 +27,7 @@ import {
 } from './nivel.js';
 
 import { finalizarSUS, selectSUS, abrirModalSUS } from './sus.js';
+import { buhoSVG } from './buho.js';
 import { exportarResultados, reiniciarJuego } from './export.js';
 import { submitLogin, submitRegister, logoutUser, resetLoginForm } from './auth-ui.js';
 import {
@@ -34,7 +35,7 @@ import {
   cargarEscenarios, cargarPreguntas,
   toggleEscenario, togglePregunta,
   editarEscenario, editarPregunta, guardarEdicion,
-  importarContenido, sincronizarEnlaces, sincronizarConsequencias, sincronizarOpciones, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab, eliminarParticipante,
+  importarContenido, sincronizarEnlaces, sincronizarConsequencias, sincronizarOpciones, sincronizarNarracion, filtrarParticipantes, verDetalleSesion, volverADetalle, switchTestTab, eliminarParticipante,
   cargarEstadisticas, exportarEstadisticasCSV, migrarKAB,
 } from './admin-ui.js';
 
@@ -138,6 +139,7 @@ Object.assign(window, {
   sincronizarEnlaces,
   sincronizarConsequencias,
   sincronizarOpciones,
+  sincronizarNarracion,
   cargarHistorialBienvenida,
 });
 
@@ -173,7 +175,7 @@ export async function cargarHistorialBienvenida(uid) {
             ${streak >= 2 ? `
             <div class="bienvenida-stat">
               <span class="body-sm text-muted">Mejor racha</span>
-              <span class="title-sm" style="color:#ff8c42">🔥 x${streak}</span>
+              <span class="title-sm" style="color:#b5560c">🔥 x${streak}</span>
             </div>` : ''}
           </div>
         </div>`;
@@ -182,6 +184,11 @@ export async function cargarHistorialBienvenida(uid) {
     el.innerHTML = '<p class="body-sm text-muted">No se pudo cargar el historial.</p>';
   }
 }
+
+/* ── Búho en la pantalla de login (PNG ilustrado) ── */
+const _loginBuho = document.getElementById('login-buho');
+if (_loginBuho) _loginBuho.innerHTML =
+  '<img src="/img/buho1.png" alt="OjoAlFraude" width="160" style="display:block;height:auto;filter:drop-shadow(0 6px 18px rgba(0,0,0,.4))">';
 
 /* ── Cargar historial al entrar a bienvenida ── */
 window.addEventListener('screen-change', ({ detail }) => {
